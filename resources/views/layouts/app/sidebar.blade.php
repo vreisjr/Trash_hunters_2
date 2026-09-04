@@ -15,6 +15,14 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="newspaper" :href="route('posts.index')" :current="request()->routeIs('posts.*')" wire:navigate>
+                        {{ __('Feed') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="pencil-square" :href="route('posts.create')" :current="request()->routeIs('posts.create')" wire:navigate>
+                        {{ __('Criar post') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

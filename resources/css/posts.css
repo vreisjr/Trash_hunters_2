@@ -1,0 +1,355 @@
+/* ==========================================================
+   VARIÁVEIS (extraídas do style.css original do Trash Hunters)
+========================================================== */
+:root{
+    --bg:#f5f7f4;
+    --text:#333333;
+
+    --green:#A8E6A3;
+    --green-dark:#74c365;
+
+    --blue:#B8E2F2;
+
+    --white:#ffffff;
+
+    --gray:#f2f2f2;
+    --gray2:#d8d8d8;
+    --gray3:#808080;
+
+    --shadow: 0 8px 30px rgba(0,0,0,.08);
+    --radius:18px;
+    --transition:.35s;
+}
+
+* { box-sizing: border-box; }
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.preview-container{
+    max-width:640px;
+    margin:40px auto;
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+    padding:0 20px;
+}
+
+/* ==========================================================
+                    NOVA POSTAGEM (composer)
+========================================================== */
+
+.new-post{
+    background:var(--white);
+    border-radius:var(--radius);
+    padding:25px;
+    box-shadow:var(--shadow);
+    transition:var(--transition);
+}
+
+.new-post:hover{
+    transform:translateY(-3px);
+}
+
+.post-header{
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+}
+
+.post-header img{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid var(--green);
+}
+
+.post-header textarea{
+    flex:1;
+    resize:none;
+    border:none;
+    background:#f7f7f7;
+    border-radius:15px;
+    padding:18px;
+    min-height:120px;
+    font-size:15px;
+    font-family:inherit;
+    transition:.3s;
+}
+
+.post-header textarea:focus{
+    outline:none;
+    background:var(--white);
+    box-shadow:0 0 0 3px rgba(116,195,101,.15);
+}
+
+.post-actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:20px;
+    padding-top:20px;
+    border-top:1px solid #ececec;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.post-actions button{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 18px;
+    border-radius:50px;
+    background:#f5f5f5;
+    font-weight:500;
+    border:none;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.post-actions button:hover:not(:disabled){
+    transform:translateY(-2px);
+    background:var(--blue);
+}
+
+.post-actions button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.publish{
+    margin-left:auto;
+    background:var(--green)!important;
+    color:#2b3d2f;
+    font-weight:700;
+    padding:12px 28px!important;
+}
+
+.publish:hover{
+    background:var(--green-dark)!important;
+    color:white;
+}
+
+/* ==========================================================
+                    FEED / LISTA DE POSTS
+========================================================== */
+
+.posts-list{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.empty-state{
+    color:var(--gray3);
+    text-align:center;
+    padding:20px;
+}
+
+.post{
+    background:var(--white);
+    border-radius:var(--radius);
+    padding:25px;
+    box-shadow:var(--shadow);
+    transition:.35s;
+}
+
+.post:hover{
+    transform:translateY(-5px);
+}
+
+/* Topo do post: avatar + nome + tempo + menu */
+.post-top{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.post-top img{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid var(--green);
+    transition:.3s;
+}
+
+.post-top img:hover{
+    transform:rotate(3deg) scale(1.05);
+}
+
+.post-top h3{
+    margin:0;
+    color:#2d5535;
+    font-size:16px;
+}
+
+.post-top span{
+    color:var(--gray3);
+    font-size:14px;
+}
+
+.post-menu{
+    margin-left:auto;
+    position:relative;
+}
+
+.post-menu-btn{
+    background:none;
+    border:none;
+    font-size:22px;
+    cursor:pointer;
+    color:#555;
+}
+
+.post-menu-options{
+    display:none;
+    position:absolute;
+    top:30px;
+    right:0;
+    background:var(--white);
+    border-radius:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
+    min-width:200px;
+    padding:8px;
+    overflow:hidden;
+    z-index:1000;
+}
+
+.post-menu-options a{
+    display:block;
+    padding:12px 14px;
+    border-radius:10px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:14px;
+}
+
+.post-menu-options a:hover{
+    background:var(--gray);
+}
+
+.post-menu.active .post-menu-options{
+    display:block;
+}
+
+/* Texto do post */
+.post p{
+    margin:0 0 20px;
+    line-height:1.8;
+    font-size:15px;
+    color:var(--text);
+}
+
+/* Rodapé: curtir / comentar / compartilhar */
+.post-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    border-top:1px solid #ededed;
+    padding-top:18px;
+}
+
+.post-footer button{
+    flex:1;
+    min-width:120px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    padding:12px;
+    border-radius:12px;
+    background:#f8f8f8;
+    border:none;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:600;
+}
+
+.post-footer i{
+    font-size:18px;
+}
+
+.like-btn:hover, .like-btn.liked{
+    background:#ffe8ec;
+    color:#d81b60;
+}
+
+.comment-btn:hover{
+    background:var(--white);
+    color:#f9a825;
+}
+
+.share-btn:hover{
+    background:#e8f8e8;
+    color:#2e7d32;
+}
+
+/* Comentários */
+.comments{
+    margin-top:20px;
+    border-top:1px solid #efefef;
+    padding-top:20px;
+}
+
+.comment{
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.comment img{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.comment-body{
+    flex:1;
+    background:var(--gray);
+    padding:15px;
+    border-radius:15px;
+}
+
+.comment strong{
+    color:#2f5d39;
+    display:block;
+    margin-bottom:5px;
+}
+
+.comment-text{
+    margin:0;
+    line-height:1.6;
+}
+
+/* ==========================================================
+                    RESPONSIVO (celular)
+========================================================== */
+@media (max-width: 600px){
+    .post-header{
+        flex-direction:column;
+    }
+    .post-header img{
+        width:55px;
+        height:55px;
+    }
+    .post, .new-post{
+        padding:18px;
+    }
+    .post-footer{
+        flex-direction:column;
+    }
+    .post-footer button{
+        width:100%;
+    }
+}
