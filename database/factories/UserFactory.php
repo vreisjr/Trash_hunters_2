@@ -52,4 +52,3 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => now(),
         ]);
     }
-}
