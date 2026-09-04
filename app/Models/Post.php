@@ -25,12 +25,11 @@ class Post extends Model
 
     /**
      * Get the user that authored the post.
+     *
+     * @return BelongsTo<User>
      */
-    /**
- * @return BelongsTo<User>
- */
-public function user(): BelongsTo
-{
-    return $this->belongsTo(User::class);
-}
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
