@@ -63,7 +63,7 @@ class User extends Authenticatable implements PasskeyUser
     /**
      * Get the posts authored by the user.
      *
-     * @return HasMany<Post, User>
+     * @return HasMany<Post, $this>
      */
     public function posts(): HasMany
     {
