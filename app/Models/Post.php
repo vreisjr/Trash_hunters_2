@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read User $user
  * @property-read Categoria|null $categoria
+ * @property-read Collection<int, Comentario> $comentarios
  */
 #[Fillable(['user_id', 'categoria_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'endereco'])]
 class Post extends Model
@@ -31,23 +33,32 @@ class Post extends Model
     /** @use HasFactory<PostFactory> */
     use HasFactory;
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return BelongsTo<Categoria, $this>
+     */
     public function categoria(): BelongsTo
     {
         return $this->belongsTo(Categoria::class);
     }
 
-    public function getMediaUrlAttribute(): ?string
-    {
-        return $this->media_path ? asset('storage/'.$this->media_path) : null;
-    }
-
+    /**
+     * @return HasMany<Comentario, $this>
+     */
     public function comentarios(): HasMany
     {
         return $this->hasMany(Comentario::class)->latest();
+    }
+
+    public function getMediaUrlAttribute(): ?string
+    {
+        return $this->media_path ? asset('storage/'.$this->media_path) : null;
     }
 }
