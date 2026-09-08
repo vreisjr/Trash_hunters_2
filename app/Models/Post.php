@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -44,8 +45,9 @@ class Post extends Model
     {
         return $this->media_path ? asset('storage/'.$this->media_path) : null;
     }
-    public function comentarios(): \Illuminate\Database\Eloquent\Relations\HasMany
-{
-    return $this->hasMany(Comentario::class)->latest();
-}
+
+    public function comentarios(): HasMany
+    {
+        return $this->hasMany(Comentario::class)->latest();
+    }
 }

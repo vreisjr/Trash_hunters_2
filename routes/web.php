@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ComentarioController;
 
 Route::view('/', 'welcome')->name('home');
 
