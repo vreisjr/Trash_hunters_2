@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,9 +15,13 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::with('user')->latest()->get();
+        $posts = Post::with(['user', 'categoria', 'comentarios.user', 'comentarios.curtidas'])->latest()->get();
+        $categorias = Categoria::orderBy('nome')->get();
 
-        return view('pages.posts.index', ['posts' => $posts]);
+        return view('pages.posts.index', [
+            'posts' => $posts,
+            'categorias' => $categorias,
+        ]);
     }
 
     /**
@@ -24,7 +29,9 @@ class PostController extends Controller
      */
     public function create(): View
     {
-        return view('pages.posts.create');
+        $categorias = Categoria::orderBy('nome')->get();
+
+        return view('pages.posts.create', ['categorias' => $categorias]);
     }
 
     /**
@@ -34,10 +41,29 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'content' => ['required', 'string', 'max:5000'],
+            'categoria_id' => ['nullable', 'exists:categorias,id'],
+            'media' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,mp4,mov,webm', 'max:20480'], // 20MB
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'endereco' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $request->user()->posts()->create($validated);
+        $data = [
+            'content' => $validated['content'],
+            'categoria_id' => $validated['categoria_id'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
+            'endereco' => $validated['endereco'] ?? null,
+        ];
 
-        return redirect()->route('posts.index')->with('status', 'Post publicado com sucesso!');
+        if ($request->hasFile('media')) {
+            $file = $request->file('media');
+            $data['media_path'] = $file->store('posts', 'public');
+            $data['media_type'] = str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image';
+        }
+
+        $request->user()->posts()->create($data);
+
+        return redirect()->route('posts.index')->with('status', 'Postagem publicada com sucesso!');
     }
 }

@@ -98,12 +98,14 @@
 
         {{ $slot }}
 
-        @persist('toast')
+              @persist('toast')
             <flux:toast.group>
                 <flux:toast />
             </flux:toast.group>
         @endpersist
 
         @fluxScripts
+
+        @stack('scripts')
     </body>
 </html>
