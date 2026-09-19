@@ -17,7 +17,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [PostController::class, 'index'])->name('index');
         Route::get('/create', [PostController::class, 'create'])->name('create');
         Route::post('/', [PostController::class, 'store'])->name('store');
-        
     });
 });
 

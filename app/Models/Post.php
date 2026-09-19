@@ -61,21 +61,21 @@ class Post extends Model
     {
         return $this->media_path ? asset('storage/'.$this->media_path) : null;
     }
-/**
- * @return HasMany<PostCurtida, $this>
- */
-public function curtidas(): HasMany
-{
-    return $this->hasMany(PostCurtida::class);
-}
 
-public function curtidoPor(?int $userId): bool
-{
-    if (! $userId) {
-        return false;
+    /**
+     * @return HasMany<PostCurtida, $this>
+     */
+    public function curtidas(): HasMany
+    {
+        return $this->hasMany(PostCurtida::class);
     }
 
-    return $this->curtidas->contains('user_id', $userId);
-}
-}
+    public function curtidoPor(?int $userId): bool
+    {
+        if (! $userId) {
+            return false;
+        }
 
+        return $this->curtidas->contains('user_id', $userId);
+    }
+}
