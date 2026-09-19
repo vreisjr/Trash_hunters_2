@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Models\Categoria;
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,7 +16,13 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::with(['user', 'categorias', 'comentarios.user', 'comentarios.curtidas' , 'curtidas'])->latest()->get();
+        $posts = Post::with([
+            'user',
+            'categorias',
+            'comentarios.user',
+            'comentarios.curtidas',
+            'curtidas',
+        ])->latest()->get();
         $categorias = Categoria::orderBy('nome')->get();
 
         return view('pages.posts.index', [
@@ -73,21 +79,21 @@ class PostController extends Controller
     }
 
     public function toggleLike(Request $request, Post $post): JsonResponse
-{
-    $userId = $request->user()->id;
-    $curtida = $post->curtidas()->where('user_id', $userId)->first();
+    {
+        $userId = $request->user()->id;
+        $curtida = $post->curtidas()->where('user_id', $userId)->first();
 
-    if ($curtida) {
-        $curtida->delete();
-        $curtido = false;
-    } else {
-        $post->curtidas()->create(['user_id' => $userId]);
-        $curtido = true;
+        if ($curtida) {
+            $curtida->delete();
+            $curtido = false;
+        } else {
+            $post->curtidas()->create(['user_id' => $userId]);
+            $curtido = true;
+        }
+
+        return response()->json([
+            'curtido' => $curtido,
+            'total' => $post->curtidas()->count(),
+        ]);
     }
-
-    return response()->json([
-        'curtido' => $curtido,
-        'total' => $post->curtidas()->count(),
-    ]);
-}
 }
