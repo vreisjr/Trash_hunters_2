@@ -41,6 +41,11 @@ php artisan key:generate
 php artisan migrate
 ```
 
+# Insere os dados iniciais das categorias no banco de dados
+```bash
+php artisan db:seed --class=CategoriaSeeder
+```
+
 ### Executando o projeto
 
 ```bash

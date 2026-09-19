@@ -12,10 +12,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/comentarios/{comentario}', [ComentarioController::class, 'update'])->name('comentarios.update');
     Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
     Route::post('/comentarios/{comentario}/curtir', [ComentarioController::class, 'toggleLike'])->name('comentarios.curtir');
+    Route::post('/posts/{post}/curtir', [PostController::class, 'toggleLike'])->name('posts.curtir');
     Route::prefix('posts')->name('posts.')->group(function () {
         Route::get('/', [PostController::class, 'index'])->name('index');
         Route::get('/create', [PostController::class, 'create'])->name('create');
         Route::post('/', [PostController::class, 'store'])->name('store');
+        
     });
 });
 

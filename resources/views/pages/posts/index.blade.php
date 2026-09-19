@@ -125,6 +125,15 @@
                             <h3>{{ $post->user->name }}</h3>
                             <span>{{ $post->created_at->diffForHumans() }}</span>
                         </div>
+
+                                             <div class="post-acoes" style="margin-left:auto; display:flex; flex-direction:column; align-items:center; gap:2px;">
+                            <button type="button" class="btn-curtir-post" data-id="{{ $post->id }}" style="background:none; border:none; cursor:pointer; padding:2px; color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};">
+                                <i class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart" style="font-size:18px;"></i>
+                            </button>
+                            <span class="curtidas-total-post-label" style="font-size:11px; color:#8e8e8e; font-weight:600; line-height:1; {{ $post->curtidas->count() ? '' : 'display:none;' }}">
+                                <span class="curtidas-total-post">{{ $post->curtidas->count() }}</span>
+                            </span>
+                        </div>
                     </div>
 
                     <div style="margin: 6px 0 8px; display:flex; gap:10px; flex-wrap:wrap;">
@@ -153,6 +162,10 @@
                         </div>
                     @endif
 
+
+  
+
+                    
                     <div class="comentarios" data-post-id="{{ $post->id }}" style="margin-top:10px; border-top:1px solid #eee; padding-top:8px;">
                         <div class="comentarios-lista" id="comentarios-lista-{{ $post->id }}">
                             @foreach ($post->comentarios as $comentario)
@@ -395,6 +408,41 @@
             document.addEventListener('click', () => {
                 dropdownCategoria.style.display = 'none';
             });
+
+ document.querySelectorAll('.btn-curtir-post').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    try {
+                        const resp = await fetch(`/posts/${id}/curtir`, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'Accept': 'application/json' },
+                        });
+                        const data = await resp.json();
+
+                        const container = btn.closest('.post-acoes');
+                        const icon = btn.querySelector('i');
+                        const label = container.querySelector('.curtidas-total-post-label');
+                        const total = container.querySelector('.curtidas-total-post');
+
+                        total.textContent = data.total;
+                        label.style.display = data.total > 0 ? 'inline' : 'none';
+
+                        if (data.curtido) {
+                            icon.classList.remove('fa-regular');
+                            icon.classList.add('fa-solid');
+                            btn.style.color = '#e0245e';
+                        } else {
+                            icon.classList.remove('fa-solid');
+                            icon.classList.add('fa-regular');
+                            btn.style.color = '#8e8e8e';
+                        }
+                    } catch (err) {
+                        alert('Não foi possível curtir a postagem.');
+                    }
+                });
+            });
+
+
 
             // --- Comentários: enviar novo ---
             document.querySelectorAll('.form-comentario').forEach(form => {
