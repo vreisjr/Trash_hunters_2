@@ -34,7 +34,7 @@
                 <input type="hidden" name="latitude" id="input-latitude">
                 <input type="hidden" name="longitude" id="input-longitude">
                 <input type="hidden" name="endereco" id="input-endereco">
-                <input type="hidden" name="categoria_id" id="input-categoria">
+              
 
                 <div class="post-actions" style="position:relative;">
                     <button type="button" id="btn-media">
@@ -53,14 +53,21 @@
                             <span id="btn-categoria-label">{{ __('Categoria') }}</span>
                         </button>
 
-                        <div id="dropdown-categoria" style="display:none; position:absolute; bottom:110%; left:0; background:#fff; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:50; min-width:160px;">
-                            @foreach ($categorias as $categoria)
-                                <button type="button" class="opcao-categoria" data-id="{{ $categoria->id }}" data-nome="{{ $categoria->nome }}" data-cor="{{ $categoria->cor }}" style="display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:8px 14px; border:none; background:none; cursor:pointer;">
-                                    <span style="width:10px; height:10px; border-radius:50%; background:{{ $categoria->cor }}; flex-shrink:0;"></span>
-                                    {{ $categoria->nome }}
-                                </button>
-                            @endforeach
-                        </div>
+                       <div id="dropdown-categoria" style="display:none; position:absolute; bottom:110%; left:0; background:#fff; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:50; min-width:200px;">
+    @foreach ($categorias as $categoria)
+        <label style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 14px; cursor:pointer;">
+            <input type="checkbox" name="categoria_ids[]" value="{{ $categoria->id }}" class="checkbox-categoria" data-nome="{{ $categoria->nome }}" data-cor="{{ $categoria->cor }}">
+            <span style="width:10px; height:10px; border-radius:50%; background:{{ $categoria->cor }}; flex-shrink:0;"></span>
+            {{ $categoria->nome }}
+        </label>
+    @endforeach
+
+    <div style="padding:8px 14px; border-top:1px solid #eee; text-align:right;">
+        <button type="button" id="btn-fechar-categorias" style="background:none; border:none; color:#2e7d32; font-weight:600; cursor:pointer; font-size:12px;">
+            {{ __('Concluir') }}
+        </button>
+              </div>
+                </div>
                     </div>
 
                     <button type="submit" class="publish">
@@ -68,6 +75,44 @@
                     </button>
                 </div>
             </form>
+
+{{-- Modal de edição de localização --}}
+<div id="modal-local" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:20px; width:90%; max-width:420px;">
+        <h3 style="margin-bottom:10px; font-size:16px;">{{ __('Localização da denúncia') }}</h3>
+
+        <input type="text" id="input-busca-endereco" placeholder="{{ __('Digite um endereço...') }}" autocomplete="off"
+            style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px;">
+
+        <div id="lista-sugestoes" style="max-height:180px; overflow-y:auto; margin-top:6px;"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+            <button type="button" id="btn-cancelar-local" style="padding:8px 16px; border:none; background:#eee; border-radius:8px; cursor:pointer;">
+                {{ __('Cancelar') }}
+            </button>
+            <button type="button" id="btn-confirmar-local" style="padding:8px 16px; border:none; background:#2e7d32; color:#fff; border-radius:8px; cursor:pointer;">
+                {{ __('Usar esta localização') }}
+            </button>
+        </div>
+    </div>
+</div>
+
+{{-- Modal de confirmação de divergência --}}
+<div id="modal-confirmacao-local" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:110; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:20px; width:90%; max-width:380px; text-align:center;">
+        <p style="font-size:14px; margin-bottom:18px;">
+            {{ __(' Deseja editar a localização?') }}
+        </p>
+        <div style="display:flex; justify-content:center; gap:12px;">
+            <button type="button" id="btn-confirmacao-nao" style="padding:8px 20px; border:none; background:#eee; border-radius:8px; cursor:pointer;">
+                {{ __('Não') }}
+            </button>
+            <button type="button" id="btn-confirmacao-sim" style="padding:8px 20px; border:none; background:#2e7d32; color:#fff; border-radius:8px; cursor:pointer;">
+                {{ __('Sim') }}
+            </button>
+        </div>
+    </div>
+</div>
         </section>
 
         {{-- FEED --}}
@@ -83,11 +128,11 @@
                     </div>
 
                     <div style="margin: 6px 0 8px; display:flex; gap:10px; flex-wrap:wrap;">
-                        @if ($post->categoria)
-                            <span style="background:{{ $post->categoria->cor }}22; color:{{ $post->categoria->cor }}; border:1px solid {{ $post->categoria->cor }}; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600;">
-                                <i class="fa-solid fa-recycle"></i> {{ $post->categoria->nome }}
-                            </span>
-                        @endif
+                       @foreach ($post->categorias as $categoria)
+            <span style="background:{{ $categoria->cor }}22; color:{{ $categoria->cor }}; border:1px solid {{ $categoria->cor }}; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600;">
+                <i class="fa-solid fa-recycle"></i> {{ $categoria->nome }}
+               </span>
+                    @endforeach
 
                         @if ($post->latitude && $post->longitude)
                             <a href="https://www.google.com/maps?q={{ $post->latitude }},{{ $post->longitude }}" target="_blank" style="background:#e3f2fd; color:#1565c0; padding:4px 10px; border-radius:999px; font-size:12px; text-decoration:none;">
@@ -173,11 +218,24 @@
             });
 
             // --- Local ---
+                     // --- Local (com edição estilo Uber) ---
             const btnLocal = document.getElementById('btn-local');
             const btnLocalLabel = document.getElementById('btn-local-label');
             const inputLat = document.getElementById('input-latitude');
             const inputLng = document.getElementById('input-longitude');
             const inputEndereco = document.getElementById('input-endereco');
+
+            const modalLocal = document.getElementById('modal-local');
+            const modalConfirmacao = document.getElementById('modal-confirmacao-local');
+            const inputBusca = document.getElementById('input-busca-endereco');
+            const listaSugestoes = document.getElementById('lista-sugestoes');
+
+            // Guarda a localização REAL do GPS, separada da que o usuário está editando
+            let gpsLat = null, gpsLng = null, gpsEndereco = null;
+            // Guarda a localização selecionada/digitada no modal (ainda não confirmada)
+            let tempLat = null, tempLng = null, tempEndereco = null;
+
+            let debounceTimer = null;
 
             btnLocal.addEventListener('click', () => {
                 if (!navigator.geolocation) {
@@ -188,45 +246,150 @@
                 btnLocalLabel.textContent = 'Obtendo local...';
 
                 navigator.geolocation.getCurrentPosition(async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    inputLat.value = latitude;
-                    inputLng.value = longitude;
+                    gpsLat = position.coords.latitude;
+                    gpsLng = position.coords.longitude;
 
                     try {
-                        const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                        const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${gpsLat}&lon=${gpsLng}`);
                         const json = await resp.json();
-                        const endereco = json.display_name ?? `${latitude}, ${longitude}`;
-                        inputEndereco.value = endereco;
-                        btnLocalLabel.textContent = endereco.length > 25 ? endereco.substring(0, 25) + '...' : endereco;
+                        gpsEndereco = json.display_name ?? `${gpsLat}, ${gpsLng}`;
                     } catch (e) {
-                        inputEndereco.value = `${latitude}, ${longitude}`;
-                        btnLocalLabel.textContent = 'Local adicionado';
+                        gpsEndereco = `${gpsLat}, ${gpsLng}`;
                     }
+
+                    // Pré-preenche o modal com a localização atual
+                    inputBusca.value = gpsEndereco;
+                    tempLat = gpsLat;
+                    tempLng = gpsLng;
+                    tempEndereco = gpsEndereco;
+
+                    listaSugestoes.innerHTML = '';
+                    modalLocal.style.display = 'flex';
+                    btnLocalLabel.textContent = 'Local';
                 }, () => {
                     btnLocalLabel.textContent = 'Local';
                     alert('Não foi possível obter sua localização.');
                 });
             });
 
-            // --- Categoria ---
+            // Autocomplete: busca sugestões enquanto o usuário digita
+            inputBusca.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                const termo = inputBusca.value.trim();
+
+                if (termo.length < 3) {
+                    listaSugestoes.innerHTML = '';
+                    return;
+                }
+
+                debounceTimer = setTimeout(async () => {
+                    try {
+                        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(termo)}&limit=5`);
+                        const resultados = await resp.json();
+
+                        listaSugestoes.innerHTML = '';
+                        resultados.forEach(item => {
+                            const div = document.createElement('div');
+                            div.textContent = item.display_name;
+                            div.style.cssText = 'padding:8px; font-size:13px; cursor:pointer; border-bottom:1px solid #eee;';
+                            div.addEventListener('click', () => {
+                                inputBusca.value = item.display_name;
+                                tempLat = parseFloat(item.lat);
+                                tempLng = parseFloat(item.lon);
+                                tempEndereco = item.display_name;
+                                listaSugestoes.innerHTML = '';
+                            });
+                            listaSugestoes.appendChild(div);
+                        });
+                    } catch (e) {
+                        // Falha silenciosa na busca de sugestões
+                    }
+                }, 400);
+            });
+
+            // Se o usuário digitar manualmente sem clicar numa sugestão,
+            // consideramos o texto atual como o endereço temporário (sem coordenadas exatas)
+            inputBusca.addEventListener('change', () => {
+                if (inputBusca.value.trim() !== tempEndereco) {
+                    tempEndereco = inputBusca.value.trim();
+                }
+            });
+
+            document.getElementById('btn-cancelar-local').addEventListener('click', () => {
+                modalLocal.style.display = 'none';
+            });
+
+            document.getElementById('btn-confirmar-local').addEventListener('click', () => {
+                const enderecoDigitado = inputBusca.value.trim();
+
+                // Se o texto final bate com o que veio do GPS, aceita direto, sem perguntar nada
+                if (enderecoDigitado === gpsEndereco) {
+                    aplicarLocalizacao(gpsLat, gpsLng, gpsEndereco);
+                    modalLocal.style.display = 'none';
+                    return;
+                }
+
+                // Endereço diferente do GPS: pergunta se quer mesmo editar
+                tempEndereco = enderecoDigitado;
+                modalConfirmacao.style.display = 'flex';
+            });
+
+            document.getElementById('btn-confirmacao-sim').addEventListener('click', () => {
+                aplicarLocalizacao(tempLat, tempLng, tempEndereco);
+                modalConfirmacao.style.display = 'none';
+                modalLocal.style.display = 'none';
+            });
+
+            document.getElementById('btn-confirmacao-nao').addEventListener('click', () => {
+                aplicarLocalizacao(gpsLat, gpsLng, gpsEndereco);
+                modalConfirmacao.style.display = 'none';
+                modalLocal.style.display = 'none';
+            });
+
+            function aplicarLocalizacao(lat, lng, endereco) {
+                inputLat.value = lat ?? '';
+                inputLng.value = lng ?? '';
+                inputEndereco.value = endereco ?? '';
+                btnLocalLabel.textContent = endereco && endereco.length > 25 ? endereco.substring(0, 25) + '...' : (endereco || 'Local');
+            }
+
+                        // --- Categoria (multi-seleção) ---
             const btnCategoria = document.getElementById('btn-categoria');
             const dropdownCategoria = document.getElementById('dropdown-categoria');
             const btnCategoriaLabel = document.getElementById('btn-categoria-label');
-            const inputCategoria = document.getElementById('input-categoria');
+            const checkboxesCategoria = document.querySelectorAll('.checkbox-categoria');
 
             btnCategoria.addEventListener('click', (e) => {
                 e.stopPropagation();
                 dropdownCategoria.style.display = dropdownCategoria.style.display === 'none' ? 'block' : 'none';
             });
 
-            document.querySelectorAll('.opcao-categoria').forEach(opcao => {
-                opcao.addEventListener('click', () => {
-                    inputCategoria.value = opcao.dataset.id;
-                    btnCategoriaLabel.textContent = opcao.dataset.nome;
-                    btnCategoria.style.borderColor = opcao.dataset.cor;
-                    btnCategoria.style.color = opcao.dataset.cor;
-                    dropdownCategoria.style.display = 'none';
-                });
+            dropdownCategoria.addEventListener('click', (e) => e.stopPropagation());
+
+            function atualizarLabelCategoria() {
+                const marcadas = Array.from(checkboxesCategoria).filter(c => c.checked);
+
+                if (marcadas.length === 0) {
+                    btnCategoriaLabel.textContent = 'Categoria';
+                    btnCategoria.style.borderColor = '';
+                    btnCategoria.style.color = '';
+                } else if (marcadas.length === 1) {
+                    btnCategoriaLabel.textContent = marcadas[0].dataset.nome;
+                    btnCategoria.style.borderColor = marcadas[0].dataset.cor;
+                    btnCategoria.style.color = marcadas[0].dataset.cor;
+                } else {
+                    btnCategoriaLabel.textContent = `${marcadas.length} categorias`;
+                    btnCategoria.style.borderColor = '#2e7d32';
+                    btnCategoria.style.color = '#2e7d32';
+                }
+            }
+
+            checkboxesCategoria.forEach(checkbox => {
+                checkbox.addEventListener('change', atualizarLabelCategoria);
+            });
+
+            document.getElementById('btn-fechar-categorias').addEventListener('click', () => {
+                dropdownCategoria.style.display = 'none';
             });
 
             document.addEventListener('click', () => {

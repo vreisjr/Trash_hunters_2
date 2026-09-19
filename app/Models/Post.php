@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property int $user_id
- * @property int|null $categoria_id
  * @property string $content
  * @property string|null $media_path
  * @property string|null $media_type
@@ -24,10 +24,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User $user
- * @property-read Categoria|null $categoria
+ * @property-read Collection<int, Categoria> $categorias
  * @property-read Collection<int, Comentario> $comentarios
  */
-#[Fillable(['user_id', 'categoria_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'endereco'])]
+#[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'endereco'])]
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
@@ -42,11 +42,11 @@ class Post extends Model
     }
 
     /**
-     * @return BelongsTo<Categoria, $this>
+     * @return BelongsToMany<Categoria, $this>
      */
-    public function categoria(): BelongsTo
+    public function categorias(): BelongsToMany
     {
-        return $this->belongsTo(Categoria::class);
+        return $this->belongsToMany(Categoria::class, 'post_categoria');
     }
 
     /**

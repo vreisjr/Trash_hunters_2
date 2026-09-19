@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -18,10 +18,10 @@ class Categoria extends Model
     protected $fillable = ['nome', 'cor'];
 
     /**
-     * @return HasMany<Post, $this>
+     * @return BelongsToMany<Post, $this>
      */
-    public function posts(): HasMany
+    public function posts(): BelongsToMany
     {
-        return $this->hasMany(Post::class);
+        return $this->belongsToMany(Post::class, 'post_categoria');
     }
 }

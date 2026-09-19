@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::with(['user', 'categoria', 'comentarios.user', 'comentarios.curtidas'])->latest()->get();
+        $posts = Post::with(['user', 'categorias', 'comentarios.user', 'comentarios.curtidas'])->latest()->get();
         $categorias = Categoria::orderBy('nome')->get();
 
         return view('pages.posts.index', [
@@ -41,7 +41,8 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'content' => ['required', 'string', 'max:5000'],
-            'categoria_id' => ['nullable', 'exists:categorias,id'],
+            'categoria_ids' => ['nullable', 'array'],
+            'categoria_ids.*' => ['exists:categorias,id'],
             'media' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,mp4,mov,webm', 'max:20480'], // 20MB
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
@@ -50,7 +51,6 @@ class PostController extends Controller
 
         $data = [
             'content' => $validated['content'],
-            'categoria_id' => $validated['categoria_id'] ?? null,
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
             'endereco' => $validated['endereco'] ?? null,
@@ -62,7 +62,11 @@ class PostController extends Controller
             $data['media_type'] = str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image';
         }
 
-        $request->user()->posts()->create($data);
+        $post = $request->user()->posts()->create($data);
+
+        if (! empty($validated['categoria_ids'])) {
+            $post->categorias()->attach($validated['categoria_ids']);
+        }
 
         return redirect()->route('posts.index')->with('status', 'Postagem publicada com sucesso!');
     }
