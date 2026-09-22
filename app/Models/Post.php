@@ -21,13 +21,14 @@ use Illuminate\Support\Carbon;
  * @property float|null $latitude
  * @property float|null $longitude
  * @property string|null $endereco
+ * @property Carbon|null $edited_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User $user
  * @property-read Collection<int, Categoria> $categorias
  * @property-read Collection<int, Comentario> $comentarios
  */
-#[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'endereco'])]
+#[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'endereco', 'edited_at'])]
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */

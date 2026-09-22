@@ -23,6 +23,7 @@ class PostController extends Controller
             'comentarios.curtidas',
             'curtidas',
         ])->latest()->get();
+
         $categorias = Categoria::orderBy('nome')->get();
 
         return view('pages.posts.index', [
@@ -38,7 +39,9 @@ class PostController extends Controller
     {
         $categorias = Categoria::orderBy('nome')->get();
 
-        return view('pages.posts.create', ['categorias' => $categorias]);
+        return view('pages.posts.create', [
+            'categorias' => $categorias
+        ]);
     }
 
     /**
@@ -50,7 +53,12 @@ class PostController extends Controller
             'content' => ['required', 'string', 'max:5000'],
             'categoria_ids' => ['nullable', 'array'],
             'categoria_ids.*' => ['exists:categorias,id'],
-            'media' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,mp4,mov,webm', 'max:20480'], // 20MB
+            'media' => [
+                'nullable',
+                'file',
+                'mimes:jpg,jpeg,png,gif,mp4,mov,webm',
+                'max:20480'
+            ], // 20MB
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'endereco' => ['nullable', 'string', 'max:255'],
@@ -65,29 +73,108 @@ class PostController extends Controller
 
         if ($request->hasFile('media')) {
             $file = $request->file('media');
+
             $data['media_path'] = $file->store('posts', 'public');
-            $data['media_type'] = str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image';
+
+            $data['media_type'] = str_starts_with(
+                $file->getMimeType(),
+                'video'
+            ) ? 'video' : 'image';
         }
 
         $post = $request->user()->posts()->create($data);
 
-        if (! empty($validated['categoria_ids'])) {
+        if (!empty($validated['categoria_ids'])) {
             $post->categorias()->attach($validated['categoria_ids']);
         }
 
-        return redirect()->route('posts.index')->with('status', 'Postagem publicada com sucesso!');
+        return redirect()
+            ->route('posts.index')
+            ->with('status', 'Postagem publicada com sucesso!');
     }
 
-    public function toggleLike(Request $request, Post $post): JsonResponse
+    /**
+     * Show the form to edit a post.
+     */
+    public function edit(Request $request, Post $post): View
     {
+        // Verifica se o usuário é o dono da publicação
+        if ($post->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        // Verifica se a publicação já foi editada
+        if ($post->edited_at !== null) {
+            abort(403, 'Esta publicação já foi editada.');
+        }
+
+        return view('pages.posts.edit', [
+            'post' => $post,
+        ]);
+    }
+
+    /**
+     * Update a post.
+     */
+    public function update(
+        Request $request,
+        Post $post
+    ): RedirectResponse {
+        // Verifica se o usuário é o dono da publicação
+        if ($post->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        // Impede uma segunda edição
+        if ($post->edited_at !== null) {
+            return redirect()
+                ->route('posts.index')
+                ->with(
+                    'error',
+                    'Esta publicação já foi editada e não pode ser alterada novamente.'
+                );
+        }
+
+        // Valida somente o texto
+        $validated = $request->validate([
+            'content' => ['required', 'string', 'max:5000'],
+        ]);
+
+        // Atualiza somente o texto e registra a data da edição
+        $post->update([
+            'content' => $validated['content'],
+            'edited_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('posts.index')
+            ->with(
+                'status',
+                'Publicação editada com sucesso!'
+            );
+    }
+
+    /**
+     * Toggle like on a post.
+     */
+    public function toggleLike(
+        Request $request,
+        Post $post
+    ): JsonResponse {
         $userId = $request->user()->id;
-        $curtida = $post->curtidas()->where('user_id', $userId)->first();
+
+        $curtida = $post->curtidas()
+            ->where('user_id', $userId)
+            ->first();
 
         if ($curtida) {
             $curtida->delete();
             $curtido = false;
         } else {
-            $post->curtidas()->create(['user_id' => $userId]);
+            $post->curtidas()->create([
+                'user_id' => $userId
+            ]);
+
             $curtido = true;
         }
 
