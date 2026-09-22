@@ -40,7 +40,7 @@ class PostController extends Controller
         $categorias = Categoria::orderBy('nome')->get();
 
         return view('pages.posts.create', [
-            'categorias' => $categorias
+            'categorias' => $categorias,
         ]);
     }
 
@@ -57,7 +57,7 @@ class PostController extends Controller
                 'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,gif,mp4,mov,webm',
-                'max:20480'
+                'max:20480',
             ], // 20MB
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
@@ -84,7 +84,7 @@ class PostController extends Controller
 
         $post = $request->user()->posts()->create($data);
 
-        if (!empty($validated['categoria_ids'])) {
+        if (! empty($validated['categoria_ids'])) {
             $post->categorias()->attach($validated['categoria_ids']);
         }
 
@@ -172,7 +172,7 @@ class PostController extends Controller
             $curtido = false;
         } else {
             $post->curtidas()->create([
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
 
             $curtido = true;
