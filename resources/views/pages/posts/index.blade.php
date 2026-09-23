@@ -243,54 +243,18 @@
 
                         </div>
 
-                        {{-- AÇÕES DA PUBLICAÇÃO --}}
+                        {{-- AÇÃO: EDITAR (curtir foi para a barra abaixo do post, estilo Instagram) --}}
 
-                        <div
-                            class="post-acoes"
-                            style="margin-left:auto; display:flex; flex-direction:column; align-items:center; gap:4px;"
-                        >
+                        @if ($post->user_id === auth()->id() && $post->edited_at === null)
 
-                            {{-- BOTÃO EDITAR --}}
-
-                            @if ($post->user_id === auth()->id() && $post->edited_at === null)
-
-                                <a
-                                    href="{{ route('posts.edit', $post) }}"
-                                    style="background:none; border:none; cursor:pointer; padding:2px; color:#2e7d32; font-size:12px; font-weight:600; text-decoration:none;"
-                                >
-                                    Editar
-                                </a>
-
-                            @endif
-
-                            {{-- BOTÃO CURTIR --}}
-
-                            <button
-                                type="button"
-                                class="btn-curtir-post"
-                                data-id="{{ $post->id }}"
-                                style="background:none; border:none; cursor:pointer; padding:2px; color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
+                            <a
+                                href="{{ route('posts.edit', $post) }}"
+                                style="margin-left:auto; background:none; border:none; cursor:pointer; padding:2px; color:#2e7d32; font-size:12px; font-weight:600; text-decoration:none;"
                             >
+                                Editar
+                            </a>
 
-                                <i
-                                    class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart"
-                                    style="font-size:18px;"
-                                ></i>
-
-                            </button>
-
-                            <span
-                                class="curtidas-total-post-label"
-                                style="font-size:11px; color:#8e8e8e; font-weight:600; line-height:1; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
-                            >
-
-                                <span class="curtidas-total-post">
-                                    {{ $post->curtidas->count() }}
-                                </span>
-
-                            </span>
-
-                        </div>
+                        @endif
 
                     </div>
 
@@ -354,70 +318,124 @@
 
                     @endif
 
+                    {{-- BARRA DE AÇÕES ESTILO INSTAGRAM: curtir + balão de comentários --}}
+
+                    <div
+                        class="post-action-bar"
+                        style="display:flex; align-items:center; gap:16px; margin-top:10px; padding-top:10px; border-top:1px solid #eee;"
+                    >
+
+                        <button
+                            type="button"
+                            class="btn-curtir-post"
+                            data-id="{{ $post->id }}"
+                            style="background:none; border:none; cursor:pointer; padding:2px; line-height:1; color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
+                        >
+
+                            <i
+                                class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart"
+                                style="font-size:22px;"
+                            ></i>
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-toggle-comentarios"
+                            data-post-id="{{ $post->id }}"
+                            style="background:none; border:none; cursor:pointer; padding:2px; line-height:1; color:#8e8e8e;"
+                        >
+
+                            <i class="fa-regular fa-comment" style="font-size:22px;"></i>
+
+                        </button>
+
+                    </div>
+
+                    {{-- CONTAGEM DE CURTIDAS, embaixo da barra de ações (igual Instagram) --}}
+
+                    <div
+                        class="curtidas-total-post-label"
+                        style="font-size:13px; color:#262626; font-weight:600; margin-top:6px; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
+                    >
+
+                        <span class="curtidas-total-post">{{ $post->curtidas->count() }}</span> curtida{{ $post->curtidas->count() == 1 ? '' : 's' }}
+
+                    </div>
+
                     <div
                         class="comentarios"
                         data-post-id="{{ $post->id }}"
-                        style="margin-top:10px; border-top:1px solid #eee; padding-top:8px;"
                     >
 
-                        <div
-                            class="comentarios-lista"
-                            id="comentarios-lista-{{ $post->id }}"
-                        >
-
-                            @foreach ($post->comentarios as $comentario)
-
-                                @include(
-                                    'pages.posts.partials.comentario',
-                                    ['comentario' => $comentario]
-                                )
-
-                            @endforeach
-
-                        </div>
+                        {{-- PAINEL DE COMENTÁRIOS: começa escondido, o balão acima abre/fecha --}}
 
                         <div
-                            class="emoji-bar"
-                            style="display:flex; gap:12px; padding:8px 0 4px; border-top:1px solid #eee; margin-top:4px; font-size:18px;"
+                            class="comentarios-painel"
+                            id="comentarios-painel-{{ $post->id }}"
+                            style="display:none; margin-top:10px; border-top:1px solid #eee; padding-top:8px;"
                         >
 
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">❤️</button>
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">🙌</button>
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">🔥</button>
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">👏</button>
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😢</button>
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😍</button>
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😮</button>
-                            <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😂</button>
+                            <div
+                                class="comentarios-lista"
+                                id="comentarios-lista-{{ $post->id }}"
+                            >
+
+                                @foreach ($post->comentarios as $comentario)
+
+                                    @include(
+                                        'pages.posts.partials.comentario',
+                                        ['comentario' => $comentario]
+                                    )
+
+                                @endforeach
+
+                            </div>
+
+                            <div
+                                class="emoji-bar"
+                                style="display:flex; gap:12px; padding:8px 0 4px; border-top:1px solid #eee; margin-top:4px; font-size:18px;"
+                            >
+
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">❤️</button>
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">🙌</button>
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">🔥</button>
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">👏</button>
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😢</button>
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😍</button>
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😮</button>
+                                <button type="button" class="btn-emoji" style="background:none; border:none; cursor:pointer;">😂</button>
+
+                            </div>
+
+                            <form
+                                class="form-comentario"
+                                data-post-id="{{ $post->id }}"
+                                style="display:flex; gap:8px; align-items:center;"
+                            >
+
+                                @csrf
+
+                                <input
+                                    type="text"
+                                    name="texto"
+                                    placeholder="Adicione um comentário..."
+                                    maxlength="500"
+                                    required
+                                    autocomplete="off"
+                                    style="flex:1; border:none; padding:8px 4px; font-size:13px; outline:none; background:transparent;"
+                                >
+
+                                <button
+                                    type="submit"
+                                    style="background:none; border:none; color:#2e7d32; font-weight:600; font-size:13px; cursor:pointer;"
+                                >
+                                    Publicar
+                                </button>
+
+                            </form>
 
                         </div>
-
-                        <form
-                            class="form-comentario"
-                            data-post-id="{{ $post->id }}"
-                            style="display:flex; gap:8px; align-items:center;"
-                        >
-
-                            @csrf
-
-                            <input
-                                type="text"
-                                name="texto"
-                                placeholder="Adicione um comentário..."
-                                maxlength="500"
-                                required
-                                autocomplete="off"
-                                style="flex:1; border:none; padding:8px 4px; font-size:13px; outline:none; background:transparent;"
-                            >
-
-                            <button
-                                type="submit"
-                                style="background:none; border:none; color:#2e7d32; font-weight:600; font-size:13px; cursor:pointer;"
-                            >
-                                Publicar
-                            </button>
-
-                        </form>
 
                     </div>
 
@@ -801,11 +819,78 @@
 
             // --- Curtir publicação ---
 
+            function aplicarEstadoCurtidaPost(icon, btn, label, curtido, total) {
+
+                label.style.display =
+                    total > 0 ? 'block' : 'none';
+
+                label.innerHTML =
+                    `<span class="curtidas-total-post">${total}</span> curtida${total == 1 ? '' : 's'}`;
+
+                if (curtido) {
+
+                    icon.classList.remove('fa-regular');
+                    icon.classList.add('fa-solid');
+
+                    btn.style.color = '#e0245e';
+
+                } else {
+
+                    icon.classList.remove('fa-solid');
+                    icon.classList.add('fa-regular');
+
+                    btn.style.color = '#8e8e8e';
+
+                }
+
+            }
+
             document.querySelectorAll('.btn-curtir-post').forEach(btn => {
 
                 btn.addEventListener('click', async () => {
 
+                    // Evita clique duplo enquanto a requisição anterior não termina
+
+                    if (btn.dataset.loading === '1') return;
+
+                    btn.dataset.loading = '1';
+
                     const id = btn.dataset.id;
+
+                    const container = btn.closest('.post');
+                    const icon = btn.querySelector('i');
+
+                    const label = container.querySelector(
+                        '.curtidas-total-post-label'
+                    );
+
+                    const totalSpan = label.querySelector(
+                        '.curtidas-total-post'
+                    );
+
+                    // Estado antes do clique, para poder desfazer se der erro
+
+                    const curtidoAntes = icon.classList.contains('fa-solid');
+
+                    const totalAntes = parseInt(
+                        (totalSpan ? totalSpan.textContent : '0').trim()
+                    ) || 0;
+
+                    // --- Atualização otimista: muda a tela IMEDIATAMENTE ---
+
+                    const curtidoOtimista = !curtidoAntes;
+
+                    const totalOtimista = curtidoOtimista
+                        ? totalAntes + 1
+                        : Math.max(totalAntes - 1, 0);
+
+                    aplicarEstadoCurtidaPost(
+                        icon,
+                        btn,
+                        label,
+                        curtidoOtimista,
+                        totalOtimista
+                    );
 
                     try {
 
@@ -820,47 +905,87 @@
                             }
                         );
 
+                        if (!resp.ok) {
+                            throw new Error('Erro ao curtir');
+                        }
+
                         const data = await resp.json();
 
-                        const container =
-                            btn.closest('.post-acoes');
+                        // Confirma com o valor real do servidor
 
-                        const icon = btn.querySelector('i');
-
-                        const label =
-                            container.querySelector(
-                                '.curtidas-total-post-label'
-                            );
-
-                        const total =
-                            container.querySelector(
-                                '.curtidas-total-post'
-                            );
-
-                        total.textContent = data.total;
-
-                        label.style.display =
-                            data.total > 0 ? 'inline' : 'none';
-
-                        if (data.curtido) {
-
-                            icon.classList.remove('fa-regular');
-                            icon.classList.add('fa-solid');
-
-                            btn.style.color = '#e0245e';
-
-                        } else {
-
-                            icon.classList.remove('fa-solid');
-                            icon.classList.add('fa-regular');
-
-                            btn.style.color = '#8e8e8e';
-
-                        }
+                        aplicarEstadoCurtidaPost(
+                            icon,
+                            btn,
+                            label,
+                            data.curtido,
+                            data.total
+                        );
 
                     } catch (err) {
 
+                        // Desfaz a atualização otimista, já que deu erro
+
+                        aplicarEstadoCurtidaPost(
+                            icon,
+                            btn,
+                            label,
+                            curtidoAntes,
+                            totalAntes
+                        );
+
                         alert('Não foi possível curtir a postagem.');
+
+                    } finally {
+
+                        btn.dataset.loading = '0';
+
+                    }
+
+                });
+
+            });
+
+            // --- Abrir/fechar comentários (balão) ---
+
+            document.querySelectorAll('.btn-toggle-comentarios').forEach(btn => {
+
+                btn.addEventListener('click', () => {
+
+                    const postId = btn.dataset.postId;
+
+                    const painel = document.getElementById(
+                        `comentarios-painel-${postId}`
+                    );
+
+                    const icon = btn.querySelector('i');
+
+                    const aberto = painel.style.display !== 'none';
+
+                    if (aberto) {
+
+                        painel.style.display = 'none';
+
+                        icon.classList.remove('fa-solid');
+                        icon.classList.add('fa-regular');
+
+                        btn.style.color = '#8e8e8e';
+
+                    } else {
+
+                        painel.style.display = 'block';
+
+                        icon.classList.remove('fa-regular');
+                        icon.classList.add('fa-solid');
+
+                        btn.style.color = '#262626';
+
+                        const input = painel.querySelector(
+                            'input[name="texto"]'
+                        );
+
+                        if (input) {
+                            input.focus();
+                        }
 
                     }
 

@@ -195,11 +195,6 @@ select:focus[data-flux-control] {
         border-radius: var(--radius);
         padding: 25px;
         box-shadow: var(--shadow);
-        transition: .35s;
-    }
-
-    .post:hover {
-        transform: translateY(-5px);
     }
 
     .post-top {
@@ -368,7 +363,61 @@ select:focus[data-flux-control] {
         line-height: 1.6;
     }
 
+    /* --- Estilo Instagram: barra de ações, curtidas e painel de comentários --- */
+
+    .post-action-bar {
+        transition: var(--transition);
+    }
+
+    .btn-curtir-post,
+    .btn-toggle-comentarios {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform .15s ease;
+    }
+
+    .btn-curtir-post:hover,
+    .btn-toggle-comentarios:hover {
+        transform: scale(1.12);
+    }
+
+    .btn-curtir-post:active,
+    .btn-toggle-comentarios:active {
+        transform: scale(.9);
+    }
+
+    .comentarios-painel {
+        animation: comentarios-abrir .2s ease;
+    }
+
+    @keyframes comentarios-abrir {
+        from {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .comentarios-lista .comentario {
+        border-bottom: 1px solid #f2f2f2;
+    }
+
+    .comentarios-lista .comentario:last-child {
+        border-bottom: none;
+    }
+
+    /* --- fim do estilo Instagram --- */
+
     @media (max-width: 600px) {
+        .post-action-bar {
+            gap: 20px !important;
+        }
+
         .post-header {
             flex-direction: column;
         }
