@@ -76,7 +76,7 @@
                         style="display:inline-block; background:#e3f2fd; color:#1565c0; padding:6px 12px; border-radius:999px; font-size:12px; text-decoration:none;"
                     >
                         <i class="fa-solid fa-location-dot"></i>
-                        {{ $post->endereco ?? 'Ver localização no mapa' }}
+                        {{ $post->address ?? 'Ver localização no mapa' }}
                     </a>
 
                 </div>

@@ -282,7 +282,7 @@
                             >
 
                                 <i class="fa-solid fa-location-dot"></i>
-                                {{ $post->endereco ?? 'Ver no mapa' }}
+                                {{ $post->address ?? 'Ver no mapa' }}
 
                             </a>
 

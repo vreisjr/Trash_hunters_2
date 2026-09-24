@@ -61,14 +61,14 @@ class PostController extends Controller
             ], // 20MB
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
-            'endereco' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string', 'max:255'],
         ]);
 
         $data = [
             'content' => $validated['content'],
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
-            'endereco' => $validated['endereco'] ?? null,
+            'address' => $validated['endereco'] ?? null,
         ];
 
         if ($request->hasFile('media')) {
