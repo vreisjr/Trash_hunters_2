@@ -28,7 +28,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Categoria> $categorias
  * @property-read Collection<int, Comentario> $comentarios
  */
-#[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'endereco', 'edited_at'])]
+#[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'endereco'])]
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
