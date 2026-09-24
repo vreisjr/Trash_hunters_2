@@ -46,21 +46,35 @@
 
                 <input
                     type="file"
-                    name="media"
-                    id="input-media"
-                    accept="image/*,video/*"
+                    name="images[]"
+                    id="input-images"
+                    accept="image/*"
+                    multiple
+                    style="display:none;"
+                >
+
+                <input
+                    type="file"
+                    name="video"
+                    id="input-video"
+                    accept="video/mp4,video/quicktime,video/webm"
                     style="display:none;"
                 >
 
                 <input type="hidden" name="latitude" id="input-latitude">
                 <input type="hidden" name="longitude" id="input-longitude">
-                <input type="hidden" name="endereco" id="input-endereco">
+                <input type="hidden" name="address" id="input-address">
 
                 <div class="post-actions" style="position:relative;">
 
                     <button type="button" id="btn-media">
                         <i class="fa-regular fa-image"></i>
-                        <span id="btn-media-label">{{ __('Foto/Vídeo') }}</span>
+                        <span id="btn-media-label">{{ __('Fotos') }}</span>
+                    </button>
+
+                    <button type="button" id="btn-video">
+                        <i class="fa-solid fa-video"></i>
+                        <span id="btn-video-label">{{ __('Vídeo') }}</span>
                     </button>
 
                     <button type="button" id="btn-local">
@@ -292,27 +306,31 @@
 
                     <p>{{ $post->content }}</p>
 
-                    @if ($post->media_path)
+                    @if ($post->attachments->isNotEmpty())
 
                         <div style="margin-top:8px;">
 
-                            @if ($post->media_type === 'video')
+                            @foreach ($post->attachments as $attachment)
 
-                                <video
-                                    src="{{ $post->media_url }}"
-                                    controls
-                                    style="max-width:100%; border-radius:12px;"
-                                ></video>
+                                @if ($attachment->file_type === 'video')
 
-                            @else
+                                    <video
+                                        src="{{ asset('storage/'.$attachment->file_path) }}"
+                                        controls
+                                        style="max-width:100%; border-radius:12px;"
+                                    ></video>
 
-                                <img
-                                    src="{{ $post->media_url }}"
-                                    alt="Mídia da postagem"
-                                    style="max-width:100%; border-radius:12px;"
-                                >
+                                @else
 
-                            @endif
+                                    <img
+                                        src="{{ asset('storage/'.$attachment->file_path) }}"
+                                        alt="Imagem da postagem"
+                                        style="max-width:100%; border-radius:12px;"
+                                    >
+
+                                @endif
+
+                            @endforeach
 
                         </div>
 
@@ -470,38 +488,54 @@
             // --- Foto/Vídeo ---
 
             const btnMedia = document.getElementById('btn-media');
-            const inputMedia = document.getElementById('input-media');
+            const inputImages = document.getElementById('input-images');
+            const btnVideo = document.getElementById('btn-video');
+            const inputVideo = document.getElementById('input-video');
             const btnMediaLabel = document.getElementById('btn-media-label');
+            const btnVideoLabel = document.getElementById('btn-video-label');
             const mediaPreview = document.getElementById('media-preview');
 
-            btnMedia.addEventListener('click', () => inputMedia.click());
+            btnMedia.addEventListener('click', () => inputImages.click());
+            btnVideo.addEventListener('click', () => inputVideo.click());
 
-            inputMedia.addEventListener('change', () => {
+            function renderMediaPreview() {
+                const images = Array.from(inputImages.files);
+                const video = inputVideo.files[0];
 
-                const file = inputMedia.files[0];
+                if (images.length === 0 && !video) {
+                    mediaPreview.style.display = 'none';
+                    mediaPreview.innerHTML = '';
 
-                if (!file) return;
+                    return;
+                }
 
-                btnMediaLabel.textContent = file.name;
+                btnMediaLabel.textContent = images.length
+                    ? `${images.length} foto${images.length > 1 ? 's' : ''}`
+                    : 'Fotos';
+                btnVideoLabel.textContent = video ? video.name : 'Vídeo';
 
                 mediaPreview.style.display = 'block';
                 mediaPreview.innerHTML = '';
 
-                const url = URL.createObjectURL(file);
+                images.forEach((file) => {
+                    const image = document.createElement('img');
+                    image.src = URL.createObjectURL(file);
+                    image.alt = file.name;
+                    image.style.cssText = 'max-width:200px; border-radius:8px; margin-right:8px;';
+                    mediaPreview.appendChild(image);
+                });
 
-                if (file.type.startsWith('video')) {
-
-                    mediaPreview.innerHTML =
-                        `<video src="${url}" controls style="max-width:200px; border-radius:8px;"></video>`;
-
-                } else {
-
-                    mediaPreview.innerHTML =
-                        `<img src="${url}" style="max-width:200px; border-radius:8px;">`;
-
+                if (video) {
+                    const videoElement = document.createElement('video');
+                    videoElement.src = URL.createObjectURL(video);
+                    videoElement.controls = true;
+                    videoElement.style.cssText = 'max-width:200px; border-radius:8px;';
+                    mediaPreview.appendChild(videoElement);
                 }
+            }
 
-            });
+            inputImages.addEventListener('change', renderMediaPreview);
+            inputVideo.addEventListener('change', renderMediaPreview);
 
             // --- Local ---
 
@@ -510,7 +544,7 @@
 
             const inputLat = document.getElementById('input-latitude');
             const inputLng = document.getElementById('input-longitude');
-            const inputEndereco = document.getElementById('input-endereco');
+            const inputAddress = document.getElementById('input-address');
 
             const modalLocal = document.getElementById('modal-local');
             const modalConfirmacao = document.getElementById('modal-confirmacao-local');
@@ -725,7 +759,7 @@
 
                 inputLat.value = lat ?? '';
                 inputLng.value = lng ?? '';
-                inputEndereco.value = endereco ?? '';
+                inputAddress.value = endereco ?? '';
 
                 btnLocalLabel.textContent =
                     endereco && endereco.length > 25

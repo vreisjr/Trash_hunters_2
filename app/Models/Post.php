@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property-read User $user
  * @property-read Collection<int, Categoria> $categorias
  * @property-read Collection<int, Comentario> $comentarios
+ * @property-read Collection<int, PostAttachment> $attachments
  */
 #[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'address'])]
 class Post extends Model
@@ -78,5 +79,13 @@ class Post extends Model
         }
 
         return $this->curtidas->contains('user_id', $userId);
+    }
+
+    /**
+     * @return HasMany<PostAttachment, $this>
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(PostAttachment::class);
     }
 }

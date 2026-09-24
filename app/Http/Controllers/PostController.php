@@ -22,6 +22,7 @@ class PostController extends Controller
             'comentarios.user',
             'comentarios.curtidas',
             'curtidas',
+            'attachments',
         ])->latest()->get();
 
         $categorias = Categoria::orderBy('nome')->get();
@@ -53,12 +54,9 @@ class PostController extends Controller
             'content' => ['required', 'string', 'max:5000'],
             'categoria_ids' => ['nullable', 'array'],
             'categoria_ids.*' => ['exists:categorias,id'],
-            'media' => [
-                'nullable',
-                'file',
-                'mimes:jpg,jpeg,png,gif,mp4,mov,webm',
-                'max:20480',
-            ], // 20MB
+            'video' => ['nullable', 'file', 'mimes:mp4,mov,webm', 'max:102400'], // 100MB
+            'images' => ['nullable', 'array', 'max:4'],
+            'images.*' => ['file', 'mimes:jpg,jpeg,png,gif', 'max:10240'], // 10MB cada
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'address' => ['nullable', 'string', 'max:255'],
@@ -68,24 +66,33 @@ class PostController extends Controller
             'content' => $validated['content'],
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
-            'address' => $validated['endereco'] ?? null,
+            'address' => $validated['address'] ?? null,
         ];
-
-        if ($request->hasFile('media')) {
-            $file = $request->file('media');
-
-            $data['media_path'] = $file->store('posts', 'public');
-
-            $data['media_type'] = str_starts_with(
-                $file->getMimeType(),
-                'video'
-            ) ? 'video' : 'image';
-        }
 
         $post = $request->user()->posts()->create($data);
 
         if (! empty($validated['categoria_ids'])) {
             $post->categorias()->attach($validated['categoria_ids']);
+        }
+
+        if ($request->hasFile('video')) {
+            $file = $request->file('video');
+
+            $post->attachments()->create([
+                'file_path' => $file->store('posts', 'public'),
+                'file_type' => 'video',
+                'file_size' => $file->getSize(),
+            ]);
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imagem) {
+                $post->attachments()->create([
+                    'file_path' => $imagem->store('posts', 'public'),
+                    'file_type' => 'image',
+                    'file_size' => $imagem->getSize(),
+                ]);
+            }
         }
 
         return redirect()
@@ -135,12 +142,10 @@ class PostController extends Controller
                 );
         }
 
-        // Valida somente o texto
         $validated = $request->validate([
             'content' => ['required', 'string', 'max:5000'],
         ]);
 
-        // Atualiza somente o texto e registra a data da edição
         $post->update([
             'content' => $validated['content'],
             'edited_at' => now(),
@@ -148,10 +153,7 @@ class PostController extends Controller
 
         return redirect()
             ->route('posts.index')
-            ->with(
-                'status',
-                'Publicação editada com sucesso!'
-            );
+            ->with('status', 'Publicação atualizada com sucesso!');
     }
 
     /**
