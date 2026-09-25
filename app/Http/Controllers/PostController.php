@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -100,7 +101,7 @@ class PostController extends Controller
             $post->categorias()->attach($validated['categoria_ids']);
         }
 
-        foreach ($request->file('media', []) as $file) {
+        foreach (Arr::wrap($request->file('media')) as $file) {
             $isVideo = str_starts_with((string) $file->getMimeType(), 'video/');
 
             $post->attachments()->create([
