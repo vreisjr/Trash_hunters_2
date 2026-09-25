@@ -46,18 +46,10 @@
 
                 <input
                     type="file"
-                    name="images[]"
-                    id="input-images"
-                    accept="image/*"
+                    name="media[]"
+                    id="input-media"
+                    accept="image/*,video/*"
                     multiple
-                    style="display:none;"
-                >
-
-                <input
-                    type="file"
-                    name="video"
-                    id="input-video"
-                    accept="video/mp4,video/quicktime,video/webm"
                     style="display:none;"
                 >
 
@@ -68,13 +60,8 @@
                 <div class="post-actions" style="position:relative;">
 
                     <button type="button" id="btn-media">
-                        <i class="fa-regular fa-image"></i>
-                        <span id="btn-media-label">{{ __('Fotos') }}</span>
-                    </button>
-
-                    <button type="button" id="btn-video">
-                        <i class="fa-solid fa-video"></i>
-                        <span id="btn-video-label">{{ __('Vídeo') }}</span>
+                        <i class="fa-solid fa-photo-film"></i>
+                        <span id="btn-media-label">{{ __('Mídia') }}</span>
                     </button>
 
                     <button type="button" id="btn-local">
@@ -308,7 +295,7 @@
 
                     @if ($post->attachments->isNotEmpty())
 
-                        <div style="margin-top:8px;">
+                        <div class="post-attachments-grid">
 
                             @foreach ($post->attachments as $attachment)
 
@@ -317,7 +304,7 @@
                                     <video
                                         src="{{ asset('storage/'.$attachment->file_path) }}"
                                         controls
-                                        style="max-width:100%; border-radius:12px;"
+                                        class="post-attachment-video"
                                     ></video>
 
                                 @else
@@ -325,7 +312,7 @@
                                     <img
                                         src="{{ asset('storage/'.$attachment->file_path) }}"
                                         alt="Imagem da postagem"
-                                        style="max-width:100%; border-radius:12px;"
+                                        class="post-attachment-image"
                                     >
 
                                 @endif
@@ -488,54 +475,45 @@
             // --- Foto/Vídeo ---
 
             const btnMedia = document.getElementById('btn-media');
-            const inputImages = document.getElementById('input-images');
-            const btnVideo = document.getElementById('btn-video');
-            const inputVideo = document.getElementById('input-video');
+            const inputMedia = document.getElementById('input-media');
             const btnMediaLabel = document.getElementById('btn-media-label');
-            const btnVideoLabel = document.getElementById('btn-video-label');
             const mediaPreview = document.getElementById('media-preview');
 
-            btnMedia.addEventListener('click', () => inputImages.click());
-            btnVideo.addEventListener('click', () => inputVideo.click());
+            btnMedia.addEventListener('click', () => inputMedia.click());
 
             function renderMediaPreview() {
-                const images = Array.from(inputImages.files);
-                const video = inputVideo.files[0];
+                const files = Array.from(inputMedia.files);
 
-                if (images.length === 0 && !video) {
+                if (files.length === 0) {
                     mediaPreview.style.display = 'none';
                     mediaPreview.innerHTML = '';
 
                     return;
                 }
 
-                btnMediaLabel.textContent = images.length
-                    ? `${images.length} foto${images.length > 1 ? 's' : ''}`
-                    : 'Fotos';
-                btnVideoLabel.textContent = video ? video.name : 'Vídeo';
+                btnMediaLabel.textContent = `${files.length} mídia${files.length > 1 ? 's' : ''}`;
 
                 mediaPreview.style.display = 'block';
                 mediaPreview.innerHTML = '';
 
-                images.forEach((file) => {
-                    const image = document.createElement('img');
-                    image.src = URL.createObjectURL(file);
-                    image.alt = file.name;
-                    image.style.cssText = 'max-width:200px; border-radius:8px; margin-right:8px;';
-                    mediaPreview.appendChild(image);
-                });
+                files.forEach((file) => {
+                    const element = file.type.startsWith('video/')
+                        ? document.createElement('video')
+                        : document.createElement('img');
 
-                if (video) {
-                    const videoElement = document.createElement('video');
-                    videoElement.src = URL.createObjectURL(video);
-                    videoElement.controls = true;
-                    videoElement.style.cssText = 'max-width:200px; border-radius:8px;';
-                    mediaPreview.appendChild(videoElement);
-                }
+                    element.src = URL.createObjectURL(file);
+                    element.alt = file.name;
+                    element.style.cssText = 'width:120px; height:90px; object-fit:cover; border-radius:8px; margin-right:8px;';
+
+                    if (element.tagName === 'VIDEO') {
+                        element.controls = true;
+                    }
+
+                    mediaPreview.appendChild(element);
+                });
             }
 
-            inputImages.addEventListener('change', renderMediaPreview);
-            inputVideo.addEventListener('change', renderMediaPreview);
+            inputMedia.addEventListener('change', renderMediaPreview);
 
             // --- Local ---
 

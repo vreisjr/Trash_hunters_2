@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class PostController extends Controller
@@ -54,9 +55,8 @@ class PostController extends Controller
             'content' => ['required', 'string', 'max:5000'],
             'categoria_ids' => ['nullable', 'array'],
             'categoria_ids.*' => ['exists:categorias,id'],
-            'video' => ['nullable', 'file', 'mimes:mp4,mov,webm', 'max:102400'], // 100MB
-            'images' => ['nullable', 'array', 'max:4'],
-            'images.*' => ['file', 'mimes:jpg,jpeg,png,gif', 'max:10240'], // 10MB cada
+            'media' => ['nullable', 'array', 'max:5'],
+            'media.*' => ['file', 'max:102400'],
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'address' => ['nullable', 'string', 'max:255'],
@@ -69,30 +69,45 @@ class PostController extends Controller
             'address' => $validated['address'] ?? null,
         ];
 
+        $videoCount = 0;
+        $imageCount = 0;
+
+        foreach ($request->file('media', []) as $index => $file) {
+            $isVideo = str_starts_with((string) $file->getMimeType(), 'video/');
+
+            $request->validate([
+                "media.{$index}" => $isVideo
+                    ? ['file', 'mimes:mp4,mov,webm', 'max:102400']
+                    : ['file', 'mimes:jpg,jpeg,png,gif', 'max:10240'],
+            ]);
+
+            if (str_starts_with((string) $file->getMimeType(), 'video/')) {
+                $videoCount++;
+            } else {
+                $imageCount++;
+            }
+        }
+
+        if ($videoCount > 1 || $imageCount > 4) {
+            throw ValidationException::withMessages([
+                'media' => ['Cada postagem pode conter até 4 imagens e 1 vídeo.'],
+            ]);
+        }
+
         $post = $request->user()->posts()->create($data);
 
         if (! empty($validated['categoria_ids'])) {
             $post->categorias()->attach($validated['categoria_ids']);
         }
 
-        if ($request->hasFile('video')) {
-            $file = $request->file('video');
+        foreach ($request->file('media', []) as $file) {
+            $isVideo = str_starts_with((string) $file->getMimeType(), 'video/');
 
             $post->attachments()->create([
                 'file_path' => $file->store('posts', 'public'),
-                'file_type' => 'video',
+                'file_type' => $isVideo ? 'video' : 'image',
                 'file_size' => $file->getSize(),
             ]);
-        }
-
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $imagem) {
-                $post->attachments()->create([
-                    'file_path' => $imagem->store('posts', 'public'),
-                    'file_type' => 'image',
-                    'file_size' => $imagem->getSize(),
-                ]);
-            }
         }
 
         return redirect()
