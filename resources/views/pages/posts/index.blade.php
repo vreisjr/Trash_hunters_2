@@ -323,35 +323,45 @@
 
                     @endif
 
-                    {{-- BARRA DE AÇÕES ESTILO INSTAGRAM: curtir + balão de comentários --}}
+                    {{-- AÇÕES DA PUBLICAÇÃO --}}
 
-                    <div
-                        class="post-action-bar"
-                        style="display:flex; align-items:center; gap:16px; margin-top:10px; padding-top:10px; border-top:1px solid #eee;"
-                    >
+                    <div class="post-action-bar">
 
                         <button
                             type="button"
-                            class="btn-curtir-post"
+                            class="post-action-button btn-curtir-post"
                             data-id="{{ $post->id }}"
-                            style="background:none; border:none; cursor:pointer; padding:2px; line-height:1; color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
+                            style="color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
+                            aria-label="Curtir publicação"
+                            title="Curtir"
                         >
 
                             <i
                                 class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart"
-                                style="font-size:22px;"
                             ></i>
 
                         </button>
 
                         <button
                             type="button"
-                            class="btn-toggle-comentarios"
+                            class="post-action-button btn-toggle-comentarios"
                             data-post-id="{{ $post->id }}"
-                            style="background:none; border:none; cursor:pointer; padding:2px; line-height:1; color:#8e8e8e;"
+                            aria-label="Comentar publicação"
+                            title="Comentar"
                         >
 
-                            <i class="fa-regular fa-comment" style="font-size:22px;"></i>
+                            <i class="fa-regular fa-comment"></i>
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="post-action-button"
+                            aria-label="Compartilhar publicação"
+                            title="Compartilhar"
+                        >
+
+                            <i class="fa-solid fa-share-nodes"></i>
 
                         </button>
 
