@@ -8,15 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasColumn('posts', 'edited_at')) {
+            return;
+        }
+
         Schema::table('posts', function (Blueprint $table) {
-            $table->timestamp('edited_at')->nullable();
+            $table->dateTime('edited_at')->nullable();
         });
     }
 
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('edited_at');
-        });
+        //
     }
 };
