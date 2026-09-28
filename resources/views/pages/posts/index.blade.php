@@ -244,7 +244,7 @@
 
                         </div>
 
-                        {{-- AÇÃO: EDITAR --}}
+                        {{-- AÇÃO: EDITAR (curtir foi para a barra abaixo do post, estilo Instagram) --}}
 
                         @if ($post->user_id === auth()->id() && $post->edited_at === null)
 
@@ -323,45 +323,37 @@
 
                     @endif
 
-                    {{-- AÇÕES DA PUBLICAÇÃO: cada botão com seu contador embaixo --}}
+                    {{-- AÇÕES DA PUBLICAÇÃO --}}
 
                     <div class="post-action-bar">
 
-                        {{-- CURTIR --}}
-                        <div style="display:flex; flex-direction:column; gap:6px;">
+                        <button
+                            type="button"
+                            class="post-action-button btn-curtir-post"
+                            data-id="{{ $post->id }}"
+                            style="color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
+                            aria-label="Curtir publicação"
+                            title="Curtir"
+                        >
 
-                            <button
-                                type="button"
-                                class="post-action-button btn-curtir-post"
-                                data-id="{{ $post->id }}"
-                                style="color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
-                                aria-label="Curtir publicação"
-                                title="Curtir"
-                            >
-                                <i class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart"></i>
-                            </button>
+                            <i
+                                class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart"
+                            ></i>
 
-                            <div
-                                class="curtidas-total-post-label"
-                                style="font-size:13px; color:#262626; font-weight:600; text-align:center; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
-                            >
-                                <span class="curtidas-total-post">{{ $post->curtidas->count() }}</span> curtida{{ $post->curtidas->count() == 1 ? '' : 's' }}
-                            </div>
+                        </button>
 
-                        </div>
+                        <button
+                            type="button"
+                            class="post-action-button btn-toggle-comentarios"
+                            data-post-id="{{ $post->id }}"
+                            aria-label="Comentar publicação"
+                            title="Comentar"
+                        >
 
-                        {{-- COMENTAR --}}
-                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <i class="fa-regular fa-comment"></i>
 
-                            <button
-                                type="button"
-                                class="post-action-button btn-toggle-comentarios"
-                                data-post-id="{{ $post->id }}"
-                                aria-label="Comentar publicação"
-                                title="Comentar"
-                            >
-                                <i class="fa-regular fa-comment"></i>
-                            </button>
+                        </button>
+
                         <div class="compartilhar-publicacao" style="position:relative; display:block; width:100%;">
 
                             <button
@@ -408,23 +400,16 @@
 
                         </div>
 
-                        <div
-                            class="comentarios-total-post-label"
-                            style="font-size:13px; color:#262626; font-weight:600; text-align:center; {{ $post->comentarios->count() ? '' : 'display:none;' }}"
-                        >
-                            <span class="comentarios-total-post">{{ $post->comentarios->count() }}</span> comentário{{ $post->comentarios->count() == 1 ? '' : 's' }}
-                        </div>
+                    </div>
 
-                            <button
-                                type="button"
-                                class="post-action-button"
-                                aria-label="Compartilhar publicação"
-                                title="Compartilhar"
-                            >
-                                <i class="fa-solid fa-share-nodes"></i>
-                            </button>
+                    {{-- CONTAGEM DE CURTIDAS, embaixo da barra de ações (igual Instagram) --}}
 
-                        </div>
+                    <div
+                        class="curtidas-total-post-label"
+                        style="font-size:13px; color:#262626; font-weight:600; margin-top:6px; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
+                    >
+
+                        <span class="curtidas-total-post">{{ $post->curtidas->count() }}</span> curtida{{ $post->curtidas->count() == 1 ? '' : 's' }}
 
                     </div>
 
@@ -557,10 +542,6 @@
                 inputMedia = novoInput;
             }
 
-            function identificadorDeArquivo(file) {
-                return `${file.name}-${file.size}-${file.lastModified}-${file.type}`;
-            }
-
             function adicionarMidiasSelecionadas() {
                 Array.from(inputMedia.files).forEach(file => {
                     selectedMediaFiles.push({ file, input: inputMedia });
@@ -622,7 +603,7 @@
                         const arquivosDoInput = Array.from(inputDoArquivo.files);
                         const arquivoRemovido = media.file;
                         const arquivosRestantes = arquivosDoInput.filter(
-                            arquivo => identificadorDeArquivo(arquivo) !== identificadorDeArquivo(arquivoRemovido)
+                            arquivo => arquivo !== arquivoRemovido
                         );
 
                         if (arquivosRestantes.length === 0) {
@@ -1426,15 +1407,6 @@
 
                         (listaResposta || lista).appendChild(div);
 
-                        // Atualiza o contador de comentários do post
-
-                        const labelComentarios = form.closest('.post').querySelector('.comentarios-total-post-label');
-                        const totalSpanComentarios = labelComentarios.querySelector('.comentarios-total-post');
-                        const novoTotal = (parseInt(totalSpanComentarios.textContent) || 0) + 1;
-
-                        labelComentarios.style.display = 'block';
-                        labelComentarios.innerHTML = `<span class="comentarios-total-post">${novoTotal}</span> comentário${novoTotal == 1 ? '' : 's'}`;
-
                         input.value = '';
 
                         if (parentId) {
@@ -1671,17 +1643,6 @@
                                     },
                                 }
                             );
-
-                            // Atualiza o contador de comentários do post
-
-                            const post = btnApagar.closest('.post');
-                            const labelComentarios = post.querySelector('.comentarios-total-post-label');
-                            const totalSpanComentarios = labelComentarios.querySelector('.comentarios-total-post');
-                            const totalAtual = parseInt(totalSpanComentarios.textContent) || 0;
-                            const novoTotal = Math.max(totalAtual - 1, 0);
-
-                            labelComentarios.style.display = novoTotal > 0 ? 'block' : 'none';
-                            labelComentarios.innerHTML = `<span class="comentarios-total-post">${novoTotal}</span> comentário${novoTotal == 1 ? '' : 's'}`;
 
                             btnApagar
                                 .closest('.comentario')
