@@ -23,6 +23,8 @@ class PostController extends Controller
             'categorias',
             'comentarios.user',
             'comentarios.curtidas',
+            'comentarios.filhos.user',
+            'comentarios.filhos.curtidas',
             'curtidas',
             'attachments',
         ])->latest()->get();

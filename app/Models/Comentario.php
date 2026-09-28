@@ -12,16 +12,19 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $post_id
  * @property int $user_id
+ * @property int|null $parent_id
  * @property string $texto
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Post $post
  * @property-read User $user
+ * @property-read Comentario|null $pai
+ * @property-read Collection<int, Comentario> $filhos
  * @property-read Collection<int, ComentarioCurtida> $curtidas
  */
 class Comentario extends Model
 {
-    protected $fillable = ['post_id', 'user_id', 'texto'];
+    protected $fillable = ['post_id', 'user_id', 'parent_id', 'texto'];
 
     /**
      * @return BelongsTo<Post, $this>
@@ -37,6 +40,22 @@ class Comentario extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo<Comentario, $this>
+     */
+    public function pai(): BelongsTo
+    {
+        return $this->belongsTo(Comentario::class, 'parent_id');
+    }
+
+    /**
+     * @return HasMany<Comentario, $this>
+     */
+    public function filhos(): HasMany
+    {
+        return $this->hasMany(Comentario::class, 'parent_id')->latest();
     }
 
     /**

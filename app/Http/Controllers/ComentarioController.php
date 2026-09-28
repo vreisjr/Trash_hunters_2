@@ -6,6 +6,7 @@ use App\Models\Comentario;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ComentarioController extends Controller
 {
@@ -13,10 +14,18 @@ class ComentarioController extends Controller
     {
         $validated = $request->validate([
             'texto' => ['required', 'string', 'max:500'],
+            'parent_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('comentarios', 'id')->where(
+                    fn ($query) => $query->where('post_id', $post->id)
+                ),
+            ],
         ]);
 
         $comentario = $post->comentarios()->create([
             'user_id' => $request->user()->id,
+            'parent_id' => $validated['parent_id'] ?? null,
             'texto' => $validated['texto'],
         ]);
 
@@ -24,6 +33,7 @@ class ComentarioController extends Controller
 
         return response()->json([
             'id' => $comentario->id,
+            'parent_id' => $comentario->parent_id,
             'texto' => $comentario->texto,
             'user_name' => $comentario->user->name,
             'created_at' => $comentario->created_at->diffForHumans(),

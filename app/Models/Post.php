@@ -29,7 +29,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Comentario> $comentarios
  * @property-read Collection<int, PostAttachment> $attachments
  */
-#[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'address'])]
+#[Fillable(['user_id', 'content', 'media_path', 'media_type', 'latitude', 'longitude', 'address', 'edited_at'])]
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
@@ -56,7 +56,7 @@ class Post extends Model
      */
     public function comentarios(): HasMany
     {
-        return $this->hasMany(Comentario::class)->latest();
+        return $this->hasMany(Comentario::class)->whereNull('parent_id')->latest();
     }
 
     public function getMediaUrlAttribute(): ?string

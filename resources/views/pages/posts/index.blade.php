@@ -225,7 +225,7 @@
 
             @forelse ($posts as $post)
 
-                <article class="post">
+                <article class="post" id="post-{{ $post->id }}">
 
                     <div class="post-top">
 
@@ -354,16 +354,51 @@
 
                         </button>
 
-                        <button
-                            type="button"
-                            class="post-action-button"
-                            aria-label="Compartilhar publicação"
-                            title="Compartilhar"
-                        >
+                        <div class="compartilhar-publicacao" style="position:relative; display:block; width:100%;">
 
-                            <i class="fa-solid fa-share-nodes"></i>
+                            <button
+                                type="button"
+                                class="post-action-button btn-compartilhar-post"
+                                data-post-id="{{ $post->id }}"
+                                data-share-url="{{ url()->route('posts.index') }}#post-{{ $post->id }}"
+                                data-share-text="{{ $post->user->name }}: {{ $post->content }}"
+                                aria-label="Compartilhar publicação"
+                                title="Compartilhar"
+                                aria-expanded="false"
+                                style="width:100%;"
+                            >
 
-                        </button>
+                                <i class="fa-solid fa-share-nodes"></i>
+
+                            </button>
+
+                            <div
+                                class="menu-compartilhar-post"
+                                style="display:none; position:absolute; bottom:calc(100% + 8px); top:auto; right:0; z-index:20; min-width:190px; padding:6px; background:#fff; border:1px solid #eee; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,.12);"
+                            >
+
+                                <button type="button" data-share-action="copy" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                    <i class="fa-regular fa-copy" style="width:16px;"></i> Copiar link
+                                </button>
+                                <button type="button" data-share-action="email" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                    <i class="fa-solid fa-envelope" style="width:16px;"></i> E-mail
+                                </button>
+                                <button type="button" data-share-action="sms" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                    <i class="fa-solid fa-comment-sms" style="width:16px;"></i> SMS
+                                </button>
+                                <button type="button" data-share-action="whatsapp" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                    <i class="fa-brands fa-whatsapp" style="width:16px;"></i> WhatsApp
+                                </button>
+                                <button type="button" data-share-action="instagram" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                    <i class="fa-brands fa-instagram" style="width:16px;"></i> Instagram
+                                </button>
+                                <button type="button" data-share-action="facebook" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                    <i class="fa-brands fa-facebook" style="width:16px;"></i> Facebook
+                                </button>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -485,45 +520,118 @@
             // --- Foto/Vídeo ---
 
             const btnMedia = document.getElementById('btn-media');
-            const inputMedia = document.getElementById('input-media');
+            const formNovaPostagem = document.getElementById('form-nova-postagem');
+            let inputMedia = document.getElementById('input-media');
             const btnMediaLabel = document.getElementById('btn-media-label');
             const mediaPreview = document.getElementById('media-preview');
+            let mediaPreviewUrls = [];
+            let selectedMediaFiles = [];
 
             btnMedia.addEventListener('click', () => inputMedia.click());
 
-            function renderMediaPreview() {
-                const files = Array.from(inputMedia.files);
+            function prepararNovoSeletorDeMedia() {
+                const novoInput = document.createElement('input');
 
-                if (files.length === 0) {
+                novoInput.type = 'file';
+                novoInput.name = 'media[]';
+                novoInput.accept = 'image/*,video/*';
+                novoInput.multiple = true;
+                novoInput.style.display = 'none';
+                novoInput.addEventListener('change', adicionarMidiasSelecionadas);
+                formNovaPostagem.insertBefore(novoInput, formNovaPostagem.querySelector('#input-latitude'));
+                inputMedia = novoInput;
+            }
+
+            function identificadorDeArquivo(file) {
+                return `${file.name}-${file.size}-${file.lastModified}-${file.type}`;
+            }
+
+            function adicionarMidiasSelecionadas() {
+                Array.from(inputMedia.files).forEach(file => {
+                    selectedMediaFiles.push({ file, input: inputMedia });
+                });
+
+                if (inputMedia.files.length > 0) {
+                    prepararNovoSeletorDeMedia();
+                }
+
+                renderMediaPreview();
+            }
+
+            function renderMediaPreview() {
+                mediaPreviewUrls.forEach(url => URL.revokeObjectURL(url));
+                mediaPreviewUrls = [];
+
+                if (selectedMediaFiles.length === 0) {
                     mediaPreview.style.display = 'none';
                     mediaPreview.innerHTML = '';
+                    btnMediaLabel.textContent = 'Mídia';
 
                     return;
                 }
 
-                btnMediaLabel.textContent = `${files.length} mídia${files.length > 1 ? 's' : ''}`;
+                btnMediaLabel.textContent = `${selectedMediaFiles.length} mídia${selectedMediaFiles.length > 1 ? 's' : ''}`;
 
                 mediaPreview.style.display = 'block';
                 mediaPreview.innerHTML = '';
 
-                files.forEach((file) => {
+                selectedMediaFiles.forEach((media, index) => {
+                    const file = media.file;
+                    const wrapper = document.createElement('div');
+                    const removeButton = document.createElement('button');
+
+                    wrapper.style.cssText = 'position:relative; display:inline-block; margin-right:8px;';
+
+                    removeButton.type = 'button';
+                    removeButton.className = 'btn-remover-media';
+                    removeButton.setAttribute('aria-label', `Remover ${file.name}`);
+                    removeButton.title = 'Remover mídia';
+                    removeButton.textContent = '×';
+                    removeButton.style.cssText = 'position:absolute; top:4px; right:4px; width:24px; height:24px; border:0; border-radius:50%; background:rgba(0,0,0,.65); color:#fff; cursor:pointer; font-size:20px; line-height:20px; padding:0; z-index:1;';
+
                     const element = file.type.startsWith('video/')
                         ? document.createElement('video')
                         : document.createElement('img');
 
                     element.src = URL.createObjectURL(file);
+                    mediaPreviewUrls.push(element.src);
                     element.alt = file.name;
-                    element.style.cssText = 'width:120px; height:90px; object-fit:cover; border-radius:8px; margin-right:8px;';
+                    element.style.cssText = 'width:120px; height:90px; object-fit:cover; border-radius:8px; display:block;';
 
                     if (element.tagName === 'VIDEO') {
                         element.controls = true;
                     }
 
-                    mediaPreview.appendChild(element);
+                    removeButton.addEventListener('click', () => {
+                        const inputDoArquivo = media.input;
+                        const arquivosDoInput = Array.from(inputDoArquivo.files);
+                        const arquivoRemovido = media.file;
+                        const arquivosRestantes = arquivosDoInput.filter(
+                            arquivo => identificadorDeArquivo(arquivo) !== identificadorDeArquivo(arquivoRemovido)
+                        );
+
+                        if (arquivosRestantes.length === 0) {
+                            inputDoArquivo.remove();
+                        } else {
+                            const dataTransfer = new DataTransfer();
+
+                            arquivosRestantes.forEach(arquivo => {
+                                dataTransfer.items.add(arquivo);
+                            });
+                            inputDoArquivo.files = dataTransfer.files;
+                        }
+
+                        selectedMediaFiles.splice(index, 1);
+                        renderMediaPreview();
+                    });
+
+                    wrapper.appendChild(element);
+                    wrapper.appendChild(removeButton);
+                    mediaPreview.appendChild(wrapper);
                 });
             }
 
-            inputMedia.addEventListener('change', renderMediaPreview);
+            inputMedia.addEventListener('change', adicionarMidiasSelecionadas);
 
             // --- Local ---
 
@@ -967,6 +1075,125 @@
 
             });
 
+            async function copiarLinkCompartilhamento(url) {
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(url);
+
+                    return;
+                }
+
+                const input = document.createElement('textarea');
+
+                input.value = url;
+                input.style.position = 'fixed';
+                input.style.opacity = '0';
+                document.body.appendChild(input);
+                input.focus();
+                input.select();
+                document.execCommand('copy');
+                input.remove();
+
+            }
+
+            function abrirJanelaCompartilhamento(url) {
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }
+
+            document.querySelectorAll('.btn-compartilhar-post').forEach(btn => {
+
+                const menu = btn.parentElement.querySelector(
+                    '.menu-compartilhar-post'
+                );
+
+                btn.addEventListener('click', (event) => {
+
+                    event.stopPropagation();
+
+                    const aberto = menu.style.display !== 'none';
+
+                    document.querySelectorAll('.menu-compartilhar-post').forEach(
+                        outroMenu => {
+                            outroMenu.style.display = 'none';
+                        }
+                    );
+
+                    document.querySelectorAll('.btn-compartilhar-post').forEach(
+                        outroBotao => {
+                            outroBotao.setAttribute('aria-expanded', 'false');
+                        }
+                    );
+
+                    menu.style.display = aberto ? 'none' : 'block';
+                    btn.setAttribute('aria-expanded', aberto ? 'false' : 'true');
+
+                });
+
+                menu.querySelectorAll('[data-share-action]').forEach(action => {
+
+                    action.addEventListener('click', async () => {
+
+                        const url = btn.dataset.shareUrl;
+                        const texto = btn.dataset.shareText;
+                        const mensagem = `${texto} ${url}`;
+
+                        try {
+
+                            switch (action.dataset.shareAction) {
+                                case 'copy':
+                                    await copiarLinkCompartilhamento(url);
+                                    alert('Link da publicação copiado.');
+                                    break;
+                                case 'email':
+                                    window.location.href =
+                                        `mailto:?subject=${encodeURIComponent('Publicação no Trash Hunters')}&body=${encodeURIComponent(mensagem)}`;
+                                    break;
+                                case 'sms':
+                                    window.location.href =
+                                        `sms:?&body=${encodeURIComponent(mensagem)}`;
+                                    break;
+                                case 'whatsapp':
+                                    abrirJanelaCompartilhamento(
+                                        `https://wa.me/?text=${encodeURIComponent(mensagem)}`
+                                    );
+                                    break;
+                                case 'instagram':
+                                    await copiarLinkCompartilhamento(url);
+                                    abrirJanelaCompartilhamento('https://www.instagram.com/');
+                                    alert('Link copiado. Cole-o na publicação ou no story do Instagram.');
+                                    break;
+                                case 'facebook':
+                                    abrirJanelaCompartilhamento(
+                                        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+                                    );
+                                    break;
+                            }
+
+                        } catch (error) {
+                            alert('Não foi possível compartilhar a publicação.');
+                        }
+
+                        menu.style.display = 'none';
+                        btn.setAttribute('aria-expanded', 'false');
+
+                    });
+
+                });
+
+            });
+
+            document.addEventListener('click', () => {
+
+                document.querySelectorAll('.menu-compartilhar-post').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+
+                document.querySelectorAll('.btn-compartilhar-post').forEach(btn => {
+                    btn.setAttribute('aria-expanded', 'false');
+                });
+
+            });
+
             // --- Abrir/fechar comentários (balão) ---
 
             document.querySelectorAll('.btn-toggle-comentarios').forEach(btn => {
@@ -1017,13 +1244,14 @@
 
             // --- Comentários: enviar novo ---
 
-            document.querySelectorAll('.form-comentario').forEach(form => {
+            function ativarFormularioComentario(form) {
 
                 form.addEventListener('submit', async (e) => {
 
                     e.preventDefault();
 
                     const postId = form.dataset.postId;
+                    const parentId = form.dataset.parentId || null;
 
                     const input =
                         form.querySelector('input[name="texto"]');
@@ -1044,7 +1272,8 @@
                                     'Accept': 'application/json',
                                 },
                                 body: JSON.stringify({
-                                    texto
+                                    texto,
+                                    parent_id: parentId,
                                 }),
                             }
                         );
@@ -1114,6 +1343,15 @@
                                         ${data.created_at}
                                     </span>
 
+                                    <button
+                                        type="button"
+                                        class="btn-responder-comentario"
+                                        data-id="${data.id}"
+                                        style="background:none; border:none; cursor:pointer; font-size:11px; color:#2e7d32; font-weight:600;"
+                                    >
+                                        Responder
+                                    </button>
+
                                     <span
                                         class="curtidas-total-label"
                                         style="font-size:11px; color:#8e8e8e; font-weight:600; display:none;"
@@ -1142,15 +1380,45 @@
 
                                 </div>
 
+                                <form
+                                    class="form-resposta"
+                                    data-post-id="${postId}"
+                                    data-parent-id="${data.id}"
+                                    style="display:none; gap:8px; align-items:center; margin-top:6px;"
+                                >
+                                    <input
+                                        type="text"
+                                        name="texto"
+                                        placeholder="Responda a este comentário..."
+                                        maxlength="500"
+                                        required
+                                        autocomplete="off"
+                                        style="flex:1; border:1px solid #eee; border-radius:6px; padding:6px 8px; font-size:12px; outline:none; background:transparent;"
+                                    >
+                                    <button type="submit" style="background:none; border:none; color:#2e7d32; font-weight:600; font-size:12px; cursor:pointer;">Publicar</button>
+                                </form>
+
+                                <div class="respostas-lista" style="margin-left:0; border-left:none; padding-left:0;"></div>
+
                             </div>
 
                         `;
 
-                        lista.appendChild(div);
+                        const listaResposta = parentId
+                            ? document
+                                .querySelector(`[data-comentario-id="${parentId}"] .respostas-lista`)
+                            : lista;
+
+                        (listaResposta || lista).appendChild(div);
 
                         input.value = '';
 
+                        if (parentId) {
+                            form.style.display = 'none';
+                        }
+
                         ativarEventosComentario(div);
+                        ativarFormularioComentario(div.querySelector('.form-resposta'));
 
                     } catch (err) {
 
@@ -1160,7 +1428,11 @@
 
                 });
 
-            });
+            }
+
+            document
+                .querySelectorAll('.form-comentario, .form-resposta')
+                .forEach(ativarFormularioComentario);
 
             // --- Comentários: curtir / editar / apagar ---
 
@@ -1174,6 +1446,25 @@
 
                 const btnApagar =
                     container.querySelector('.btn-apagar-comentario');
+
+                const btnResponder =
+                    container.querySelector('.btn-responder-comentario');
+
+                const formResposta =
+                    container.querySelector('.form-resposta');
+
+                if (btnResponder && formResposta) {
+
+                    btnResponder.addEventListener('click', () => {
+                        formResposta.style.display =
+                            formResposta.style.display === 'none' ? 'flex' : 'none';
+
+                        if (formResposta.style.display === 'flex') {
+                            formResposta.querySelector('input[name="texto"]').focus();
+                        }
+                    });
+
+                }
 
                 if (btnCurtir) {
 

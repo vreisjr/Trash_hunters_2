@@ -16,6 +16,8 @@
         <div style="display:flex; gap:14px; align-items:center; margin-top:4px; flex-wrap:wrap;">
             <span style="font-size:11px; color:#8e8e8e;">{{ $comentario->created_at->diffForHumans() }}</span>
 
+            <button type="button" class="btn-responder-comentario" data-id="{{ $comentario->id }}" style="background:none; border:none; cursor:pointer; font-size:11px; color:#2e7d32; font-weight:600;">Responder</button>
+
             <span class="curtidas-total-label" style="font-size:11px; color:#8e8e8e; font-weight:600; {{ $comentario->curtidas->count() ? '' : 'display:none;' }}">
                 <span class="curtidas-total">{{ $comentario->curtidas->count() }}</span> curtida{{ $comentario->curtidas->count() == 1 ? '' : 's' }}
             </span>
@@ -25,5 +27,21 @@
                 <button type="button" class="btn-apagar-comentario" data-id="{{ $comentario->id }}" style="background:none; border:none; cursor:pointer; font-size:11px; color:#8e8e8e; font-weight:600;">Apagar</button>
             @endif
         </div>
+
+        <form class="form-resposta" data-post-id="{{ $comentario->post_id }}" data-parent-id="{{ $comentario->id }}" style="display:none; gap:8px; align-items:center; margin-top:6px;">
+            @csrf
+            <input type="text" name="texto" placeholder="Responda a este comentário..." maxlength="500" required autocomplete="off" style="flex:1; border:1px solid #eee; border-radius:6px; padding:6px 8px; font-size:12px; outline:none; background:transparent;">
+            <button type="submit" style="background:none; border:none; color:#2e7d32; font-weight:600; font-size:12px; cursor:pointer;">Publicar</button>
+        </form>
+
+        @if ($comentario->filhos->isNotEmpty())
+            <div class="respostas-lista" style="margin-left:0; border-left:none; padding-left:0;">
+                @foreach ($comentario->filhos as $resposta)
+                    @include('pages.posts.partials.comentario', ['comentario' => $resposta])
+                @endforeach
+            </div>
+        @else
+            <div class="respostas-lista" style="margin-left:0; border-left:none; padding-left:0;"></div>
+        @endif
     </div>
 </div>
