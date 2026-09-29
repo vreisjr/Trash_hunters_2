@@ -244,18 +244,50 @@
 
                         </div>
 
-                        {{-- AÇÃO: EDITAR (curtir foi para a barra abaixo do post, estilo Instagram) --}}
+                        {{-- AÇÕES DO POST --}}
 
-                        @if ($post->user_id === auth()->id() && $post->edited_at === null)
+@php
+    $isResponsiblePremium =
+        auth()->user()->role === 'premium'
+        && auth()->user()->district !== null
+        && auth()->user()->district === $post->district;
+@endphp
 
-                            <a
-                                href="{{ route('posts.edit', $post) }}"
-                                style="margin-left:auto; background:none; border:none; cursor:pointer; padding:2px; color:#2e7d32; font-size:12px; font-weight:600; text-decoration:none;"
-                            >
-                                Editar
-                            </a>
+<div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
 
-                        @endif
+    @if ($post->user_id === auth()->id() && $post->edited_at === null)
+
+        <a
+            href="{{ route('posts.edit', $post) }}"
+            style="background:none; border:none; cursor:pointer; padding:2px; color:#2e7d32; font-size:12px; font-weight:600; text-decoration:none;"
+        >
+            Editar
+        </a>
+
+    @endif
+
+    @if (auth()->user()->role === 'admin' || $isResponsiblePremium)
+
+        <form
+            action="{{ route('posts.destroy', $post) }}"
+            method="POST"
+            onsubmit="return confirm('Tem certeza que deseja excluir esta publicação?');"
+            style="display:inline;"
+        >
+            @csrf
+            @method('DELETE')
+
+            <button
+                type="submit"
+                style="background:none; border:none; cursor:pointer; padding:2px; color:#c62828; font-size:12px; font-weight:600;"
+            >
+                Excluir
+            </button>
+        </form>
+
+    @endif
+
+</div>
 
                     </div>
 
