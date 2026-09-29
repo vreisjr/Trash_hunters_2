@@ -41,7 +41,25 @@
                 passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
                 viewable
             />
+	<!-- Tipo de conta -->
+	<flux:select
+    	name="role"
+    	:label="__('Account type')"
+    	required
+	>
+    	<option value="user">Usuário</option>
+    	<option value="premium">Premium</option>
+	</flux:select>
 
+	<!-- Distrito -->
+<flux:input
+    name="district"
+    :label="__('Distrito')"
+    :value="old('district')"
+    type="text"
+    autocomplete="address-level2"
+    placeholder="Ex.: Centro"
+/>
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"

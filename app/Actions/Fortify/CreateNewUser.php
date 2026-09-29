@@ -19,8 +19,13 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        if (! array_key_exists('role', $input)) {
+            $input['role'] = 'user';
+        }
         Validator::make($input, [
             ...$this->profileRules(),
+            'role' => ['required', 'in:user,premium'],
+            'district' => ['required_if:role,premium', 'nullable', 'string', 'max:255'],
             'password' => $this->passwordRules(),
         ])->validate();
 
@@ -28,6 +33,8 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            'role' => $input['role'],
+            'district' => $input['district'] ?? null,
         ]);
     }
 }
