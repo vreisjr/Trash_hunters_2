@@ -13,9 +13,6 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    /**
-     * Show the composer and the feed of posts.
-     */
     public function index(): View
     {
         $posts = Post::with([
@@ -37,9 +34,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Show the form to create a new post.
-     */
     public function create(): View
     {
         $categorias = Categoria::orderBy('nome')->get();
@@ -49,9 +43,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created post for the authenticated user.
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -63,6 +54,7 @@ class PostController extends Controller
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'address' => ['nullable', 'string', 'max:255'],
+            'district' => ['nullable', 'string', 'max:255'],
         ]);
 
         $data = [
@@ -70,6 +62,7 @@ class PostController extends Controller
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
             'address' => $validated['address'] ?? null,
+            'district' => $request->user()->district,
         ];
 
         $videoCount = 0;
@@ -118,17 +111,12 @@ class PostController extends Controller
             ->with('status', 'Postagem publicada com sucesso!');
     }
 
-    /**
-     * Show the form to edit a post.
-     */
     public function edit(Request $request, Post $post): View
     {
-        // Verifica se o usuário é o dono da publicação
         if ($post->user_id !== $request->user()->id) {
             abort(403);
         }
 
-        // Verifica se a publicação já foi editada
         if ($post->edited_at !== null) {
             abort(403, 'Esta publicação já foi editada.');
         }
@@ -138,19 +126,14 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Update a post.
-     */
     public function update(
         Request $request,
         Post $post
     ): RedirectResponse {
-        // Verifica se o usuário é o dono da publicação
         if ($post->user_id !== $request->user()->id) {
             abort(403);
         }
 
-        // Impede uma segunda edição
         if ($post->edited_at !== null) {
             return redirect()
                 ->route('posts.index')
@@ -174,9 +157,6 @@ class PostController extends Controller
             ->with('status', 'Publicação atualizada com sucesso!');
     }
 
-    /**
-     * Toggle like on a post.
-     */
     public function toggleLike(
         Request $request,
         Post $post
@@ -202,5 +182,29 @@ class PostController extends Controller
             'curtido' => $curtido,
             'total' => $post->curtidas()->count(),
         ]);
+    }
+
+    public function destroy(
+        Request $request,
+        Post $post
+    ): RedirectResponse {
+        $user = $request->user();
+
+        $isAdmin = $user->role === 'admin';
+
+        $isResponsiblePremium =
+            $user->role === 'premium'
+            && $user->district !== null
+            && $user->district === $post->district;
+
+        if (! $isAdmin && ! $isResponsiblePremium) {
+            abort(403);
+        }
+
+        $post->delete();
+
+        return redirect()
+            ->route('posts.index')
+            ->with('status', 'Publicação excluída com sucesso!');
     }
 }
