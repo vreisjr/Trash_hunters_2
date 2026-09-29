@@ -1,6 +1,8 @@
 <x-layouts::app :title="__('Feed')">
 
-    <div class="preview-container">
+    <div class="feed-shell">
+
+        <main class="preview-container">
 
         @session('status')
             <div style="background:#e8f8e8; color:#2e7d32; padding:14px 18px; border-radius:12px;">
@@ -18,11 +20,30 @@
             </div>
         @endif
 
+        <section class="mission-shortcuts" aria-label="{{ __('Atalhos da comunidade') }}">
+            <div class="mission-shortcut shortcut-ranking" aria-hidden="true"><i class="fa-solid fa-trophy"></i><span>{{ __('Ranking') }}</span></div>
+            <div class="mission-shortcut shortcut-games" aria-hidden="true"><i class="fa-solid fa-gamepad"></i><span>{{ __('Jogos') }}</span></div>
+            <div class="mission-shortcut shortcut-missions" aria-hidden="true"><i class="fa-solid fa-recycle"></i><span>{{ __('Missões') }}</span></div>
+            <div class="mission-shortcut shortcut-maker" aria-hidden="true"><i class="fa-solid fa-person-digging"></i><span>{{ __('Fale com um artesão/reciclador') }}</span></div>
+            <div class="mission-shortcut shortcut-donor" aria-hidden="true"><i class="fa-solid fa-hand-holding-heart"></i><span>{{ __('Fale com um doador') }}</span></div>
+        </section>
+
         {{-- NOVA POSTAGEM --}}
 
-        <section class="new-post">
+        <section class="new-post" id="criar-post">
 
-            <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="form-nova-postagem">
+            <button type="button" class="new-post-trigger" id="btn-abrir-compositor" aria-expanded="false" aria-controls="form-nova-postagem">
+                <span class="new-post-trigger-icon"><i class="fa-solid fa-plus"></i></span>
+                <span>
+                    <strong>{{ __('Criar post') }}</strong>
+                    <small>{{ __('Compartilhe uma nova missão com a comunidade') }}</small>
+                </span>
+                <i class="fa-solid fa-chevron-down new-post-trigger-arrow"></i>
+            </button>
+
+            <div class="composer-content" id="composer-content" hidden>
+
+                <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="form-nova-postagem">
 
                 @csrf
 
@@ -126,7 +147,9 @@
 
                 </div>
 
-            </form>
+                </form>
+
+            </div>
 
             {{-- Modal de edição de localização --}}
 
@@ -501,6 +524,34 @@
 
         </section>
 
+        </main>
+
+        <aside class="feed-aside" aria-label="Informações sobre reciclagem">
+            <section class="aside-panel">
+                <div class="aside-heading">
+                    <i class="fa-solid fa-leaf"></i>
+                    <h2>{{ __('Separe corretamente') }}</h2>
+                </div>
+                <p>{{ __('Alguns materiais precisam de um destino diferente do lixo comum.') }}</p>
+                <ul class="recycling-list">
+                    <li><span class="recycling-image medicine"><i class="fa-solid fa-pills"></i></span><span><strong>{{ __('Medicamentos') }}</strong><small>{{ __('Entregue em pontos de coleta.') }}</small></span></li>
+                    <li><span class="recycling-image package"><i class="fa-solid fa-bottle-water"></i></span><span><strong>{{ __('Embalagens coloridas') }}</strong><small>{{ __('Lave e separe por material.') }}</small></span></li>
+                    <li><span class="recycling-image electronics"><i class="fa-solid fa-mobile-screen-button"></i></span><span><strong>{{ __('Eletrônicos e pilhas') }}</strong><small>{{ __('Não descarte no lixo comum.') }}</small></span></li>
+                    <li><span class="recycling-image lamp"><i class="fa-solid fa-lightbulb"></i></span><span><strong>{{ __('Lâmpadas') }}</strong><small>{{ __('Procure um descarte especializado.') }}</small></span></li>
+                    <li><span class="recycling-image paint"><i class="fa-solid fa-paint-roller"></i></span><span><strong>{{ __('Tintas e solventes') }}</strong><small>{{ __('São resíduos perigosos.') }}</small></span></li>
+                </ul>
+            </section>
+
+            <section class="aside-panel aside-news">
+                <div class="aside-heading">
+                    <i class="fa-solid fa-leaf"></i>
+                    <h2>{{ __('Notícias ambientais') }}</h2>
+                </div>
+                <p>{{ __('Acompanhe as novidades e ações sustentáveis da comunidade.') }}</p>
+                <a href="#" class="aside-link">{{ __('Ver todas') }} <i class="fa-solid fa-arrow-right"></i></a>
+            </section>
+        </aside>
+
     </div>
 
     @push('scripts')
@@ -508,6 +559,29 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
+
+            const btnAbrirCompositor = document.getElementById('btn-abrir-compositor');
+            const composerContent = document.getElementById('composer-content');
+
+            function abrirCompositor() {
+                composerContent.hidden = false;
+                btnAbrirCompositor.setAttribute('aria-expanded', 'true');
+                document.getElementById('criar-post').classList.add('is-open');
+            }
+
+            function fecharCompositor() {
+                composerContent.hidden = true;
+                btnAbrirCompositor.setAttribute('aria-expanded', 'false');
+                document.getElementById('criar-post').classList.remove('is-open');
+            }
+
+            btnAbrirCompositor.addEventListener('click', () => {
+                composerContent.hidden ? abrirCompositor() : fecharCompositor();
+            });
+
+            if (window.location.hash === '#criar-post') {
+                abrirCompositor();
+            }
 
             function getCsrfToken() {
 

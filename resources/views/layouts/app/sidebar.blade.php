@@ -5,23 +5,59 @@
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+            <flux:sidebar.header class="trash-sidebar-header">
+                <div class="trash-brand-placeholder" aria-label="{{ __('Espaço reservado para a identidade visual') }}"></div>
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                <flux:sidebar.group :heading="__('Platform')" class="grid !text-white">
+                    <flux:sidebar.item icon="home" class="!text-white" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('Início') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="newspaper" :href="route('posts.index')" :current="request()->routeIs('posts.*')" wire:navigate>
-                        {{ __('Feed') }}
+                    <flux:sidebar.item icon="globe-alt" class="!text-white" :href="route('posts.index')" :current="request()->routeIs('posts.index')" wire:navigate>
+                        {{ __('Explorar') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="pencil-square" :href="route('posts.create')" :current="request()->routeIs('posts.create')" wire:navigate>
+                    <flux:sidebar.item icon="plus" class="!text-white" :href="route('posts.index').'#criar-post'" :current="request()->routeIs('posts.create')">
                         {{ __('Criar post') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="bell" class="!text-white" href="#">
+                        {{ __('Notificações') }}
+                        <x-slot name="badge">3</x-slot>
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="chat-bubble-left-right" class="!text-white" href="#">
+                        {{ __('Mensagens') }}
+                        <x-slot name="badge">1</x-slot>
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="bookmark" class="!text-white" href="#">
+                        {{ __('Salvos') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="eye-slash" class="!text-white" href="#">
+                        {{ __('Curiosidades') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="map-pin" class="!text-white" href="#">
+                        {{ __('Pontos de coleta') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+
+                <flux:sidebar.group :heading="__('Comunidade')" class="grid mt-5 !text-white">
+                    <flux:sidebar.item icon="trophy" class="!text-white" href="#">
+                        {{ __('Ranking') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="play" class="!text-white" href="#">
+                        {{ __('Jogos') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="check-badge" class="!text-white" href="#">
+                        {{ __('Desafios') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
@@ -29,12 +65,8 @@
             <flux:spacer />
 
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
+                <flux:sidebar.item icon="cog" class="!text-white" :href="route('profile.edit')" wire:navigate>
+                    {{ __('Configurações') }}
                 </flux:sidebar.item>
             </flux:sidebar.nav>
 
@@ -95,6 +127,13 @@
                 </flux:menu>
             </flux:dropdown>
         </flux:header>
+
+        <header class="trash-topbar">
+            <div class="trash-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" placeholder="{{ __('Buscar posts, usuários, materiais...') }}" aria-label="{{ __('Buscar') }}">
+            </div>
+        </header>
 
         {{ $slot }}
 
