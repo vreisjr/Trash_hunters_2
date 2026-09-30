@@ -104,4 +104,3 @@ class User extends Authenticatable implements PasskeyUser
         return $this->hasMany(Post::class);
     }
 }
-
