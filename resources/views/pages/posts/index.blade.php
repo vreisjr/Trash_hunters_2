@@ -5,7 +5,7 @@
         <main class="preview-container">
 
         @session('status')
-            <div style="background:#e8f8e8; color:#2e7d32; padding:14px 18px; border-radius:12px;">
+            <div style="background:#ffffff; color:#374151; padding:14px 18px; border-radius:12px;">
                 {{ $value }}
             </div>
         @endsession
@@ -130,7 +130,7 @@
                                 <button
                                     type="button"
                                     id="btn-fechar-categorias"
-                                    style="background:none; border:none; color:#2e7d32; font-weight:600; cursor:pointer; font-size:12px;"
+                                    style="background:none; border:none; color:#374151; font-weight:600; cursor:pointer; font-size:12px;"
                                 >
                                     {{ __('Concluir') }}
                                 </button>
@@ -190,7 +190,7 @@
                         <button
                             type="button"
                             id="btn-confirmar-local"
-                            style="padding:8px 16px; border:none; background:#2e7d32; color:#fff; border-radius:8px; cursor:pointer;"
+                            style="padding:8px 16px; border:1px solid #d1d5db; background:#ffffff; color:#374151; border-radius:8px; cursor:pointer;"
                         >
                             {{ __('Usar esta localização') }}
                         </button>
@@ -229,7 +229,7 @@
                         <button
                             type="button"
                             id="btn-confirmacao-sim"
-                            style="padding:8px 20px; border:none; background:#2e7d32; color:#fff; border-radius:8px; cursor:pointer;"
+                            style="padding:8px 20px; border:1px solid #d1d5db; background:#ffffff; color:#374151; border-radius:8px; cursor:pointer;"
                         >
                             {{ __('Sim') }}
                         </button>
@@ -265,8 +265,17 @@
 
                                 @if ($post->user->tipoPerfilLabel())
 
+                                    @php
+                                        $tipoPerfilEstilo = match ($post->user->tipo_perfil) {
+                                            'denunciante' => 'background:#fee2e2; color:#b91c1c; border-color:#fca5a5;',
+                                            'doador' => 'background:#fef3c7; color:#b45309; border-color:#fcd34d;',
+                                            'reciclador' => 'background:#dcfce7; color:#15803d; border-color:#86efac;',
+                                            default => 'background:#ffffff; color:#374151; border-color:#d1d5db;',
+                                        };
+                                    @endphp
+
                                     <span
-                                        style="display:inline-flex; align-items:center; gap:3px; background:#e8f5e9; color:#2e7d32; border:1px solid #a8e6a3; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600;"
+                                        style="display:inline-flex; align-items:center; gap:3px; border:1px solid; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; {{ $tipoPerfilEstilo }}"
                                     >
                                         {{ $post->user->tipoPerfilIcone() }}
                                         {{ $post->user->tipoPerfilLabel() }}
@@ -297,7 +306,7 @@
 
         <a
             href="{{ route('posts.edit', $post) }}"
-            style="background:none; border:none; cursor:pointer; padding:2px; color:#2e7d32; font-size:12px; font-weight:600; text-decoration:none;"
+            style="background:none; border:none; cursor:pointer; padding:2px; color:#374151; font-size:12px; font-weight:600; text-decoration:none;"
         >
             Editar
         </a>
@@ -548,7 +557,7 @@
 
                                 <button
                                     type="submit"
-                                    style="background:none; border:none; color:#2e7d32; font-weight:600; font-size:13px; cursor:pointer;"
+                                    style="background:none; border:none; color:#374151; font-weight:600; font-size:13px; cursor:pointer;"
                                 >
                                     Publicar
                                 </button>
@@ -1034,8 +1043,8 @@
                     btnCategoriaLabel.textContent =
                         `${marcadas.length} categorias`;
 
-                    btnCategoria.style.borderColor = '#2e7d32';
-                    btnCategoria.style.color = '#2e7d32';
+                    btnCategoria.style.borderColor = '#d1d5db';
+                    btnCategoria.style.color = '#374151';
 
                 }
 
@@ -1464,7 +1473,7 @@
                                         type="button"
                                         class="btn-responder-comentario"
                                         data-id="${data.id}"
-                                        style="background:none; border:none; cursor:pointer; font-size:11px; color:#2e7d32; font-weight:600;"
+                                        style="background:none; border:none; cursor:pointer; font-size:11px; color:#374151; font-weight:600;"
                                     >
                                         Responder
                                     </button>
@@ -1512,7 +1521,7 @@
                                         autocomplete="off"
                                         style="flex:1; border:1px solid #eee; border-radius:6px; padding:6px 8px; font-size:12px; outline:none; background:transparent;"
                                     >
-                                    <button type="submit" style="background:none; border:none; color:#2e7d32; font-weight:600; font-size:12px; cursor:pointer;">Publicar</button>
+                                    <button type="submit" style="background:none; border:none; color:#374151; font-weight:600; font-size:12px; cursor:pointer;">Publicar</button>
                                 </form>
 
                                 <div class="respostas-lista" style="margin-left:0; border-left:none; padding-left:0;"></div>

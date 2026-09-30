@@ -65,8 +65,8 @@ select:focus[data-flux-control] {
     :root {
         --bg: #f5f7f4;
         --text: #333333;
-        --green: #A8E6A3;
-        --green-dark: #74c365;
+        --green: #ffffff;
+        --green-dark: #f3f4f6;
         --blue: #B8E2F2;
         --white: #ffffff;
         --gray: #f2f2f2;
@@ -102,7 +102,8 @@ select:focus[data-flux-control] {
         gap: 14px;
         padding: 14px 18px;
         border-radius: 15px;
-        background: linear-gradient(110deg, #06463c, #006551);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         box-shadow: 0 8px 24px rgba(0, 65, 53, .13);
     }
 
@@ -113,7 +114,7 @@ select:focus[data-flux-control] {
         justify-content: center;
         min-height: 92px;
         gap: 8px;
-        color: #fff;
+        color: #1f2937;
         font-size: 11px;
         font-weight: 600;
         text-align: center;
@@ -125,18 +126,16 @@ select:focus[data-flux-control] {
         place-items: center;
         width: 58px;
         height: 58px;
-        border: 2px solid rgba(255, 255, 255, .95);
+        border: 2px solid #d1d5db;
         border-radius: 50%;
-        background: rgba(255, 255, 255, .08);
+        background: #ffffff;
         font-size: 25px;
         transition: transform .2s ease, background-color .2s ease;
     }
 
-    .mission-shortcut:hover i { transform: translateY(-3px); background: rgba(255, 255, 255, .16); }
+    .mission-shortcut:hover i { transform: translateY(-3px); background: #f9fafb; }
 
-    .shortcut-games i { background: #365b85; }
-    .shortcut-maker i { background: #176c5b; }
-    .shortcut-donor i { background: #236a66; }
+    .shortcut-games i, .shortcut-maker i, .shortcut-donor i { background: #ffffff; }
 
     .trash-topbar {
         position: sticky;
@@ -146,7 +145,8 @@ select:focus[data-flux-control] {
         align-items: center;
         min-height: 68px;
         padding: 12px 30px;
-        background: #06463c;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
     }
 
     .trash-search {
@@ -155,10 +155,10 @@ select:focus[data-flux-control] {
         width: min(555px, 100%);
         gap: 12px;
         padding: 10px 16px;
-        border: 1px solid rgba(255, 255, 255, .2);
+        border: 1px solid #d1d5db;
         border-radius: 12px;
-        background: rgba(255, 255, 255, .12);
-        color: #fff;
+        background: #ffffff;
+        color: #1f2937;
     }
 
     .trash-search input {
@@ -166,23 +166,23 @@ select:focus[data-flux-control] {
         border: 0;
         outline: 0;
         background: transparent;
-        color: #fff;
+        color: #1f2937;
         font-size: 12px;
     }
 
-    .trash-search input::placeholder { color: rgba(255, 255, 255, .82); }
+    .trash-search input::placeholder { color: #6b7280; }
 
     body:has(.trash-topbar) { background: #eef5f7 !important; }
     body:has(.trash-topbar) flux\:main { background: transparent; }
-    body:has(.trash-topbar) [data-flux-sidebar] { background: #003b33 !important; border-color: rgba(255,255,255,.16) !important; color: #ecf8f2; }
-    body:has(.trash-topbar) [data-flux-sidebar] [data-flux-sidebar-item] { color: #fff !important; }
-    body:has(.trash-topbar) [data-flux-sidebar-item][data-current] { background: #007b5d !important; color: #fff !important; }
-    body:has(.trash-topbar) [data-flux-sidebar-item]:hover { background: rgba(255,255,255,.1) !important; color: #fff !important; }
-    body:has(.trash-topbar) [data-flux-sidebar-group-heading] { color: #d8fff0 !important; }
+    body:has(.trash-topbar) [data-flux-sidebar] { background: #ffffff !important; border-color: #e5e7eb !important; color: #1f2937; }
+    body:has(.trash-topbar) [data-flux-sidebar] [data-flux-sidebar-item] { color: #1f2937 !important; }
+    body:has(.trash-topbar) [data-flux-sidebar-item][data-current] { background: #f3f4f6 !important; color: #111827 !important; }
+    body:has(.trash-topbar) [data-flux-sidebar-item]:hover { background: #f9fafb !important; color: #111827 !important; }
+    body:has(.trash-topbar) [data-flux-sidebar-group-heading] { color: #6b7280 !important; }
     body:has(.trash-topbar) [data-flux-main] { max-width: none !important; background: transparent !important; }
-    .trash-sidebar-header { background: #003b33 !important; }
-    .trash-sidebar-header + * { background: #003b33 !important; }
-    .trash-sidebar-header ~ * { color: #ecf8f2; }
+    .trash-sidebar-header { background: #ffffff !important; }
+    .trash-sidebar-header + * { background: #ffffff !important; }
+    .trash-sidebar-header ~ * { color: #1f2937; }
 
     .new-post {
         background: var(--white);
@@ -216,7 +216,7 @@ select:focus[data-flux-control] {
     .feed-aside { display: flex; flex-direction: column; gap: 18px; }
     .aside-panel { padding: 20px; border-radius: 16px; background: rgba(255,255,255,.9); box-shadow: 0 8px 30px rgba(19,64,53,.08); }
     .aside-heading { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e5ece9; padding-bottom: 12px; }
-    .aside-heading i { color: #2c8b45; font-size: 21px; }
+    .aside-heading i { color: #374151; font-size: 21px; }
     .aside-heading h2 { margin: 0; color: #193b36; font-size: 15px; }
     .aside-panel > p { margin: 12px 0 14px; color: #71827f; font-size: 12px; line-height: 1.5; }
     .recycling-list { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; }
@@ -228,7 +228,7 @@ select:focus[data-flux-control] {
     .recycling-image { display: grid; place-items: center; width: 52px; height: 45px; flex: 0 0 52px; border-radius: 8px; color: #fff; font-size: 19px; }
     .medicine { background: #d8b28c; } .package { background: #36a9c1; } .electronics { background: #8b837d; } .lamp { background: #d1c3a2; } .paint { background: #b6824c; }
     .aside-news { min-height: 145px; }
-    .aside-link { display: flex; justify-content: flex-end; align-items: center; gap: 7px; color: #2c8b45; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .aside-link { display: flex; justify-content: flex-end; align-items: center; gap: 7px; color: #374151; font-size: 12px; font-weight: 700; text-decoration: none; }
     .trash-sidebar-header { min-height: 92px; }
     .trash-brand-placeholder { width: 100%; height: 52px; }
 
@@ -306,7 +306,7 @@ select:focus[data-flux-control] {
     .publish {
         margin-left: auto;
         background: var(--green) !important;
-        color: #2b3d2f;
+        color: #374151;
         font-weight: 700;
         padding: 12px 28px !important;
     }
@@ -358,7 +358,7 @@ select:focus[data-flux-control] {
 
     .post-top h3 {
         margin: 0;
-        color: #2d5535;
+        color: #374151;
         font-size: 16px;
     }
 
@@ -541,8 +541,8 @@ select:focus[data-flux-control] {
     }
 
     .share-btn:hover {
-        background: #e8f8e8;
-        color: #2e7d32;
+        background: #f3f4f6;
+        color: #374151;
     }
 
     .comments {
@@ -572,7 +572,7 @@ select:focus[data-flux-control] {
     }
 
     .comment strong {
-        color: #2f5d39;
+        color: #374151;
         display: block;
         margin-bottom: 5px;
     }
