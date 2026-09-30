@@ -26,6 +26,7 @@ class CreateNewUser implements CreatesNewUsers
             ...$this->profileRules(),
             'role' => ['required', 'in:user,premium'],
             'district' => ['required_if:role,premium', 'nullable', 'string', 'max:255'],
+            'tipo_perfil' => ['required', 'in:'.implode(',', array_keys(User::TIPOS_PERFIL))],
             'password' => $this->passwordRules(),
         ])->validate();
 
@@ -35,6 +36,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $input['password'],
             'role' => $input['role'],
             'district' => $input['district'] ?? null,
+            'tipo_perfil' => $input['tipo_perfil'],
         ]);
     }
 }

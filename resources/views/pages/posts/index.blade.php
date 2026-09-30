@@ -259,7 +259,22 @@
 
                         <div>
 
-                            <h3>{{ $post->user->name }}</h3>
+                            <h3 style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+
+                                {{ $post->user->name }}
+
+                                @if ($post->user->tipoPerfilLabel())
+
+                                    <span
+                                        style="display:inline-flex; align-items:center; gap:3px; background:#e8f5e9; color:#2e7d32; border:1px solid #a8e6a3; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600;"
+                                    >
+                                        {{ $post->user->tipoPerfilIcone() }}
+                                        {{ $post->user->tipoPerfilLabel() }}
+                                    </span>
+
+                                @endif
+
+                            </h3>
 
                             <span>
                                 {{ $post->created_at->diffForHumans() }}
