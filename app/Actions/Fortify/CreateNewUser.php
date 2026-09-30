@@ -19,7 +19,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        if (!array_key_exists('role', $input)) {
+        if (! array_key_exists('role', $input)) {
             $input['role'] = 'user';
         }
         Validator::make($input, [
