@@ -20,14 +20,6 @@
             </div>
         @endif
 
-        <section class="mission-shortcuts" aria-label="{{ __('Atalhos da comunidade') }}">
-            <div class="mission-shortcut shortcut-ranking" aria-hidden="true"><i class="fa-solid fa-trophy"></i><span>{{ __('Ranking') }}</span></div>
-            <div class="mission-shortcut shortcut-games" aria-hidden="true"><i class="fa-solid fa-gamepad"></i><span>{{ __('Jogos') }}</span></div>
-            <div class="mission-shortcut shortcut-missions" aria-hidden="true"><i class="fa-solid fa-recycle"></i><span>{{ __('Missões') }}</span></div>
-            <div class="mission-shortcut shortcut-maker" aria-hidden="true"><i class="fa-solid fa-person-digging"></i><span>{{ __('Fale com um artesão/reciclador') }}</span></div>
-            <div class="mission-shortcut shortcut-donor" aria-hidden="true"><i class="fa-solid fa-hand-holding-heart"></i><span>{{ __('Fale com um doador') }}</span></div>
-        </section>
-
         {{-- NOVA POSTAGEM --}}
 
         <section class="new-post" id="criar-post">
@@ -581,32 +573,6 @@
         </section>
 
         </main>
-
-        <aside class="feed-aside" aria-label="Informações sobre reciclagem">
-            <section class="aside-panel">
-                <div class="aside-heading">
-                    <i class="fa-solid fa-leaf"></i>
-                    <h2>{{ __('Separe corretamente') }}</h2>
-                </div>
-                <p>{{ __('Alguns materiais precisam de um destino diferente do lixo comum.') }}</p>
-                <ul class="recycling-list">
-                    <li><span class="recycling-image medicine"><i class="fa-solid fa-pills"></i></span><span><strong>{{ __('Medicamentos') }}</strong><small>{{ __('Entregue em pontos de coleta.') }}</small></span></li>
-                    <li><span class="recycling-image package"><i class="fa-solid fa-bottle-water"></i></span><span><strong>{{ __('Embalagens coloridas') }}</strong><small>{{ __('Lave e separe por material.') }}</small></span></li>
-                    <li><span class="recycling-image electronics"><i class="fa-solid fa-mobile-screen-button"></i></span><span><strong>{{ __('Eletrônicos e pilhas') }}</strong><small>{{ __('Não descarte no lixo comum.') }}</small></span></li>
-                    <li><span class="recycling-image lamp"><i class="fa-solid fa-lightbulb"></i></span><span><strong>{{ __('Lâmpadas') }}</strong><small>{{ __('Procure um descarte especializado.') }}</small></span></li>
-                    <li><span class="recycling-image paint"><i class="fa-solid fa-paint-roller"></i></span><span><strong>{{ __('Tintas e solventes') }}</strong><small>{{ __('São resíduos perigosos.') }}</small></span></li>
-                </ul>
-            </section>
-
-            <section class="aside-panel aside-news">
-                <div class="aside-heading">
-                    <i class="fa-solid fa-leaf"></i>
-                    <h2>{{ __('Notícias ambientais') }}</h2>
-                </div>
-                <p>{{ __('Acompanhe as novidades e ações sustentáveis da comunidade.') }}</p>
-                <a href="#" class="aside-link">{{ __('Ver todas') }} <i class="fa-solid fa-arrow-right"></i></a>
-            </section>
-        </aside>
 
     </div>
 

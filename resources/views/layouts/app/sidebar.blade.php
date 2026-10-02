@@ -11,7 +11,7 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid !text-gray-800">
+                <flux:sidebar.group :heading="__('Platform')" class="grid gap-1.5 !text-gray-800">
                     <flux:sidebar.item icon="home" class="!text-gray-800" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Início') }}
                     </flux:sidebar.item>
@@ -47,11 +47,7 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
-                <flux:sidebar.group :heading="__('Comunidade')" class="grid mt-5 !text-gray-800">
-                    <flux:sidebar.item icon="trophy" class="!text-gray-800" href="#">
-                        {{ __('Ranking') }}
-                    </flux:sidebar.item>
-
+                <flux:sidebar.group :heading="__('Comunidade')" class="grid gap-1.5 mt-5 !text-gray-800">
                     <flux:sidebar.item icon="play" class="!text-gray-800" href="#">
                         {{ __('Jogos') }}
                     </flux:sidebar.item>
