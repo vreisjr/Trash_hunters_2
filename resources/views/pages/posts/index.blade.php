@@ -396,36 +396,52 @@
 
                     {{-- AÇÕES DA PUBLICAÇÃO --}}
 
-                    <div class="post-action-bar">
+                                        <div class="post-action-bar">
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;">
 
-                        <button
-                            type="button"
-                            class="post-action-button btn-curtir-post"
-                            data-id="{{ $post->id }}"
-                            style="color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
-                            aria-label="Curtir publicação"
-                            title="Curtir"
-                        >
+                            <button
+                                type="button"
+                                class="post-action-button btn-curtir-post"
+                                data-id="{{ $post->id }}"
+                                style="color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }}; width:100%;"
+                                aria-label="Curtir publicação"
+                                title="Curtir"
+                            >
+                                <i class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart"></i>
+                            </button>
 
-                            <i
-                                class="fa-{{ $post->curtidoPor(auth()->id()) ? 'solid' : 'regular' }} fa-heart"
-                            ></i>
+                            <div
+                                class="curtidas-total-post-label"
+                                style="font-size:13px; color:#262626; font-weight:600; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
+                            >
+                                <span class="curtidas-total-post">{{ $post->curtidas->count() }}</span> curtida{{ $post->curtidas->count() == 1 ? '' : 's' }}
+                            </div>
 
-                        </button>
+                        </div>
 
-                        <button
-                            type="button"
-                            class="post-action-button btn-toggle-comentarios"
-                            data-post-id="{{ $post->id }}"
-                            aria-label="Comentar publicação"
-                            title="Comentar"
-                        >
+                                               <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;">
 
-                            <i class="fa-regular fa-comment"></i>
+                            <button
+                                type="button"
+                                class="post-action-button btn-toggle-comentarios"
+                                data-post-id="{{ $post->id }}"
+                                aria-label="Comentar publicação"
+                                title="Comentar"
+                                style="width:100%;"
+                            >
+                                <i class="fa-regular fa-comment"></i>
+                            </button>
 
-                        </button>
+                            <div
+                                class="comentarios-total-post-label"
+                                style="font-size:13px; color:#262626; font-weight:600; {{ $post->comentarios->count() ? '' : 'display:none;' }}"
+                            >
+                                <span class="comentarios-total-post">{{ $post->comentarios->count() }}</span> comentário{{ $post->comentarios->count() == 1 ? '' : 's' }}
+                            </div>
 
-                        <div class="compartilhar-publicacao" style="position:relative; display:block; width:100%;">
+                        </div>
+
+                                                <div class="compartilhar-publicacao" style="position:relative; display:block; flex:1;">
 
                             <button
                                 type="button"
@@ -438,16 +454,13 @@
                                 aria-expanded="false"
                                 style="width:100%;"
                             >
-
                                 <i class="fa-solid fa-share-nodes"></i>
-
                             </button>
 
                             <div
                                 class="menu-compartilhar-post"
                                 style="display:none; position:absolute; bottom:calc(100% + 8px); top:auto; right:0; z-index:20; min-width:190px; padding:6px; background:#fff; border:1px solid #eee; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,.12);"
                             >
-
                                 <button type="button" data-share-action="copy" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-regular fa-copy" style="width:16px;"></i> Copiar link
                                 </button>
@@ -466,21 +479,9 @@
                                 <button type="button" data-share-action="facebook" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-brands fa-facebook" style="width:16px;"></i> Facebook
                                 </button>
-
                             </div>
 
                         </div>
-
-                    </div>
-
-                    {{-- CONTAGEM DE CURTIDAS, embaixo da barra de ações (igual Instagram) --}}
-
-                    <div
-                        class="curtidas-total-post-label"
-                        style="font-size:13px; color:#262626; font-weight:600; margin-top:6px; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
-                    >
-
-                        <span class="curtidas-total-post">{{ $post->curtidas->count() }}</span> curtida{{ $post->curtidas->count() == 1 ? '' : 's' }}
 
                     </div>
 
@@ -1501,7 +1502,14 @@
                                 .querySelector(`[data-comentario-id="${parentId}"] .respostas-lista`)
                             : lista;
 
-                        (listaResposta || lista).appendChild(div);
+                            (listaResposta || lista).appendChild(div);
+
+                        const labelComentarios = document.querySelector(`#post-${postId} .comentarios-total-post-label`);
+                        const totalSpanComentarios = labelComentarios.querySelector('.comentarios-total-post');
+                        const novoTotal = (parseInt(totalSpanComentarios.textContent) || 0) + 1;
+
+                        labelComentarios.style.display = 'block';
+                        labelComentarios.innerHTML = `<span class="comentarios-total-post">${novoTotal}</span> comentário${novoTotal == 1 ? '' : 's'}`;
 
                         input.value = '';
 
@@ -1729,7 +1737,7 @@
 
                         try {
 
-                            await fetch(
+                                                       await fetch(
                                 `/comentarios/${id}`,
                                 {
                                     method: 'DELETE',
@@ -1739,6 +1747,15 @@
                                     },
                                 }
                             );
+
+                            const postArticle = btnApagar.closest('.post');
+                            const labelComentarios = postArticle.querySelector('.comentarios-total-post-label');
+                            const totalSpanComentarios = labelComentarios.querySelector('.comentarios-total-post');
+                            const totalAtual = parseInt(totalSpanComentarios.textContent) || 0;
+                            const novoTotal = Math.max(totalAtual - 1, 0);
+
+                            labelComentarios.style.display = novoTotal > 0 ? 'block' : 'none';
+                            labelComentarios.innerHTML = `<span class="comentarios-total-post">${novoTotal}</span> comentário${novoTotal == 1 ? '' : 's'}`;
 
                             btnApagar
                                 .closest('.comentario')
