@@ -45,6 +45,18 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    html {
+        background-color: #f3f5ec;
+    }
+
+    body,
+    body > div,
+    main,
+    [data-flux-main],
+    [data-flux-layout] {
+        background-color: #f3f5ec;
+    }
 }
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {
@@ -65,8 +77,8 @@ select:focus[data-flux-control] {
     :root {
         --bg: #f5f7f4;
         --text: #333333;
-        --green: #ffffff;
-        --green-dark: #f3f4f6;
+        --green: #228B22;
+        --green-dark: #006400;
         --blue: #B8E2F2;
         --white: #ffffff;
         --gray: #f2f2f2;
@@ -78,11 +90,9 @@ select:focus[data-flux-control] {
     }
 
     .feed-shell {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 300px;
-        gap: 18px;
+        display: block;
         width: 100%;
-        max-width: 1220px;
+        max-width: 760px;
         margin: 0 auto;
         padding: 18px 24px 48px;
     }
@@ -96,93 +106,97 @@ select:focus[data-flux-control] {
         padding: 0 20px;
     }
 
-    .mission-shortcuts {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 14px;
-        padding: 14px 18px;
-        border-radius: 15px;
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 8px 24px rgba(0, 65, 53, .13);
+    body { background: #f3f5ec !important; }
+    [data-flux-sidebar] {
+        background: #228B22 !important;
+        border-color: #1b6f1b !important;
+        color: #ffffff !important;
     }
-
-    .mission-shortcut {
+    [data-flux-sidebar] [data-flux-sidebar-item] {
+        color: #ffffff !important;
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.18) !important;
+        border-radius: 14px !important;
+        padding: 0.8rem 0.95rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.01em;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 4px 10px rgba(15, 47, 15, 0.15) !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+    [data-flux-sidebar] [data-flux-sidebar-item] > * {
+        color: #ffffff !important;
+    }
+    [data-flux-sidebar-item][data-current] {
+        background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.09)) !important;
+        color: #ffffff !important;
+        border-color: rgba(255,255,255,0.35) !important;
+        box-shadow: 0 10px 20px rgba(16,46,16,0.2), inset 0 0 0 1px rgba(255,255,255,0.12) !important;
+    }
+    [data-flux-sidebar-item]:hover {
+        background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.12)) !important;
+        color: #ffffff !important;
+        border-color: rgba(255,255,255,0.4) !important;
+    }
+    [data-flux-sidebar-item] svg,
+    [data-flux-sidebar-item] i,
+    [data-flux-sidebar-item] [data-flux-icon] {
+        color: #ffffff !important;
+        opacity: 1 !important;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+    }
+    [data-flux-sidebar] [data-flux-sidebar-group] > div:first-child > div,
+    [data-flux-sidebar] [data-flux-sidebar-group] button > span,
+    [data-flux-sidebar-group-heading],
+    [data-flux-sidebar-group] [data-flux-sidebar-group-heading] {
+        color: #e6f7e8 !important;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.68rem !important;
+        font-weight: 700 !important;
+        opacity: 1 !important;
+    }
+    [data-flux-main] { max-width: none !important; background: transparent !important; }
+    .trash-sidebar-header {
+        background: transparent !important;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    [data-flux-sidebar-collapse] {
+        display: flex !important;
         align-items: center;
         justify-content: center;
-        min-height: 92px;
-        gap: 8px;
-        color: #1f2937;
-        font-size: 11px;
-        font-weight: 600;
-        text-align: center;
-        user-select: none;
+        margin-left: auto;
+        position: relative;
+        z-index: 1;
+        inset: auto !important;
+        transform: none !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
     }
-
-    .mission-shortcut i {
-        display: grid;
-        place-items: center;
-        width: 58px;
-        height: 58px;
-        border: 2px solid #d1d5db;
-        border-radius: 50%;
-        background: #ffffff;
-        font-size: 25px;
-        transition: transform .2s ease, background-color .2s ease;
-    }
-
-    .mission-shortcut:hover i { transform: translateY(-3px); background: #f9fafb; }
-
-    .shortcut-games i, .shortcut-maker i, .shortcut-donor i { background: #ffffff; }
-
-    .trash-topbar {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        display: flex;
+    [data-flux-sidebar-collapse] button {
+        display: inline-flex !important;
         align-items: center;
-        min-height: 68px;
-        padding: 12px 30px;
-        background: #ffffff;
-        border-bottom: 1px solid #e5e7eb;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        border-radius: 10px !important;
+        background: rgba(255,255,255,0.08) !important;
+        color: #ffffff !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease;
     }
-
-    .trash-search {
-        display: flex;
-        align-items: center;
-        width: min(555px, 100%);
-        gap: 12px;
-        padding: 10px 16px;
-        border: 1px solid #d1d5db;
-        border-radius: 12px;
-        background: #ffffff;
-        color: #1f2937;
+    [data-flux-sidebar-collapse] {
+        cursor: pointer !important;
     }
-
-    .trash-search input {
-        width: 100%;
-        border: 0;
-        outline: 0;
-        background: transparent;
-        color: #1f2937;
-        font-size: 12px;
+    [data-flux-sidebar-collapse] button:hover {
+        background: rgba(255,255,255,0.15) !important;
+        border-color: rgba(255,255,255,0.4) !important;
     }
-
-    .trash-search input::placeholder { color: #6b7280; }
-
-    body:has(.trash-topbar) { background: #eef5f7 !important; }
-    body:has(.trash-topbar) flux\:main { background: transparent; }
-    body:has(.trash-topbar) [data-flux-sidebar] { background: #ffffff !important; border-color: #e5e7eb !important; color: #1f2937; }
-    body:has(.trash-topbar) [data-flux-sidebar] [data-flux-sidebar-item] { color: #1f2937 !important; }
-    body:has(.trash-topbar) [data-flux-sidebar-item][data-current] { background: #f3f4f6 !important; color: #111827 !important; }
-    body:has(.trash-topbar) [data-flux-sidebar-item]:hover { background: #f9fafb !important; color: #111827 !important; }
-    body:has(.trash-topbar) [data-flux-sidebar-group-heading] { color: #6b7280 !important; }
-    body:has(.trash-topbar) [data-flux-main] { max-width: none !important; background: transparent !important; }
-    .trash-sidebar-header { background: #ffffff !important; }
-    .trash-sidebar-header + * { background: #ffffff !important; }
-    .trash-sidebar-header ~ * { color: #1f2937; }
 
     .new-post {
         background: var(--white);
@@ -213,22 +227,6 @@ select:focus[data-flux-control] {
     .new-post.is-open .new-post-trigger-arrow { transform: rotate(180deg); }
     .composer-content { margin-top: 22px; padding-top: 22px; border-top: 1px solid #edf1ef; }
 
-    .feed-aside { display: flex; flex-direction: column; gap: 18px; }
-    .aside-panel { padding: 20px; border-radius: 16px; background: rgba(255,255,255,.9); box-shadow: 0 8px 30px rgba(19,64,53,.08); }
-    .aside-heading { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e5ece9; padding-bottom: 12px; }
-    .aside-heading i { color: #374151; font-size: 21px; }
-    .aside-heading h2 { margin: 0; color: #193b36; font-size: 15px; }
-    .aside-panel > p { margin: 12px 0 14px; color: #71827f; font-size: 12px; line-height: 1.5; }
-    .recycling-list { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; }
-    .recycling-list li { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #e5ece9; }
-    .recycling-list li:last-child { border-bottom: 0; }
-    .recycling-list strong, .recycling-list small { display: block; }
-    .recycling-list strong { color: #274b47; font-size: 12px; }
-    .recycling-list small { margin-top: 3px; color: #71827f; font-size: 10px; line-height: 1.35; }
-    .recycling-image { display: grid; place-items: center; width: 52px; height: 45px; flex: 0 0 52px; border-radius: 8px; color: #fff; font-size: 19px; }
-    .medicine { background: #d8b28c; } .package { background: #36a9c1; } .electronics { background: #8b837d; } .lamp { background: #d1c3a2; } .paint { background: #b6824c; }
-    .aside-news { min-height: 145px; }
-    .aside-link { display: flex; justify-content: flex-end; align-items: center; gap: 7px; color: #374151; font-size: 12px; font-weight: 700; text-decoration: none; }
     .trash-sidebar-header { min-height: 92px; }
     .trash-brand-placeholder { width: 100%; height: 52px; }
 
@@ -306,7 +304,7 @@ select:focus[data-flux-control] {
     .publish {
         margin-left: auto;
         background: var(--green) !important;
-        color: #374151;
+        color: #ffffff;
         font-weight: 700;
         padding: 12px 28px !important;
     }
@@ -634,10 +632,6 @@ select:focus[data-flux-control] {
 
     @media (max-width: 600px) {
         .feed-shell { display: block; padding: 18px 12px 36px; }
-        .feed-aside { display: none; }
-        .mission-shortcuts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .mission-shortcut:nth-child(n + 4) { display: none; }
-        .trash-topbar { min-height: 58px; padding: 10px 14px; }
         .post-action-bar {
             gap: 20px !important;
         }

@@ -4,10 +4,10 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 rounded-r-2xl">
+        <flux:sidebar sticky collapsible="true" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 rounded-r-2xl">
             <flux:sidebar.header class="trash-sidebar-header">
                 <div class="trash-brand-placeholder" aria-label="{{ __('Espaço reservado para a identidade visual') }}"></div>
-                <flux:sidebar.collapse class="lg:hidden" />
+                <flux:sidebar.collapse class="ml-auto sidebar-collapse-toggle" icon="chevron-left" inset="right" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
