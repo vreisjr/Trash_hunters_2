@@ -47,6 +47,8 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'content' => ['required', 'string', 'max:5000'],
+            'price_type' => ['required', 'in:free,paid'],
+            'price' => ['nullable', 'required_if:price_type,paid', 'numeric', 'min:0.01', 'max:99999999.99'],
             'categoria_ids' => ['nullable', 'array'],
             'categoria_ids.*' => ['exists:categorias,id'],
             'media' => ['nullable', 'array', 'max:5'],
@@ -59,6 +61,8 @@ class PostController extends Controller
 
         $data = [
             'content' => $validated['content'],
+            'price_type' => $validated['price_type'],
+            'price' => $validated['price_type'] === 'paid' ? $validated['price'] : null,
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
             'address' => $validated['address'] ?? null,

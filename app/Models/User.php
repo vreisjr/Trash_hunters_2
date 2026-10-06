@@ -28,7 +28,7 @@ use Laravel\Fortify\PasskeyAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password', 'role', 'district', 'tipo_perfil'])]
+#[Fillable(['name', 'email', 'password', 'role', 'district'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -60,38 +60,9 @@ class User extends Authenticatable implements PasskeyUser
             : $initials;
     }
 
-    /**
-     * Tipos de perfil disponíveis na plataforma, com o nome
-     * bonito que deve ser exibido para cada valor salvo no banco.
-     *
-     * @var array<string, string>
-     */
-    public const TIPOS_PERFIL = [
-        'denunciante' => 'Denunciante',
-        'doador' => 'Doador',
-        'reciclador' => 'Reciclador',
-    ];
-
-    /**
-     * Get the friendly label for the user's tipo_perfil
-     * (ex.: "reciclador" -> "Reciclador").
-     */
-    public function tipoPerfilLabel(): ?string
+    public function isModerator(): bool
     {
-        return self::TIPOS_PERFIL[$this->tipo_perfil] ?? null;
-    }
-
-    /**
-     * Get a small emoji icon representing the user's tipo_perfil.
-     */
-    public function tipoPerfilIcone(): ?string
-    {
-        return match ($this->tipo_perfil) {
-            'denunciante' => '📢',
-            'doador' => '🎁',
-            'reciclador' => '♻️',
-            default => null,
-        };
+        return in_array($this->role, ['admin', 'premium'], true);
     }
 
     /**

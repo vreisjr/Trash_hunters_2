@@ -61,19 +61,6 @@
     placeholder="Ex.: Centro"
 />
 
-	<!-- Tipo de perfil -->
-	<flux:select
-    	name="tipo_perfil"
-    	:label="__('Tipo de perfil')"
-    	:placeholder="__('Selecione um tipo')"
-    	required
-	>
-    	@foreach (\App\Models\User::TIPOS_PERFIL as $valor => $rotulo)
-        	<option value="{{ $valor }}" @selected(old('tipo_perfil') === $valor)>
-            	{{ $rotulo }}
-        	</option>
-    	@endforeach
-	</flux:select>
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"

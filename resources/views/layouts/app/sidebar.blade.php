@@ -4,55 +4,54 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="true" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 rounded-r-2xl">
+        <flux:sidebar sticky collapsible="true" class="trash-sidebar">
             <flux:sidebar.header class="trash-sidebar-header">
-                <div class="trash-brand-placeholder" aria-label="{{ __('Espaço reservado para a identidade visual') }}"></div>
-                <flux:sidebar.collapse class="ml-auto sidebar-collapse-toggle" icon="chevron-left" inset="right" />
+                <flux:sidebar.collapse class="sidebar-collapse-toggle" icon="chevron-left" inset="right" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid gap-1.5 !text-gray-800">
-                    <flux:sidebar.item icon="home" class="!text-gray-800" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                <flux:sidebar.group :heading="__('Navegação')" class="trash-sidebar-group">
+                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Início') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="globe-alt" class="!text-gray-800" :href="route('posts.index')" :current="request()->routeIs('posts.index')" wire:navigate>
+                    <flux:sidebar.item icon="globe-alt" :href="route('posts.index')" :current="request()->routeIs('posts.index')" wire:navigate>
                         {{ __('Explorar') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="plus" class="!text-gray-800" :href="route('posts.index').'#criar-post'" :current="request()->routeIs('posts.create')">
+                    <flux:sidebar.item icon="plus" :href="route('posts.index').'#criar-post'" :current="request()->routeIs('posts.create')" wire:navigate>
                         {{ __('Criar post') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="bell" class="!text-gray-800" href="#">
+                    <flux:sidebar.item icon="bell" href="#">
                         {{ __('Notificações') }}
                         <x-slot name="badge">3</x-slot>
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="chat-bubble-left-right" class="!text-gray-800" href="#">
+                    <flux:sidebar.item icon="chat-bubble-left-right" href="#">
                         {{ __('Mensagens') }}
                         <x-slot name="badge">1</x-slot>
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="bookmark" class="!text-gray-800" href="#">
+                    <flux:sidebar.item icon="bookmark" href="#">
                         {{ __('Salvos') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="eye-slash" class="!text-gray-800" href="#">
+                    <flux:sidebar.item icon="eye-slash" href="#">
                         {{ __('Curiosidades') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="map-pin" class="!text-gray-800" href="#">
+                    <flux:sidebar.item icon="map-pin" href="#">
                         {{ __('Pontos de coleta') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
-                <flux:sidebar.group :heading="__('Comunidade')" class="grid gap-1.5 mt-5 !text-gray-800">
-                    <flux:sidebar.item icon="play" class="!text-gray-800" href="#">
+                <flux:sidebar.group :heading="__('Comunidade')" class="trash-sidebar-group">
+                    <flux:sidebar.item icon="play" href="#">
                         {{ __('Jogos') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="check-badge" class="!text-gray-800" href="#">
+                    <flux:sidebar.item icon="check-badge" href="#">
                         {{ __('Desafios') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
@@ -60,8 +59,8 @@
 
             <flux:spacer />
 
-            <flux:sidebar.nav>
-                <flux:sidebar.item icon="cog" class="!text-gray-800" :href="route('profile.edit')" wire:navigate>
+            <flux:sidebar.nav class="trash-sidebar-footer-nav">
+                <flux:sidebar.item icon="cog" :href="route('profile.edit')" :current="request()->routeIs('profile.edit')" wire:navigate>
                     {{ __('Configurações') }}
                 </flux:sidebar.item>
             </flux:sidebar.nav>

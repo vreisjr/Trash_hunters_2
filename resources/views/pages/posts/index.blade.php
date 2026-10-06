@@ -133,6 +133,50 @@
 
                     </div>
 
+                    <div style="position:relative; display:inline-block;">
+
+                        <button type="button" id="btn-preco">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                            <span id="btn-preco-label">{{ __('Grátis') }}</span>
+                        </button>
+
+                        <div
+                            id="dropdown-preco"
+                            style="display:none; position:absolute; bottom:110%; left:0; background:#fff; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:50; min-width:230px; padding:10px;"
+                        >
+                            <label style="display:flex; align-items:center; gap:8px; padding:7px 4px; cursor:pointer;">
+                                <input type="radio" name="price_type" value="free" checked>
+                                <span>{{ __('Grátis') }}</span>
+                            </label>
+
+                            <label style="display:flex; align-items:center; gap:8px; padding:7px 4px; cursor:pointer;">
+                                <input type="radio" name="price_type" value="paid">
+                                <span>{{ __('Defina um valor') }}</span>
+                            </label>
+
+                            <div id="preco-valor-wrapper" hidden style="margin-top:6px;">
+                                <label for="preco-valor" style="display:block; margin-bottom:4px; color:#64748b; font-size:12px;">
+                                    {{ __('Valor sugerido em reais') }}
+                                </label>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span style="color:#64748b; font-size:13px;">R$</span>
+                                    <input
+                                        type="number"
+                                        name="price"
+                                        id="preco-valor"
+                                        min="0.01"
+                                        max="99999999.99"
+                                        step="0.01"
+                                        placeholder="0,00"
+                                        inputmode="decimal"
+                                        style="width:100%; padding:7px 8px; border:1px solid #cbd5e1; border-radius:6px;"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <button type="submit" class="publish">
                         {{ __('Publicar') }}
                     </button>
@@ -182,7 +226,7 @@
                         <button
                             type="button"
                             id="btn-confirmar-local"
-                            style="padding:8px 16px; border:1px solid #d1d5db; background:#ffffff; color:#374151; border-radius:8px; cursor:pointer;"
+                            style="padding:8px 16px; border:1px solid #059669; background:#059669; color:#ffffff; border-radius:8px; cursor:pointer;"
                         >
                             {{ __('Usar esta localização') }}
                         </button>
@@ -221,7 +265,7 @@
                         <button
                             type="button"
                             id="btn-confirmacao-sim"
-                            style="padding:8px 20px; border:1px solid #d1d5db; background:#ffffff; color:#374151; border-radius:8px; cursor:pointer;"
+                            style="padding:8px 20px; border:1px solid #059669; background:#059669; color:#ffffff; border-radius:8px; cursor:pointer;"
                         >
                             {{ __('Sim') }}
                         </button>
@@ -255,22 +299,12 @@
 
                                 {{ $post->user->name }}
 
-                                @if ($post->user->tipoPerfilLabel())
-
-                                    @php
-                                        $tipoPerfilEstilo = match ($post->user->tipo_perfil) {
-                                            'denunciante' => 'background:#fee2e2; color:#b91c1c; border-color:#fca5a5;',
-                                            'doador' => 'background:#fef3c7; color:#b45309; border-color:#fcd34d;',
-                                            'reciclador' => 'background:#dcfce7; color:#15803d; border-color:#86efac;',
-                                            default => 'background:#ffffff; color:#374151; border-color:#d1d5db;',
-                                        };
-                                    @endphp
-
+                                @if ($post->user->isModerator())
                                     <span
-                                        style="display:inline-flex; align-items:center; gap:3px; border:1px solid; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; {{ $tipoPerfilEstilo }}"
+                                        style="display:inline-flex; align-items:center; gap:3px; border:1px solid #d4af37; padding:1px 8px; border-radius:999px; background:#fff8dc; color:#9a6b00; font-size:11px; font-weight:600;"
                                     >
-                                        {{ $post->user->tipoPerfilIcone() }}
-                                        {{ $post->user->tipoPerfilLabel() }}
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                        {{ __('Moderador') }}
                                     </span>
 
                                 @endif
@@ -361,6 +395,18 @@
                         @endif
 
                     </div>
+
+                    @if ($post->price_type === 'paid' && $post->price !== null)
+                        <div class="post-price post-price-paid">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                            {{ __('Pede-se uma contribuição de') }} <strong>R$ {{ number_format((float) $post->price, 2, ',', '.') }}</strong>
+                        </div>
+                    @else
+                        <div class="post-price post-price-free">
+                            <i class="fa-solid fa-gift"></i>
+                            {{ __('Para doação') }}
+                        </div>
+                    @endif
 
                     <p>{{ $post->content }}</p>
 
@@ -1034,9 +1080,50 @@
 
                 });
 
+            // --- Preço da doação ---
+
+            const btnPreco = document.getElementById('btn-preco');
+            const dropdownPreco = document.getElementById('dropdown-preco');
+            const btnPrecoLabel = document.getElementById('btn-preco-label');
+            const precoValorWrapper = document.getElementById('preco-valor-wrapper');
+            const precoValor = document.getElementById('preco-valor');
+            const opcoesPreco = document.querySelectorAll('input[name="price_type"]');
+
+            btnPreco.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                dropdownPreco.style.display =
+                    dropdownPreco.style.display === 'none' ? 'block' : 'none';
+            });
+
+            dropdownPreco.addEventListener('click', (e) => e.stopPropagation());
+
+            opcoesPreco.forEach((opcao) => {
+                opcao.addEventListener('change', () => {
+                    const isPaid = opcao.value === 'paid' && opcao.checked;
+
+                    precoValorWrapper.hidden = !isPaid;
+                    precoValor.required = isPaid;
+                    btnPrecoLabel.textContent = isPaid
+                        ? (precoValor.value ? `R$ ${precoValor.value}` : 'Defina um valor')
+                        : 'Grátis';
+                });
+            });
+
+            precoValor.addEventListener('input', () => {
+                const opcaoPaga = document.querySelector('input[name="price_type"][value="paid"]');
+
+                if (opcaoPaga.checked) {
+                    btnPrecoLabel.textContent = precoValor.value
+                        ? `R$ ${precoValor.value}`
+                        : 'Defina um valor';
+                }
+            });
+
             document.addEventListener('click', () => {
 
                 dropdownCategoria.style.display = 'none';
+                dropdownPreco.style.display = 'none';
 
             });
 
