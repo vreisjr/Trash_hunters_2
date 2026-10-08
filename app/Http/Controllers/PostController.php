@@ -34,6 +34,20 @@ class PostController extends Controller
         ]);
     }
 
+    public function dashboard(): View
+    {
+        $posts = Post::with(['user', 'categorias', 'attachments'])
+            ->latest()
+            ->get();
+
+        $categorias = Categoria::orderBy('nome')->get();
+
+        return view('dashboard', [
+            'posts' => $posts,
+            'categorias' => $categorias,
+        ]);
+    }
+
     public function create(): View
     {
         $categorias = Categoria::orderBy('nome')->get();

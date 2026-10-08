@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\ComentarioController;
+use App\Http\Controllers\PontoColetaController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', [PostController::class, 'dashboard'])->name('dashboard');
+    Route::get('pontos-de-coleta', [PontoColetaController::class, 'index'])->name('collection-points.index');
     Route::post('/posts/{post}/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
     Route::patch('/comentarios/{comentario}', [ComentarioController::class, 'update'])->name('comentarios.update');
     Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');

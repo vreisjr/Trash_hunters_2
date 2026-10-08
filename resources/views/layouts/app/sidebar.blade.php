@@ -41,7 +41,7 @@
                         {{ __('Curiosidades') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="map-pin" href="#">
+                    <flux:sidebar.item icon="map-pin" :href="route('collection-points.index')" :current="request()->routeIs('collection-points.*')" wire:navigate>
                         {{ __('Pontos de coleta') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>

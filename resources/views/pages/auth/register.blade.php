@@ -1,12 +1,16 @@
 <x-layouts::auth :title="__('Register')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+        <x-auth-header
+            :title="__('Create an account')"
+            :description="__('Enter your details below to create your account')"
+        />
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 
         <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-6">
             @csrf
+
             <!-- Name -->
             <flux:input
                 name="name"
@@ -41,25 +45,6 @@
                 passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
                 viewable
             />
-	<!-- Tipo de conta -->
-	<flux:select
-    	name="role"
-    	:label="__('Account type')"
-    	required
-	>
-    	<option value="user">Usuário</option>
-    	<option value="premium">Premium</option>
-	</flux:select>
-
-	<!-- Distrito -->
-<flux:input
-    name="district"
-    :label="__('Distrito')"
-    :value="old('district')"
-    type="text"
-    autocomplete="address-level2"
-    placeholder="Ex.: Centro"
-/>
 
             <!-- Confirm Password -->
             <flux:input
@@ -71,6 +56,26 @@
                 :placeholder="__('Confirm password')"
                 passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
                 viewable
+            />
+
+            <!-- Account Type -->
+            <flux:select
+                name="role"
+                :label="__('Account type')"
+                required
+            >
+                <option value="user" @selected(old('role', 'user') === 'user')>{{ __('User') }}</option>
+                <option value="premium" @selected(old('role') === 'premium')>{{ __('Premium') }}</option>
+            </flux:select>
+
+            <!-- District -->
+            <flux:input
+                name="district"
+                :label="__('District')"
+                :value="old('district')"
+                type="text"
+                autocomplete="address-level2"
+                :placeholder="__('E.g.: Downtown')"
             />
 
             <div class="flex items-center justify-end">
