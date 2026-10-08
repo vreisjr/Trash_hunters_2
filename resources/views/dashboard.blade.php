@@ -139,6 +139,9 @@
                             <span aria-hidden="true">·</span>
                             {{ $post->created_at?->diffForHumans() }}
                         </p>
+                        <p>
+                            {{ __('Status: :status', ['status' => $post->status]) }}
+                        </p>
 
                         <div class="recovery-card-footer">
                             <span class="recovery-availability">
