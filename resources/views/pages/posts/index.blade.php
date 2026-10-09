@@ -137,7 +137,7 @@
 
                         <button type="button" id="btn-preco">
                             <i class="fa-solid fa-hand-holding-dollar"></i>
-                            <span id="btn-preco-label">{{ __('Grátis') }}</span>
+                            <span id="btn-preco-label">{{ __('Defina um valor') }}</span>
                         </button>
 
                         <div

@@ -37,7 +37,7 @@
                         {{ __('Salvos') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="eye-slash" href="#">
+                    <flux:sidebar.item icon="light-bulb" href="#">
                         {{ __('Curiosidades') }}
                     </flux:sidebar.item>
 
