@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 
@@ -929,6 +930,170 @@ select:focus[data-flux-control] {
         color: #ffffff !important;
         box-shadow: 4px 0 24px rgba(33, 65, 42, 0.04);
         overflow-x: hidden !important;
+    }
+    .auth-split-brand-panel {
+        background: #042f2e;
+        isolation: isolate;
+        overflow: hidden;
+        padding: 3rem 4.5rem 2.5rem !important;
+    }
+    .auth-split-logo {
+        width: min(28rem, 58vw);
+        height: auto;
+    }
+    .auth-split-brand-link {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.25rem;
+        margin-top: 2rem;
+    }
+    .auth-split-wordmark {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: 'Michroma', sans-serif;
+        color: #ffffff;
+        font-size: clamp(2rem, 4.4vw, 3.5rem);
+        font-weight: 400;
+        letter-spacing: 0.36em;
+        line-height: 0.95;
+        text-transform: uppercase;
+    }
+    .auth-split-wordmark-line {
+        display: block;
+        white-space: nowrap;
+    }
+    .auth-split-wordmark-subline {
+        margin-top: 0.65rem;
+        font-size: 0.5em;
+        letter-spacing: 0.48em;
+    }
+    .auth-split-letter-white {
+        color: #ffffff;
+    }
+    .auth-split-letter-green {
+        color: #a3e635;
+    }
+    .auth-split-letter-a {
+        display: inline-block;
+        margin-right: 0.02em;
+        font-family: Arial, sans-serif;
+        font-size: 1.05em;
+        transform: scaleX(0.9);
+    }
+    .auth-split-wordmark-mobile {
+        font-size: 1.8rem;
+        padding: 0 0.75rem 0.75rem;
+    }
+    .auth-split-slogan {
+        color: #ffffff;
+        font-size: clamp(1.25rem, 2vw, 1.75rem);
+        font-weight: 600;
+        line-height: 1.35;
+    }
+    .auth-split-slogan span {
+        color: #a3e635;
+    }
+    .auth-split-form-panel {
+        position: relative;
+        min-height: 100dvh;
+        background: #ffffff;
+        padding: 2.5rem 5rem !important;
+        color: #042f2e;
+    }
+    .auth-split-form-panel [data-flux-heading],
+    .auth-split-form-panel [data-flux-subheading],
+    .auth-split-form-panel [data-flux-label],
+    .auth-split-form-panel label,
+    .auth-split-form-panel a,
+    .auth-split-form-panel [data-flux-checkbox-label] {
+        color: #042f2e !important;
+    }
+    .auth-split-form-panel [data-flux-subheading] {
+        opacity: 0.7;
+    }
+    .auth-split-form-panel [data-flux-button][data-variant="primary"],
+    .auth-split-form-panel button[type="submit"] {
+        background: #042f2e !important;
+        border-color: #042f2e !important;
+        color: #ffffff !important;
+    }
+    .auth-split-eyebrow,
+    .auth-split-form-topline {
+        color: #ffffff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+    }
+    .auth-split-eyebrow span,
+    .auth-split-form-topline span {
+        margin-right: 0.6rem;
+    }
+    .auth-split-form-topline {
+        position: absolute;
+        top: 3.2rem;
+        right: 4.5rem;
+        color: #042f2e;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: none;
+    }
+    .auth-split-message {
+        margin-top: clamp(4rem, 9vh, 7rem);
+        margin-bottom: 2rem;
+    }
+    .auth-split-message h2 {
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(2.5rem, 4vw, 4.4rem);
+        font-weight: 400;
+        letter-spacing: -0.06em;
+        line-height: 0.98;
+    }
+    .auth-split-message h2 span {
+        color: #a3e635;
+    }
+    .auth-split-message p {
+        margin: 2rem 0 0;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
+    .auth-split-footer {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255, 255, 255, 0.28);
+        padding-top: 1.25rem;
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .auth-split-form-leaf {
+        display: flex;
+        justify-content: center;
+        color: #042f2e;
+        font-size: 2rem;
+        line-height: 1;
+    }
+    .auth-split-auth-header h1,
+    .auth-split-auth-header [data-flux-heading] {
+        color: #042f2e !important;
+        font-size: clamp(2rem, 3vw, 3rem) !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.05em;
+    }
+    .auth-split-auth-header [data-flux-subheading] {
+        color: #64748b !important;
+        font-size: 0.95rem;
+    }
+    .auth-split-logo-mobile {
+        width: 10rem;
+        height: auto;
+    }
+    .auth-split-mobile-brand {
+        border-radius: 0.75rem;
+        background: #042f2e;
     }
     [data-flux-sidebar].trash-sidebar[data-flux-sidebar-collapsed-desktop] {
         width: 5rem !important;
