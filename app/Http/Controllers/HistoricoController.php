@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Doacao;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class HistoricoController extends Controller
 {
-    public function doacoes(\Illuminate\Http\Request $request): \Illuminate\View\View
+    public function doacoes(Request $request): View
     {
         $query = $request->user()->doacoes()->with('coletor');
 
@@ -31,9 +34,9 @@ class HistoricoController extends Controller
         ]);
     }
 
-    public function coletas(\Illuminate\Http\Request $request): \Illuminate\View\View
+    public function coletas(Request $request): View
     {
-        $query = \App\Models\Doacao::query()->with(['doador', 'coletor'])
+        $query = Doacao::query()->with(['doador', 'coletor'])
             ->where('coletor_id', $request->user()->id);
 
         $this->applyFilters($request, $query);
@@ -54,9 +57,9 @@ class HistoricoController extends Controller
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Doacao>|\Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Doacao, \App\Models\User> $query
+     * @param Builder<Doacao>|HasMany<Doacao, User> $query
      */
-    protected function applyFilters(\Illuminate\Http\Request $request, \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\HasMany $query): void
+    protected function applyFilters(Request $request, Builder|HasMany $query): void
     {
         if ($request->filled('status')) {
             $query->where('status', $request->status);
