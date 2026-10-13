@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doacao;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -52,7 +53,7 @@ class HistoricoController extends Controller
         ]);
     }
 
-    protected function applyFilters(Request $request, $query): void
+    protected function applyFilters(Request $request, Builder $query): void
     {
         if ($request->filled('status')) {
             $query->where('status', $request->status);
