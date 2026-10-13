@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coleta;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class HistoricoController extends Controller
 {
     // Histórico de DOAÇÕES: itens que o usuário logado doou
-    public function doacoes(Request $request)
+    public function doacoes(Request $request): View
     {
         $query = Coleta::with('coletor')
             ->where('doador_id', auth()->id());
