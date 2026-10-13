@@ -14,6 +14,7 @@ class ColetaSeeder extends Seeder
         $usuarios = User::take(2)->get();
         if ($usuarios->count() < 2) {
             $this->command->warn('Cadastre pelo menos 2 usuários antes.');
+
             return;
         }
         [$a, $b] = [$usuarios[0], $usuarios[1]];
@@ -21,10 +22,10 @@ class ColetaSeeder extends Seeder
         for ($i = 1; $i <= 25; $i++) {
             // alterna: ora $a doa para $b, ora $b doa para $a
             Coleta::create([
-                'doador_id'  => $i % 2 ? $a->id : $b->id,
+                'doador_id' => $i % 2 ? $a->id : $b->id,
                 'coletor_id' => $i % 2 ? $b->id : $a->id,
-                'item'       => "Item de teste #$i",
-                'data_hora'  => now()->subDays($i)->subMinutes($i * 7),
+                'item' => "Item de teste #$i",
+                'data_hora' => now()->subDays($i)->subMinutes($i * 7),
             ]);
         }
     }
