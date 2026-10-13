@@ -17,7 +17,7 @@ class HistoricoController extends Controller
         if ($busca = $request->input('busca')) {
             $query->where(function ($q) use ($busca) {
                 $q->where('item', 'like', "%{$busca}%")
-                  ->orWhereHas('coletor', fn ($u) => $u->where('name', 'like', "%{$busca}%"));
+                    ->orWhereHas('coletor', fn ($u) => $u->where('name', 'like', "%{$busca}%"));
             });
         }
 
