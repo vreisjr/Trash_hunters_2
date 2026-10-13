@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doacao;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
@@ -54,6 +55,9 @@ class HistoricoController extends Controller
         ]);
     }
 
+    /**
+     * @param Builder<Doacao>|HasMany<Doacao, User> $query
+     */
     protected function applyFilters(Request $request, Builder|HasMany $query): void
     {
         if ($request->filled('status')) {
