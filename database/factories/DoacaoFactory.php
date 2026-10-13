@@ -30,7 +30,7 @@ class DoacaoFactory extends Factory
     public function reservada(?User $coletor = null): static
     {
         return $this->state(fn () => [
-            'coletor_id' => $coletor?->id ?? User::factory(),
+            'coletor_id' => $coletor !== null ? $coletor->id : User::factory(),
             'status' => StatusDoacao::Reservado,
             'reservado_em' => now(),
         ]);
@@ -39,7 +39,7 @@ class DoacaoFactory extends Factory
     public function coletada(?User $coletor = null): static
     {
         return $this->state(fn () => [
-            'coletor_id' => $coletor?->id ?? User::factory(),
+            'coletor_id' => $coletor !== null ? $coletor->id : User::factory(),
             'status' => StatusDoacao::Coletado,
             'reservado_em' => now()->subHour(),
             'coletado_em' => now(),
