@@ -55,9 +55,6 @@ class HistoricoController extends Controller
         ]);
     }
 
-    /**
-     * @param Builder<Doacao>|HasMany<Doacao, User> $query
-     */
     protected function applyFilters(Request $request, Builder|HasMany $query): void
     {
         if ($request->filled('status')) {
