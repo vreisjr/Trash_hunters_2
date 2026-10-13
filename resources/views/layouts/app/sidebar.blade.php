@@ -45,6 +45,12 @@
                         {{ __('Pontos de coleta') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+                <flux:sidebar.group expandable :expanded="request()->routeIs('historico.*')" icon="clock" :heading="__('Histórico')">
+                <flux:sidebar.item :href="route('historico.doacoes')" :current="request()->routeIs('historico.doacoes')" wire:navigate>
+                   {{ __('Doações') }}
+                 </flux:sidebar.item>
+                {{-- Coletas: será feito depois --}}
+                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Comunidade')" class="trash-sidebar-group">
                     <flux:sidebar.item icon="play" href="#">

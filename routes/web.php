@@ -4,6 +4,8 @@ use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\PontoColetaController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HistoricoController;
+
 
 Route::view('/', 'welcome')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -27,3 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+Route::middleware('auth')->prefix('historico')->name('historico.')->group(function () {
+    Route::get('/doacoes', [HistoricoController::class, 'doacoes'])->name('doacoes');
+});
