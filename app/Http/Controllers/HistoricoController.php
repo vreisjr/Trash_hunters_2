@@ -54,14 +54,10 @@ class HistoricoController extends Controller
         ]);
     }
 
-<<<<<<< HEAD
     /**
      * @param Builder<Doacao>|HasMany<Doacao> $query
      */
     protected function applyFilters(Request $request, Builder|HasMany $query): void
-=======
-    protected function applyFilters(Request $request, mixed $query): void
->>>>>>> 58cf129 (Altera tipo do parâmetro 'query' para 'mixed' no método applyFilters)
     {
         if ($request->filled('status')) {
             $query->where('status', $request->status);
