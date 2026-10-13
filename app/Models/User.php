@@ -74,4 +74,24 @@ class User extends Authenticatable implements PasskeyUser
     {
         return $this->hasMany(Post::class);
     }
+
+    /**
+     * Doações cadastradas pelo usuário (como doador).
+     *
+     * @return HasMany<Doacao, $this>
+     */
+    public function doacoes(): HasMany
+    {
+        return $this->hasMany(Doacao::class);
+    }
+
+    /**
+     * Doações que o usuário reservou/coletou (como coletor).
+     *
+     * @return HasMany<Doacao, $this>
+     */
+    public function coletas(): HasMany
+    {
+        return $this->hasMany(Doacao::class, 'coletor_id');
+    }
 }

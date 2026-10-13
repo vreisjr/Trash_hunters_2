@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ComentarioController;
+use App\Http\Controllers\DoacaoController;
+use App\Http\Controllers\HistoricoController;
 use App\Http\Controllers\PontoColetaController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [PostController::class, 'store'])->name('store');
         Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
         Route::put('/{post}', [PostController::class, 'update'])->name('update');
+    });
+
+    Route::prefix('doacoes')->name('doacoes.')->group(function () {
+        Route::get('/', [DoacaoController::class, 'index'])->name('index');
+        Route::get('/create', [DoacaoController::class, 'create'])->name('create');
+        Route::post('/', [DoacaoController::class, 'store'])->name('store');
+        Route::post('/{doacao}/coletar', [DoacaoController::class, 'coletar'])->name('coletar');
+        Route::post('/{doacao}/liberar', [DoacaoController::class, 'liberar'])->name('liberar');
+        Route::post('/{doacao}/confirmar', [DoacaoController::class, 'confirmar'])->name('confirmar');
+        Route::post('/{doacao}/cancelar', [DoacaoController::class, 'cancelar'])->name('cancelar');
+    });
+
+    Route::prefix('historico')->name('historico.')->group(function () {
+        Route::get('/doacoes', [HistoricoController::class, 'doacoes'])->name('doacoes');
+        Route::get('/coletas', [HistoricoController::class, 'coletas'])->name('coletas');
     });
 
 });

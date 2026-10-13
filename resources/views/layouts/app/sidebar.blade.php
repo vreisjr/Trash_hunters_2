@@ -44,6 +44,20 @@
                     <flux:sidebar.item icon="map-pin" :href="route('collection-points.index')" :current="request()->routeIs('collection-points.*')" wire:navigate>
                         {{ __('Pontos de coleta') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="gift" :href="route('doacoes.index')" :current="request()->routeIs('doacoes.*')" wire:navigate>
+                        {{ __('Doações') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+
+                <flux:sidebar.group :heading="__('Histórico')" class="trash-sidebar-group">
+                    <flux:sidebar.item icon="clock" :href="route('historico.doacoes')" :current="request()->routeIs('historico.doacoes')" wire:navigate>
+                        {{ __('Minhas doações') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="archive-box" :href="route('historico.coletas')" :current="request()->routeIs('historico.coletas')" wire:navigate>
+                        {{ __('Minhas coletas') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Comunidade')" class="trash-sidebar-group">
