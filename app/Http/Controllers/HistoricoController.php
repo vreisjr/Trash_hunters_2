@@ -39,4 +39,36 @@ class HistoricoController extends Controller
 
         return view('pages.historico.doacoes', compact('registros'));
     }
+
+    // Histórico de COLETAS: itens que o usuário logado coletou
+    public function coletas(Request $request): View
+    {
+        $query = Coleta::with('doador')
+            ->where('coletor_id', auth()->id());
+
+        // FILTRO por texto (nome do item ou nome de quem doou)
+        if ($busca = $request->input('busca')) {
+            $query->where(function ($q) use ($busca) {
+                $q->where('item', 'like', "%{$busca}%")
+                    ->orWhereHas('doador', fn ($u) => $u->where('name', 'like', "%{$busca}%"));
+            });
+        }
+
+        // FILTRO por período
+        if ($request->filled('de')) {
+            $query->whereDate('data_hora', '>=', $request->input('de'));
+        }
+        if ($request->filled('ate')) {
+            $query->whereDate('data_hora', '<=', $request->input('ate'));
+        }
+
+        // ORDENAÇÃO (mais recentes primeiro por padrão)
+        $ordem = $request->input('ordem') === 'asc' ? 'asc' : 'desc';
+        $query->orderBy('data_hora', $ordem);
+
+        // PAGINAÇÃO (10 por página, mantendo os filtros na URL)
+        $registros = $query->paginate(10)->withQueryString();
+
+        return view('pages.historico.coletas', compact('registros'));
+    }
 }

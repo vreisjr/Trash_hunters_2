@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [PostController::class, 'dashboard'])->name('dashboard');
     Route::get('pontos-de-coleta', [PontoColetaController::class, 'index'])->name('collection-points.index');
@@ -15,20 +16,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
     Route::post('/comentarios/{comentario}/curtir', [ComentarioController::class, 'toggleLike'])->name('comentarios.curtir');
     Route::post('/posts/{post}/curtir', [PostController::class, 'toggleLike'])->name('posts.curtir');
+    
     Route::prefix('posts')->name('posts.')->group(function () {
         Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy');
-
         Route::get('/', [PostController::class, 'index'])->name('index');
         Route::get('/create', [PostController::class, 'create'])->name('create');
         Route::post('/', [PostController::class, 'store'])->name('store');
         Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
         Route::put('/{post}', [PostController::class, 'update'])->name('update');
     });
-
 });
 
 require __DIR__.'/settings.php';
 
 Route::middleware('auth')->prefix('historico')->name('historico.')->group(function () {
     Route::get('/doacoes', [HistoricoController::class, 'doacoes'])->name('doacoes');
+    Route::get('/coletas', [HistoricoController::class, 'coletas'])->name('coletas');
 });

@@ -33,7 +33,7 @@
                 <tr>
                     <td>{{ $r->item }}</td>
                     <td>{{ $r->coletor->name ?? 'Usuário removido' }}</td>
-                    <td>{{ $r->data_hora->format('d/m/Y H:i') }}</td>
+                    <td>{{ $r->data_hora instanceof \Carbon\Carbon ? $r->data_hora->format('d/m/Y H:i') : \Carbon\Carbon::parse($r->data_hora)->format('d/m/Y H:i') }}</td>
                 </tr>
             @empty
                 <tr><td colspan="3">Nenhuma doação encontrada.</td></tr>
@@ -42,7 +42,9 @@
     </table>
 
     {{-- Paginação --}}
-    {{ $registros->links() }}
+    <div class="historico-paginacao">
+        {{ $registros->links() }}
+    </div>
 </div>
 
 <style>
@@ -50,5 +52,6 @@
     .historico-filtros { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; align-items: center; }
     .historico-tabela { width: 100%; border-collapse: collapse; }
     .historico-tabela th, .historico-tabela td { padding: .6rem; border-bottom: 1px solid #ddd; text-align: left; }
+    .historico-paginacao { margin-top: 1rem; }
 </style>
 </x-layouts::app>
