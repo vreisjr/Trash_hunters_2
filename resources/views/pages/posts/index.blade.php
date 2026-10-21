@@ -1599,23 +1599,20 @@
                         div.className = 'comentario';
                         div.dataset.comentarioId = data.id;
 
-                        div.style.cssText =
-                            'display:flex; gap:10px; padding:8px 0; align-items:flex-start;';
-
                         div.innerHTML = `
 
                             <img
+                                class="comentario-avatar"
                                 src="https://ui-avatars.com/api/?name=${encodeURIComponent(data.user_name)}&background=A8E6A3&color=2b3d2f"
-                                style="width:32px; height:32px; border-radius:50%; flex-shrink:0; margin-top:2px;"
                             >
 
-                            <div style="flex:1; min-width:0;">
+                            <div class="comentario-conteudo">
 
-                                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                                <div class="comentario-linha">
 
-                                    <div style="font-size:14px; line-height:1.4; word-break:break-word;">
+                                    <div class="comentario-mensagem">
 
-                                        <strong style="margin-right:5px;">
+                                        <strong>
                                             ${data.user_name}
                                         </strong>
 
@@ -1625,50 +1622,38 @@
 
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        class="btn-curtir-comentario"
-                                        data-id="${data.id}"
-                                        style="background:none; border:none; cursor:pointer; padding:2px; flex-shrink:0; color:#8e8e8e;"
-                                    >
-
-                                        <i
-                                            class="fa-regular fa-heart"
-                                            style="font-size:13px;"
-                                        ></i>
-
-                                    </button>
-
                                 </div>
 
-                                <div style="display:flex; gap:14px; align-items:center; margin-top:4px; flex-wrap:wrap;">
+                                <div class="comentario-acoes">
 
-                                    <span style="font-size:11px; color:#8e8e8e;">
+                                    <span>
                                         ${data.created_at}
                                     </span>
 
                                     <button
                                         type="button"
+                                        class="btn-curtir-comentario"
+                                        data-id="${data.id}"
+                                        aria-label="Curtir comentário"
+                                    >
+                                        <i class="fa-regular fa-heart"></i>
+                                        <span class="curtidas-total-label" style="display:none;">
+                                            <span class="curtidas-total">0</span>
+                                        </span>
+                                    </button>
+
+                                    <button
+                                        type="button"
                                         class="btn-responder-comentario"
                                         data-id="${data.id}"
-                                        style="background:none; border:none; cursor:pointer; font-size:11px; color:#374151; font-weight:600;"
                                     >
                                         Responder
                                     </button>
-
-                                    <span
-                                        class="curtidas-total-label"
-                                        style="font-size:11px; color:#8e8e8e; font-weight:600; display:none;"
-                                    >
-                                        <span class="curtidas-total">0</span>
-                                        curtidas
-                                    </span>
 
                                     <button
                                         type="button"
                                         class="btn-editar-comentario"
                                         data-id="${data.id}"
-                                        style="background:none; border:none; cursor:pointer; font-size:11px; color:#8e8e8e; font-weight:600;"
                                     >
                                         Editar
                                     </button>
@@ -1677,7 +1662,6 @@
                                         type="button"
                                         class="btn-apagar-comentario"
                                         data-id="${data.id}"
-                                        style="background:none; border:none; cursor:pointer; font-size:11px; color:#8e8e8e; font-weight:600;"
                                     >
                                         Apagar
                                     </button>
@@ -1688,7 +1672,7 @@
                                     class="form-resposta"
                                     data-post-id="${postId}"
                                     data-parent-id="${data.id}"
-                                    style="display:none; gap:8px; align-items:center; margin-top:6px;"
+                                    style="display:none;"
                                 >
                                     <input
                                         type="text"
@@ -1697,12 +1681,11 @@
                                         maxlength="500"
                                         required
                                         autocomplete="off"
-                                        style="flex:1; border:1px solid #eee; border-radius:6px; padding:6px 8px; font-size:12px; outline:none; background:transparent;"
                                     >
-                                    <button type="submit" style="background:none; border:none; color:#374151; font-weight:600; font-size:12px; cursor:pointer;">Publicar</button>
+                                    <button type="submit">Publicar</button>
                                 </form>
 
-                                <div class="respostas-lista" style="margin-left:0; border-left:none; padding-left:0;"></div>
+                                <div class="respostas-lista"></div>
 
                             </div>
 
@@ -1987,6 +1970,31 @@
             document
                 .querySelectorAll('.comentario')
                 .forEach(ativarEventosComentario);
+
+            document.querySelectorAll('.btn-ver-respostas').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const respostas = [];
+                    let resposta = button.nextElementSibling;
+
+                    while (resposta) {
+                        if (resposta.classList.contains('comentario')) {
+                            respostas.push(resposta);
+                        }
+                        resposta = resposta.nextElementSibling;
+                    }
+
+                    const aberto = button.getAttribute('aria-expanded') === 'true';
+
+                    respostas.forEach((item) => {
+                        item.hidden = aberto;
+                    });
+
+                    button.setAttribute('aria-expanded', String(!aberto));
+                    button.innerHTML = aberto
+                        ? '<i class="fa-solid fa-caret-right"></i> Ver respostas'
+                        : '<i class="fa-solid fa-caret-down"></i> Ocultar respostas';
+                });
+            });
 
             // --- Emojis rápidos ---
 

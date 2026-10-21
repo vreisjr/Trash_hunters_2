@@ -1813,11 +1813,170 @@ select:focus[data-flux-control] {
     }
 
     .comentarios-lista .comentario {
-        border-bottom: 1px solid #f2f2f2;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.7rem 0;
+    }
+
+    .comentario-avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        flex: 0 0 2.5rem;
+        margin-top: 0.1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 999px;
+        object-fit: cover;
+    }
+
+    .comentario-conteudo {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .comentario-linha {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .comentario-mensagem {
+        min-width: 0;
+        color: #202124;
+        font-size: 0.88rem;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
+    .comentario-mensagem strong {
+        margin-right: 0.3rem;
+        color: #171717;
+        font-weight: 700;
+    }
+
+    .btn-curtir-comentario {
+        flex: 0 0 auto;
+        padding: 0.15rem;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: transform 0.15s ease;
+    }
+
+    .btn-curtir-comentario:hover {
+        transform: scale(1.15);
+    }
+
+    .comentario-acoes {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.45rem;
+        color: #737983;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .comentario-acoes .btn-curtir-comentario,
+    .comentario-acoes .btn-dislike-comentario {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #606060;
+        cursor: pointer;
+        font-size: 0.8rem;
+    }
+
+    .comentario-acoes .btn-curtir-comentario:hover,
+    .comentario-acoes .btn-dislike-comentario:hover {
+        color: #065fd4;
+    }
+
+    .comentario-acoes button {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+    }
+
+    .comentario-acoes button:hover {
+        color: #1f2937;
+    }
+
+    .form-resposta {
+        display: flex !important;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.55rem;
+    }
+
+    .form-resposta[style*="display:none"] {
+        display: none !important;
+    }
+
+    .form-resposta input {
+        min-width: 0;
+        flex: 1;
+        border: 1px solid #e5e7eb;
+        border-radius: 999px;
+        background: #fafafa;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.78rem;
+        outline: none;
+    }
+
+    .form-resposta button {
+        border: 0;
+        background: transparent;
+        color: #374151;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .respostas-lista {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-top: 0;
+        margin-left: 0;
+        padding-left: 0;
+        width: 100%;
+        border-left: 0;
+    }
+
+    .respostas-lista > .comentario {
+        padding-top: 0.35rem;
+        padding-bottom: 0.35rem;
+    }
+
+    .btn-ver-respostas {
+        align-self: flex-start;
+        margin: 0.25rem 0 0.2rem;
+        padding: 0.35rem 0.6rem;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: #065fd4;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .btn-ver-respostas:hover {
+        background: #e8f0fe;
     }
 
     .comentarios-lista .comentario:last-child {
-        border-bottom: none;
+        padding-bottom: 0;
     }
 
     /* --- fim do estilo Instagram --- */
