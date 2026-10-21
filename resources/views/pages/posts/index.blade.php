@@ -352,6 +352,27 @@
 
     @endif
 
+    @if (auth()->user()->isModerator() && $post->user_id !== auth()->id() && ! $post->user->isModerator())
+
+        <form
+            action="{{ route('users.destroy', $post->user) }}"
+            method="POST"
+            onsubmit="return confirm('Tem certeza que deseja excluir a conta deste usuário? Todas as publicações e comentários dele também serão excluídos.');"
+            style="display:inline;"
+        >
+            @csrf
+            @method('DELETE')
+
+            <button
+                type="submit"
+                style="background:none; border:none; cursor:pointer; padding:2px; color:#8e2424; font-size:12px; font-weight:600;"
+            >
+                Excluir conta
+            </button>
+        </form>
+
+    @endif
+
 </div>
 
                     </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\HistoricoController;
 use App\Http\Controllers\PontoColetaController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
     Route::post('/comentarios/{comentario}/curtir', [ComentarioController::class, 'toggleLike'])->name('comentarios.curtir');
     Route::post('/posts/{post}/curtir', [PostController::class, 'toggleLike'])->name('posts.curtir');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::prefix('posts')->name('posts.')->group(function () {
         Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy');
