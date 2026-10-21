@@ -55,7 +55,7 @@
 
                 </div>
 
-                <div id="media-preview" style="display:none; margin: 8px 0;"></div>
+                <div id="media-preview" class="mt-3 hidden flex flex-wrap gap-2"></div>
 
                 <input
                     type="file"
@@ -412,30 +412,45 @@
 
                     @if ($post->attachments->isNotEmpty())
 
-                        <div class="post-attachments-grid">
+                        <div
+                            class="{{ $post->attachments->count() === 1 ? 'grid-cols-1' : 'grid-cols-2' }} mt-3 grid max-w-2xl gap-1 overflow-hidden rounded-2xl bg-slate-100 shadow-lg ring-1 ring-slate-200"
+                            data-media-gallery
+                        >
+                            @foreach ($post->attachments as $index => $attachment)
+                                <button
+                                    type="button"
+                                    class="{{ $index >= 4 ? 'hidden' : '' }} {{ $post->attachments->count() === 1 ? 'aspect-auto' : 'aspect-square' }} group relative block w-full overflow-hidden bg-slate-100 text-left"
+                                    data-media-index="{{ $index }}"
+                                    data-media-src="{{ asset('storage/'.$attachment->file_path) }}"
+                                    data-media-type="{{ $attachment->file_type }}"
+                                    aria-label="Abrir {{ $attachment->file_type === 'video' ? 'vídeo' : 'imagem' }} {{ $index + 1 }} em tela cheia"
+                                >
+                                    @if ($attachment->file_type === 'video')
+                                        <video
+                                            src="{{ asset('storage/'.$attachment->file_path) }}"
+                                            preload="metadata"
+                                            muted
+                                            class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                        ></video>
+                                        <span class="absolute left-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/60 text-sm text-white">
+                                            <i class="fa-solid fa-play"></i>
+                                        </span>
+                                    @else
+                                        <img
+                                            src="{{ asset('storage/'.$attachment->file_path) }}"
+                                            alt="Imagem da postagem"
+                                            loading="lazy"
+                                            class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                        >
+                                    @endif
 
-                            @foreach ($post->attachments as $attachment)
-
-                                @if ($attachment->file_type === 'video')
-
-                                    <video
-                                        src="{{ asset('storage/'.$attachment->file_path) }}"
-                                        controls
-                                        class="post-attachment-video"
-                                    ></video>
-
-                                @else
-
-                                    <img
-                                        src="{{ asset('storage/'.$attachment->file_path) }}"
-                                        alt="Imagem da postagem"
-                                        class="post-attachment-image"
-                                    >
-
-                                @endif
-
+                                    @if ($index === 3 && $post->attachments->count() > 4)
+                                        <span class="absolute inset-0 flex items-center justify-center bg-slate-950/55 text-3xl font-semibold tracking-widest text-white backdrop-blur-[1px]">
+                                            ...
+                                        </span>
+                                    @endif
+                                </button>
                             @endforeach
-
                         </div>
 
                     @endif
@@ -623,6 +638,44 @@
 
     </div>
 
+    <div
+        id="media-lightbox"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-white/80 p-4 backdrop-blur-xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Visualizador de mídia"
+    >
+        <button
+            type="button"
+            class="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-slate-900/70 text-xl text-white transition hover:bg-slate-900"
+            data-lightbox-close
+            aria-label="Fechar visualizador"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <button
+            type="button"
+            class="absolute left-4 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-slate-900/70 text-white transition hover:bg-slate-900"
+            data-lightbox-previous
+            aria-label="Mídia anterior"
+        >
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="flex max-h-[90vh] max-w-[92vw] items-center justify-center overflow-hidden rounded-2xl bg-white/60 p-2 shadow-2xl ring-1 ring-slate-200/80">
+            <img class="max-h-[86vh] max-w-[90vw] object-contain" data-lightbox-image alt="Imagem ampliada">
+            <video class="hidden max-h-[86vh] max-w-[90vw] object-contain" data-lightbox-video controls></video>
+        </div>
+        <button
+            type="button"
+            class="absolute right-4 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-slate-900/70 text-white transition hover:bg-slate-900"
+            data-lightbox-next
+            aria-label="Próxima mídia"
+        >
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <span class="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-slate-900/70 px-3 py-1 text-sm font-medium text-white" data-lightbox-counter></span>
+    </div>
+
     @push('scripts')
 
     <script>
@@ -702,7 +755,7 @@
                 mediaPreviewUrls = [];
 
                 if (selectedMediaFiles.length === 0) {
-                    mediaPreview.style.display = 'none';
+                    mediaPreview.classList.add('hidden');
                     mediaPreview.innerHTML = '';
                     btnMediaLabel.textContent = 'Mídia';
 
@@ -711,7 +764,7 @@
 
                 btnMediaLabel.textContent = `${selectedMediaFiles.length} mídia${selectedMediaFiles.length > 1 ? 's' : ''}`;
 
-                mediaPreview.style.display = 'block';
+                mediaPreview.classList.remove('hidden');
                 mediaPreview.innerHTML = '';
 
                 selectedMediaFiles.forEach((media, index) => {
@@ -719,14 +772,14 @@
                     const wrapper = document.createElement('div');
                     const removeButton = document.createElement('button');
 
-                    wrapper.style.cssText = 'position:relative; display:inline-block; margin-right:8px;';
+                    wrapper.className = 'group relative h-24 w-32 overflow-hidden rounded-xl bg-slate-100 ring-1 ring-slate-200';
 
                     removeButton.type = 'button';
                     removeButton.className = 'btn-remover-media';
                     removeButton.setAttribute('aria-label', `Remover ${file.name}`);
                     removeButton.title = 'Remover mídia';
                     removeButton.textContent = '×';
-                    removeButton.style.cssText = 'position:absolute; top:4px; right:4px; width:24px; height:24px; border:0; border-radius:50%; background:rgba(0,0,0,.65); color:#fff; cursor:pointer; font-size:20px; line-height:20px; padding:0; z-index:1;';
+                    removeButton.className = 'absolute right-1.5 top-1.5 z-10 grid h-6 w-6 place-items-center rounded-full border-0 bg-black/65 text-lg leading-none text-white opacity-0 transition group-hover:opacity-100 focus:opacity-100';
 
                     const element = file.type.startsWith('video/')
                         ? document.createElement('video')
@@ -735,7 +788,7 @@
                     element.src = URL.createObjectURL(file);
                     mediaPreviewUrls.push(element.src);
                     element.alt = file.name;
-                    element.style.cssText = 'width:120px; height:90px; object-fit:cover; border-radius:8px; display:block;';
+                    element.className = 'h-full w-full object-cover';
 
                     if (element.tagName === 'VIDEO') {
                         element.controls = true;
@@ -771,6 +824,77 @@
             }
 
             inputMedia.addEventListener('change', adicionarMidiasSelecionadas);
+
+            // --- Galeria de mídias ---
+
+            const lightbox = document.getElementById('media-lightbox');
+            const lightboxImage = lightbox.querySelector('[data-lightbox-image]');
+            const lightboxVideo = lightbox.querySelector('[data-lightbox-video]');
+            const lightboxCounter = lightbox.querySelector('[data-lightbox-counter]');
+            const mediaTriggers = Array.from(document.querySelectorAll('[data-media-src]'));
+            let lightboxIndex = 0;
+
+            function showLightboxMedia(index) {
+                lightboxIndex = (index + mediaTriggers.length) % mediaTriggers.length;
+                const trigger = mediaTriggers[lightboxIndex];
+                const isVideo = trigger.dataset.mediaType === 'video';
+
+                lightboxImage.classList.toggle('hidden', isVideo);
+                lightboxVideo.classList.toggle('hidden', !isVideo);
+
+                if (isVideo) {
+                    lightboxVideo.src = trigger.dataset.mediaSrc;
+                    lightboxVideo.load();
+                } else {
+                    lightboxVideo.pause();
+                    lightboxVideo.removeAttribute('src');
+                    lightboxImage.src = trigger.dataset.mediaSrc;
+                    lightboxImage.alt = trigger.querySelector('img')?.alt || 'Imagem ampliada';
+                }
+
+                lightboxCounter.textContent = `${lightboxIndex + 1}/${mediaTriggers.length}`;
+            }
+
+            function closeLightbox() {
+                lightboxVideo.pause();
+                lightboxVideo.removeAttribute('src');
+                lightbox.classList.add('hidden');
+                lightbox.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            mediaTriggers.forEach((trigger, index) => {
+                trigger.addEventListener('click', () => {
+                    showLightboxMedia(index);
+                    lightbox.classList.remove('hidden');
+                    lightbox.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                });
+            });
+
+            lightbox.querySelector('[data-lightbox-previous]').addEventListener('click', () => {
+                showLightboxMedia(lightboxIndex - 1);
+            });
+            lightbox.querySelector('[data-lightbox-next]').addEventListener('click', () => {
+                showLightboxMedia(lightboxIndex + 1);
+            });
+            lightbox.querySelector('[data-lightbox-close]').addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (event) => {
+                if (event.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                    closeLightbox();
+                }
+                if (event.key === 'ArrowLeft' && !lightbox.classList.contains('hidden')) {
+                    showLightboxMedia(lightboxIndex - 1);
+                }
+                if (event.key === 'ArrowRight' && !lightbox.classList.contains('hidden')) {
+                    showLightboxMedia(lightboxIndex + 1);
+                }
+            });
 
             // --- Local ---
 
