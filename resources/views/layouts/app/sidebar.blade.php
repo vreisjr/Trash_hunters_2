@@ -46,7 +46,7 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
-                <flux:sidebar.group expandable :expanded="request()->routeIs('historico.*')" icon="clock" :heading="__('Histórico')">
+                <flux:sidebar.group expandable :expanded="request()->routeIs('historico.*')" icon="clock" :heading="__('Histórico')" class="trash-sidebar-history-group">
                     <flux:sidebar.item :href="route('historico.doacoes')" :current="request()->routeIs('historico.doacoes')" wire:navigate>
                         {{ __('Doações') }}
                     </flux:sidebar.item>
