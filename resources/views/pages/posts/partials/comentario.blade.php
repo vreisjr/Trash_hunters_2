@@ -1,5 +1,5 @@
 <div class="comentario" data-comentario-id="{{ $comentario->id }}">
-    <img class="comentario-avatar {{ $comentario->user->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}" src="https://ui-avatars.com/api/?name={{ urlencode($comentario->user->name) }}&background=A8E6A3&color=2b3d2f" alt="{{ $comentario->user->name }}">
+    <img class="comentario-avatar {{ $comentario->user->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}" src="{{ $comentario->user->profilePhotoUrl() ?? 'https://ui-avatars.com/api/?name='.urlencode($comentario->user->name).'&background=A8E6A3&color=2b3d2f' }}" alt="{{ $comentario->user->name }}">
 
     <div class="comentario-conteudo">
         <div class="comentario-linha">

@@ -43,7 +43,7 @@
 
                     <img
                         class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
-                        src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=A8E6A3&color=2b3d2f"
+                        src="{{ auth()->user()->profilePhotoUrl() ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=A8E6A3&color=2b3d2f' }}"
                         alt="{{ auth()->user()->name }}"
                     >
 
@@ -291,7 +291,7 @@
 
                         <img
                             class="{{ $post->user->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
-                            src="https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&background=A8E6A3&color=2b3d2f"
+                            src="{{ $post->user->profilePhotoUrl() ?? 'https://ui-avatars.com/api/?name='.urlencode($post->user->name).'&background=A8E6A3&color=2b3d2f' }}"
                             alt="{{ $post->user->name }}"
                         >
 
@@ -1595,7 +1595,7 @@
 
                             <img
                                 class="comentario-avatar ${data.user_is_moderator ? 'profile-avatar-moderator' : 'profile-avatar-user'}"
-                                src="https://ui-avatars.com/api/?name=${encodeURIComponent(data.user_name)}&background=A8E6A3&color=2b3d2f"
+                                src="${data.user_profile_photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.user_name)}&background=A8E6A3&color=2b3d2f`}"
                             >
 
                             <div class="comentario-conteudo">

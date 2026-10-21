@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 test('profile page is displayed', function () {
@@ -26,6 +28,24 @@ test('profile information can be updated', function () {
     expect($user->name)->toEqual('Test User');
     expect($user->email)->toEqual('test@example.com');
     expect($user->email_verified_at)->toBeNull();
+});
+
+test('user can update their profile photo', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::settings.profile')
+        ->set('profilePhoto', UploadedFile::fake()->image('avatar.png'))
+        ->call('updateProfilePhoto')
+        ->assertHasNoErrors();
+
+    $user->refresh();
+
+    expect($user->profile_photo_path)->not->toBeNull();
+    Storage::disk('public')->assertExists($user->profile_photo_path);
 });
 
 test('email verification status is unchanged when email address is unchanged', function () {

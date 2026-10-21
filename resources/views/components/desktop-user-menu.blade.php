@@ -3,7 +3,8 @@
         :name="auth()->user()->name"
         :initials="auth()->user()->initials()"
         icon:trailing="chevrons-up-down"
-        class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
+        avatar:src="{{ auth()->user()->profilePhotoUrl() }}"
+        avatar:class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
         data-test="sidebar-menu-button"
     />
 
@@ -13,6 +14,7 @@
                 :name="auth()->user()->name"
                 :initials="auth()->user()->initials()"
                 class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
+                src="{{ auth()->user()->profilePhotoUrl() }}"
             />
             <div class="grid flex-1 text-start text-sm leading-tight">
                 <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>

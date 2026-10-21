@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
@@ -21,6 +22,7 @@ use Laravel\Fortify\PasskeyAuthenticatable;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
+ * @property string|null $profile_photo_path
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
@@ -28,7 +30,7 @@ use Laravel\Fortify\PasskeyAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password', 'role', 'district'])]
+#[Fillable(['name', 'email', 'password', 'role', 'district', 'profile_photo_path'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -63,6 +65,13 @@ class User extends Authenticatable implements PasskeyUser
     public function isModerator(): bool
     {
         return in_array($this->role, ['admin', 'premium'], true);
+    }
+
+    public function profilePhotoUrl(): ?string
+    {
+        return $this->profile_photo_path
+            ? Storage::disk('public')->url($this->profile_photo_path)
+            : null;
     }
 
     /**

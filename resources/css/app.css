@@ -1525,8 +1525,8 @@ select:focus[data-flux-control] {
     }
 
     .post-top img {
-        width: 58px;
-        height: 58px;
+        width: 68px;
+        height: 68px;
         border-radius: 50%;
         object-fit: cover;
         border: 3px solid var(--green);
@@ -1548,8 +1548,9 @@ select:focus[data-flux-control] {
 
     .post-top h3 {
         margin: 0;
-        color: #374151;
-        font-size: 16px;
+        color: #123b35;
+        font-size: 17px;
+        font-weight: 750;
     }
 
     .post-top span {
@@ -1829,9 +1830,9 @@ select:focus[data-flux-control] {
     }
 
     .comentario-avatar {
-        width: 2.5rem;
-        height: 2.5rem;
-        flex: 0 0 2.5rem;
+        width: 2.85rem;
+        height: 2.85rem;
+        flex: 0 0 2.85rem;
         margin-top: 0.1rem;
         border: 1px solid #d1d5db;
         border-radius: 999px;
@@ -1860,8 +1861,8 @@ select:focus[data-flux-control] {
 
     .comentario-mensagem strong {
         margin-right: 0.3rem;
-        color: #171717;
-        font-weight: 700;
+        color: #123b35;
+        font-weight: 800;
     }
 
     .btn-curtir-comentario {
@@ -2001,8 +2002,8 @@ select:focus[data-flux-control] {
         }
 
         .post-header img {
-            width: 55px;
-            height: 55px;
+            width: 62px;
+            height: 62px;
         }
 
         .post,

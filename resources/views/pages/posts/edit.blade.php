@@ -18,7 +18,7 @@
             <div class="post-header">
 
                 <img
-                    src="https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&background=A8E6A3&color=2b3d2f"
+                    src="{{ $post->user->profilePhotoUrl() ?? 'https://ui-avatars.com/api/?name='.urlencode($post->user->name).'&background=A8E6A3&color=2b3d2f' }}"
                     alt="{{ $post->user->name }}"
                 >
 
