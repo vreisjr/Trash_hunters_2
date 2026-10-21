@@ -36,6 +36,7 @@ class ComentarioController extends Controller
             'parent_id' => $comentario->parent_id,
             'texto' => $comentario->texto,
             'user_name' => $comentario->user->name,
+            'user_is_moderator' => $comentario->user->isModerator(),
             'created_at' => $comentario->created_at->diffForHumans(),
         ]);
     }

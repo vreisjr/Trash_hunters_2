@@ -87,6 +87,7 @@
                 <flux:profile
                     :initials="auth()->user()->initials()"
                     icon-trailing="chevron-down"
+                    class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
                 />
 
                 <flux:menu>
@@ -96,6 +97,7 @@
                                 <flux:avatar
                                     :name="auth()->user()->name"
                                     :initials="auth()->user()->initials()"
+                                    class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
                                 />
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">

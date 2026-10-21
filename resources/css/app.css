@@ -1533,6 +1533,15 @@ select:focus[data-flux-control] {
         transition: .3s;
     }
 
+    .profile-avatar-user {
+        border-color: #059669 !important;
+    }
+
+    .profile-avatar-moderator {
+        border-color: #d4af37 !important;
+        box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.2), 0 0 8px rgba(212, 175, 55, 0.35);
+    }
+
     .post-top img:hover {
         transform: rotate(3deg) scale(1.05);
     }

@@ -42,6 +42,7 @@
                 <div class="post-header">
 
                     <img
+                        class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
                         src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=A8E6A3&color=2b3d2f"
                         alt="{{ auth()->user()->name }}"
                     >
@@ -289,6 +290,7 @@
                     <div class="post-top">
 
                         <img
+                            class="{{ $post->user->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
                             src="https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&background=A8E6A3&color=2b3d2f"
                             alt="{{ $post->user->name }}"
                         >
@@ -298,16 +300,6 @@
                             <h3 style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
 
                                 {{ $post->user->name }}
-
-                                @if ($post->user->isModerator())
-                                    <span
-                                        style="display:inline-flex; align-items:center; gap:3px; border:1px solid #d4af37; padding:1px 8px; border-radius:999px; background:#fff8dc; color:#9a6b00; font-size:11px; font-weight:600;"
-                                    >
-                                        <i class="fa-solid fa-shield-halved"></i>
-                                        {{ __('Moderador') }}
-                                    </span>
-
-                                @endif
 
                             </h3>
 
@@ -1602,7 +1594,7 @@
                         div.innerHTML = `
 
                             <img
-                                class="comentario-avatar"
+                                class="comentario-avatar ${data.user_is_moderator ? 'profile-avatar-moderator' : 'profile-avatar-user'}"
                                 src="https://ui-avatars.com/api/?name=${encodeURIComponent(data.user_name)}&background=A8E6A3&color=2b3d2f"
                             >
 

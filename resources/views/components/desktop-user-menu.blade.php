@@ -3,6 +3,7 @@
         :name="auth()->user()->name"
         :initials="auth()->user()->initials()"
         icon:trailing="chevrons-up-down"
+        class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
         data-test="sidebar-menu-button"
     />
 
@@ -11,6 +12,7 @@
             <flux:avatar
                 :name="auth()->user()->name"
                 :initials="auth()->user()->initials()"
+                class="{{ auth()->user()->isModerator() ? 'profile-avatar-moderator' : 'profile-avatar-user' }}"
             />
             <div class="grid flex-1 text-start text-sm leading-tight">
                 <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
