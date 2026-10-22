@@ -467,7 +467,7 @@
                         </div>
 
                     @endif
-
+             
                     {{-- AÇÕES DA PUBLICAÇÃO --}}
 
                                         <div class="post-action-bar">

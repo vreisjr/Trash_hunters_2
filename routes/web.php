@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [PostController::class, 'store'])->name('store');
         Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
         Route::put('/{post}', [PostController::class, 'update'])->name('update');
+        Route::post('/{post}/coletar', [PostController::class, 'coletar'])->name('coletar');
     });
 });
 

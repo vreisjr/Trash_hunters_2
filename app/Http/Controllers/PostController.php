@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Coleta;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -28,9 +30,15 @@ class PostController extends Controller
 
         $categorias = Categoria::orderBy('nome')->get();
 
+        // IDs dos posts que já foram coletados (para esconder o botão "Coletar")
+        $coletados = Coleta::whereIn('post_id', $posts->pluck('id'))
+            ->pluck('post_id')
+            ->all();
+
         return view('pages.posts.index', [
             'posts' => $posts,
             'categorias' => $categorias,
+            'coletados' => $coletados,
         ]);
     }
 
@@ -42,9 +50,15 @@ class PostController extends Controller
 
         $categorias = Categoria::orderBy('nome')->get();
 
+        // IDs dos posts já coletados (para mostrar "Coletado" em vez de "Disponível")
+        $coletados = Coleta::whereIn('post_id', $posts->pluck('id'))
+            ->pluck('post_id')
+            ->all();
+
         return view('dashboard', [
             'posts' => $posts,
             'categorias' => $categorias,
+            'coletados' => $coletados,
         ]);
     }
 
@@ -173,6 +187,36 @@ class PostController extends Controller
         return redirect()
             ->route('posts.index')
             ->with('status', 'Publicação atualizada com sucesso!');
+    }
+
+    // Coleta um item "Para doação": grava no histórico de quem doou e de quem coletou
+    public function coletar(Request $request, Post $post): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($post->user_id === $user->id) {
+            return back()->withErrors(['coleta' => 'Você não pode coletar o seu próprio item.']);
+        }
+
+        if ($post->price_type === 'paid') {
+            return back()->withErrors(['coleta' => 'Este item não está disponível para doação.']);
+        }
+
+        $coleta = Coleta::firstOrCreate(
+            ['post_id' => $post->id],
+            [
+                'doador_id' => $post->user_id,
+                'coletor_id' => $user->id,
+                'item' => Str::limit($post->content, 80),
+                'data_hora' => now(),
+            ]
+        );
+
+        if (! $coleta->wasRecentlyCreated) {
+            return back()->withErrors(['coleta' => 'Este item já foi coletado por outra pessoa.']);
+        }
+
+        return back()->with('status', 'Item coletado! Ele já aparece no seu histórico de coletas.');
     }
 
     public function toggleLike(

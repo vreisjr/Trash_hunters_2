@@ -1,5 +1,19 @@
 <x-layouts::app :title="__('Início')">
     <div class="recovery-home">
+
+        {{-- Mensagens de sucesso/erro da coleta --}}
+        @session('status')
+            <div style="background:#ffffff; color:#374151; padding:14px 18px; border-radius:12px; margin-bottom:16px;">
+                {{ $value }}
+            </div>
+        @endsession
+
+        @if ($errors->has('coleta'))
+            <div style="background:#ffe8ec; color:#d81b60; padding:14px 18px; border-radius:12px; margin-bottom:16px;">
+                {{ $errors->first('coleta') }}
+            </div>
+        @endif
+
         <header class="recovery-home-header">
             <div>
                 <span class="recovery-eyebrow">{{ __('Reaproveite perto de você') }}</span>
@@ -102,6 +116,7 @@
                     $image = $post->attachments->firstWhere('file_type', 'image');
                     $category = $post->categorias->first();
                     $title = \Illuminate\Support\Str::of($post->content)->squish()->limit(48);
+                    $jaColetado = in_array($post->id, $coletados ?? []);
                 @endphp
 
                 <article class="recovery-card" data-post-categories="{{ $post->categorias->pluck('id')->implode(',') }}">
@@ -146,7 +161,7 @@
                         <div class="recovery-card-footer">
                             <span class="recovery-availability">
                                 <span aria-hidden="true"></span>
-                                {{ __('Disponível') }}
+                                {{ $jaColetado ? __('Coletado') : __('Disponível') }}
                             </span>
                             <span class="recovery-price">
                                 {{ $post->price_type === 'paid' && $post->price !== null
@@ -154,6 +169,24 @@
                                     : __('Grátis') }}
                             </span>
                         </div>
+
+                        {{-- Botão Coletar: só em itens grátis, ainda disponíveis e de outra pessoa --}}
+                        @if (! $jaColetado && $post->price_type !== 'paid' && $post->user_id !== auth()->id())
+                            <form
+                                method="POST"
+                                action="{{ route('posts.coletar', $post) }}"
+                                onsubmit="return confirm('Confirmar que você vai coletar este item?');"
+                                style="margin-top:10px;"
+                            >
+                                @csrf
+                                <button
+                                    type="submit"
+                                    style="width:100%; padding:9px 14px; border:1px solid #059669; background:#059669; color:#ffffff; border-radius:999px; cursor:pointer; font-weight:600; font-size:13px;"
+                                >
+                                    {{ __('Coletar') }}
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </article>
             @empty
