@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Coleta;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HistoricoController extends Controller
 {
@@ -12,7 +13,7 @@ class HistoricoController extends Controller
     public function doacoes(Request $request): View
     {
         $query = Coleta::with('coletor')
-            ->where('doador_id', auth()->id());
+            ->where('doador_id', Auth::id());
 
         // FILTRO por texto (nome do item ou nome de quem coletou)
         if ($busca = $request->input('busca')) {
@@ -44,7 +45,7 @@ class HistoricoController extends Controller
     public function coletas(Request $request): View
     {
         $query = Coleta::with('doador')
-            ->where('coletor_id', auth()->id());
+            ->where('coletor_id', Auth::id());
 
         // FILTRO por texto (nome do item ou nome de quem doou)
         if ($busca = $request->input('busca')) {
