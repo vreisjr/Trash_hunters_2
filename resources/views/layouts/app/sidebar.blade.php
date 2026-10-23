@@ -6,6 +6,10 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="true" class="trash-sidebar">
             <flux:sidebar.header class="trash-sidebar-header">
+                <a href="{{ route('dashboard') }}" class="trash-sidebar-brand" wire:navigate>
+                    <img src="{{ asset('images/trash-hunters-logo-alpha.png') }}" alt="" aria-hidden="true">
+                    <span>Trash<span>Hunters</span></span>
+                </a>
                 <flux:sidebar.collapse class="sidebar-collapse-toggle" icon="chevron-left" inset="right" />
             </flux:sidebar.header>
 
@@ -46,14 +50,9 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
-                <flux:sidebar.group expandable :expanded="request()->routeIs('historico.*')" icon="clock" :heading="__('Histórico')" class="trash-sidebar-history-group">
-                    <flux:sidebar.item :href="route('historico.doacoes')" :current="request()->routeIs('historico.doacoes')" wire:navigate>
-                        {{ __('Doações') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item :href="route('historico.coletas')" :current="request()->routeIs('historico.coletas')" wire:navigate>
-                        {{ __('Coletas') }}
-                    </flux:sidebar.item>
-                </flux:sidebar.group>
+                <flux:sidebar.item icon="clock" :href="route('historico.coletas')" :current="request()->routeIs('historico.*')" wire:navigate>
+                    {{ __('Histórico') }}
+                </flux:sidebar.item>
 
                 <flux:sidebar.group :heading="__('Comunidade')" class="trash-sidebar-group">
                     <flux:sidebar.item icon="play" href="#">

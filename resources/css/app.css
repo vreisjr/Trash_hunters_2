@@ -925,11 +925,11 @@ select:focus[data-flux-control] {
     }
     [data-flux-sidebar].trash-sidebar {
         width: 19rem !important;
-        background: linear-gradient(145deg, #042f2e 0%, #134e4a 35%, #0f766e 65%, #059669 100%) !important;
-        border-color: #0f766e !important;
+        background: #042f2e !important;
+        border-color: #042f2e !important;
         color: #ffffff !important;
         transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        box-shadow: 4px 0 24px rgba(33, 65, 42, 0.04);
+        box-shadow: 4px 0 24px rgba(4, 47, 46, 0.12);
         overflow-x: hidden !important;
     }
     .auth-split-brand-panel {
@@ -1103,12 +1103,13 @@ select:focus[data-flux-control] {
         position: relative !important;
         isolation: isolate;
         overflow: hidden;
-        min-height: 3.15rem;
-        color: rgba(255, 255, 255, 0.88) !important;
+        min-height: 3.2rem;
+        color: rgba(243, 255, 249, 0.78) !important;
         background: transparent !important;
         border: 0 !important;
-        border-radius: 12px !important;
-        padding: 0.75rem 0.9rem !important;
+        border-radius: 1rem !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 1rem !important;
         font-weight: 500 !important;
         transition: background-color 0.2s ease, color 0.2s ease, transform 0.28s ease !important;
     }
@@ -1155,14 +1156,14 @@ select:focus[data-flux-control] {
         color: inherit !important;
     }
     [data-flux-sidebar-item][data-current] {
-        background: rgba(16, 185, 129, 0.35) !important;
-        color: #ffffff !important;
+        background: rgba(53, 217, 173, 0.15) !important;
+        color: #35d9ad !important;
         font-weight: 700 !important;
-        box-shadow: inset 3px 0 0 #a7f3d0, 0 0 18px rgba(110, 231, 183, 0.14);
+        box-shadow: inset 3px 0 0 #35d9ad, 0 0 18px rgba(53, 217, 173, 0.08);
     }
     [data-flux-sidebar-item]:hover {
-        background: rgba(209, 250, 229, 0.18) !important;
-        color: #ffffff !important;
+        background: rgba(53, 217, 173, 0.1) !important;
+        color: #35d9ad !important;
     }
     [data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-item] {
         width: 3rem !important;
@@ -1245,7 +1246,7 @@ select:focus[data-flux-control] {
     [data-flux-sidebar-item] [data-flux-icon] {
         width: 1.4rem !important;
         height: 1.4rem !important;
-        color: rgba(255, 255, 255, 0.82) !important;
+        color: rgba(243, 255, 249, 0.72) !important;
         opacity: 1 !important;
         filter: drop-shadow(0 0 0 transparent);
         transition: color 0.22s ease, filter 0.22s ease, transform 0.22s ease !important;
@@ -1256,8 +1257,8 @@ select:focus[data-flux-control] {
     [data-flux-sidebar-item][data-current] svg,
     [data-flux-sidebar-item][data-current] i,
     [data-flux-sidebar-item][data-current] [data-flux-icon] {
-        color: #ffffff !important;
-        filter: drop-shadow(0 0 7px rgba(167, 243, 208, 0.65));
+        color: #35d9ad !important;
+        filter: drop-shadow(0 0 7px rgba(53, 217, 173, 0.5));
         transform: scale(1.08);
     }
     [data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-item] svg,
@@ -1295,19 +1296,6 @@ select:focus[data-flux-control] {
         font-weight: 700 !important;
         opacity: 1 !important;
     }
-    [data-flux-sidebar] .trash-sidebar-history-group [data-flux-sidebar-group-heading],
-    [data-flux-sidebar] .trash-sidebar-history-group [data-flux-sidebar-group-heading] > *,
-    [data-flux-sidebar] .trash-sidebar-history-group [data-flux-icon],
-    [data-flux-sidebar] .trash-sidebar-history-group [data-flux-sidebar-group-heading] svg,
-    [data-flux-sidebar] .trash-sidebar-history-group [data-flux-sidebar-group-heading] i {
-        color: rgba(255, 255, 255, 0.9) !important;
-        opacity: 1 !important;
-        filter: drop-shadow(0 0 5px rgba(167, 243, 208, 0.35));
-    }
-    [data-flux-sidebar] .trash-sidebar-history-group [data-flux-sidebar-group-heading]:hover {
-        color: #ffffff !important;
-        background: rgba(209, 250, 229, 0.18) !important;
-    }
     [data-flux-main] {
         max-width: none !important;
         min-height: 100vh;
@@ -1318,12 +1306,27 @@ select:focus[data-flux-control] {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding-inline: 1rem !important;
+        min-height: 6rem;
+        padding: 1rem 1.15rem !important;
     }
     .trash-sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
         min-width: 0;
         color: #ffffff !important;
+        font-family: 'Sora', sans-serif;
+        font-size: 1.2rem;
         font-weight: 800;
+        letter-spacing: -.04em;
+    }
+    .trash-sidebar-brand img {
+        width: 2.3rem;
+        height: 2.3rem;
+        object-fit: contain;
+    }
+    .trash-sidebar-brand span span {
+        color: #35d9ad;
     }
     [data-flux-sidebar-collapse] {
         display: flex !important;
