@@ -116,7 +116,7 @@
                     $image = $post->attachments->firstWhere('file_type', 'image');
                     $category = $post->categorias->first();
                     $title = \Illuminate\Support\Str::of($post->content)->squish()->limit(48);
-                    $jaColetado = in_array($post->id, $coletados ?? []);
+                    $jaColetado = in_array($post->id, $coletados ?? [], true);
                 @endphp
 
                 <article class="recovery-card" data-post-categories="{{ $post->categorias->pluck('id')->implode(',') }}">
@@ -170,8 +170,8 @@
                             </span>
                         </div>
 
-                        {{-- Botão Coletar: só em itens grátis, ainda disponíveis e de outra pessoa --}}
-                        @if (! $jaColetado && $post->price_type !== 'paid' && $post->user_id !== auth()->id())
+                        {{-- Botão Coletar: itens disponíveis de outros usuários --}}
+                        @if (! $jaColetado && $post->user_id !== auth()->id())
                             <form
                                 method="POST"
                                 action="{{ route('posts.coletar', $post) }}"

@@ -30,8 +30,9 @@ class PostController extends Controller
 
         $categorias = Categoria::orderBy('nome')->get();
 
-        // IDs dos posts que já foram coletados (para esconder o botão "Coletar")
+        // Cada usuário só deve ver como coletados os itens que ele próprio coletou.
         $coletados = Coleta::whereIn('post_id', $posts->pluck('id'))
+            ->where('coletor_id', auth()->id())
             ->pluck('post_id')
             ->all();
 
@@ -50,8 +51,9 @@ class PostController extends Controller
 
         $categorias = Categoria::orderBy('nome')->get();
 
-        // IDs dos posts já coletados (para mostrar "Coletado" em vez de "Disponível")
+        // Cada usuário só deve ver como coletados os itens que ele próprio coletou.
         $coletados = Coleta::whereIn('post_id', $posts->pluck('id'))
+            ->where('coletor_id', auth()->id())
             ->pluck('post_id')
             ->all();
 
@@ -196,10 +198,6 @@ class PostController extends Controller
 
         if ($post->user_id === $user->id) {
             return back()->withErrors(['coleta' => 'Você não pode coletar o seu próprio item.']);
-        }
-
-        if ($post->price_type === 'paid') {
-            return back()->withErrors(['coleta' => 'Este item não está disponível para doação.']);
         }
 
         $coleta = Coleta::firstOrCreate(
