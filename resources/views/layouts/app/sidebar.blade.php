@@ -32,10 +32,17 @@
                         <x-slot name="badge">3</x-slot>
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="chat-bubble-left-right" href="#">
-                        {{ __('Mensagens') }}
-                        <x-slot name="badge">1</x-slot>
-                    </flux:sidebar.item>
+                    {{-- "Feature Flag" for messages --}}
+                    @if (Route::has('messages.index'))
+                        <flux:sidebar.item icon="chat-bubble-left-right" :href="route('messages.index')" :current="request()->routeIs('messages.*')" wire:navigate>
+                            {{ __('Mensagens') }}
+                            <x-slot name="badge">1</x-slot>
+                        </flux:sidebar.item>
+                    @else
+                        <flux:sidebar.item icon="chat-bubble-left-right" href="#" :enabled="false">
+                            {{ __('Mensagens') }} (em breve)
+                        </flux:sidebar.item>
+                    @endif
 
                     <flux:sidebar.item icon="bookmark" href="#">
                         {{ __('Salvos') }}
