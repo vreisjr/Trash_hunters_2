@@ -3,7 +3,8 @@
 
         {{-- Mensagens de sucesso/erro da coleta --}}
         @session('status')
-            <div style="background:#ffffff; color:#374151; padding:14px 18px; border-radius:12px; margin-bottom:16px;">
+            {{-- <div style="background:#ffffff; color:#374151; padding:14px 18px; border-radius:12px; margin-bottom:16px;"> --}}
+            <div class="bg-white text-gray-700 px-[18px] py-[14px] rounded-xl mb-4">
                 {{ $value }}
             </div>
         @endsession

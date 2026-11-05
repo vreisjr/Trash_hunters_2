@@ -106,11 +106,13 @@ select:focus[data-flux-control] {
     }
 
     .recovery-eyebrow {
-        color: #059669;
+        /* color: #059669;
         font-size: .7rem;
         font-weight: 800;
         letter-spacing: .12em;
-        text-transform: uppercase;
+        text-transform: uppercase; */
+        @apply text-emerald-600 text-xs font-extrabold tracking-widest uppercase;
+        @apply dark:text-emerald-400;
     }
 
     .recovery-home-header h1 {
@@ -894,7 +896,8 @@ select:focus[data-flux-control] {
 
     body {
         min-height: 100vh;
-        background: #f3f5ec !important;
+        /* background: #f3f5ec !important; */
+        @apply bg-green-200 dark:bg-green-800;
     }
     body::-webkit-scrollbar,
     [data-flux-sidebar]::-webkit-scrollbar {
