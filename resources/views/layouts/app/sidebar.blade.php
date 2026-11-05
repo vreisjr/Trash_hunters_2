@@ -44,7 +44,7 @@
                         </flux:sidebar.item>
                     @endif
 
-                    <flux:sidebar.item icon="bookmark" href="#">
+                    <flux:sidebar.item icon="bookmark" :href="route('posts.saved')" :current="request()->routeIs('posts.saved')" wire:navigate>
                         {{ __('Salvos') }}
                     </flux:sidebar.item>
 

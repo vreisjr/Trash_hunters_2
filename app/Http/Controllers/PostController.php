@@ -25,6 +25,7 @@ class PostController extends Controller
             'comentarios.filhos.user',
             'comentarios.filhos.curtidas',
             'curtidas',
+            'savedByUsers' => fn ($query) => $query->whereKey(auth()->id()),
             'attachments',
         ])->latest()->get();
 
@@ -241,6 +242,40 @@ class PostController extends Controller
         return response()->json([
             'curtido' => $curtido,
             'total' => $post->curtidas()->count(),
+        ]);
+    }
+
+    public function toggleSave(Request $request, Post $post): JsonResponse
+    {
+        $salvo = $post->salvos()
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if ($salvo) {
+            $salvo->delete();
+            $salvoAgora = false;
+        } else {
+            $post->salvos()->create([
+                'user_id' => $request->user()->id,
+            ]);
+            $salvoAgora = true;
+        }
+
+        return response()->json([
+            'salvo' => $salvoAgora,
+        ]);
+    }
+
+    public function saved(Request $request): View
+    {
+        $posts = $request->user()
+            ->savedPosts()
+            ->with(['user', 'categorias', 'attachments'])
+            ->orderByPivot('created_at', 'desc')
+            ->paginate(10);
+
+        return view('pages.posts.saved', [
+            'posts' => $posts,
         ]);
     }
 

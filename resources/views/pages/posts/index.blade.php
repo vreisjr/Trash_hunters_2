@@ -318,61 +318,40 @@
         && auth()->user()->district === $post->district;
 @endphp
 
-<div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+<div class="post-menu">
+    <button type="button" class="post-menu-btn" aria-expanded="false" aria-label="{{ __('Abrir ações do post') }}">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </button>
 
-    @if ($post->user_id === auth()->id() && $post->edited_at === null)
+    <div class="post-menu-options bg-white dark:bg-zinc-800">
+        @if ($post->user_id === auth()->id() && $post->edited_at === null)
+            <a href="{{ route('posts.edit', $post) }}" class="flex items-center gap-2 !text-zinc-950 dark:!text-white">
+                <i class="fa-solid fa-pen-to-square !text-zinc-950 dark:!text-white" aria-hidden="true"></i>
+                <span class="!text-zinc-950 dark:!text-white">{{ __('Editar') }}</span>
+            </a>
+        @endif
 
-        <a
-            href="{{ route('posts.edit', $post) }}"
-            style="background:none; border:none; cursor:pointer; padding:2px; color:#374151; font-size:12px; font-weight:600; text-decoration:none;"
+        <button
+            type="button"
+            class="post-save-action flex w-full items-center gap-2 text-left !text-zinc-950 dark:!text-white {{ $post->savedByUsers->isNotEmpty() ? 'is-saved' : '' }}"
+            data-post-id="{{ $post->id }}"
+            data-save-url="{{ route('posts.salvar', $post) }}"
         >
-            Editar
-        </a>
+            <i class="fa-{{ $post->savedByUsers->isNotEmpty() ? 'solid' : 'regular' }} fa-bookmark !text-zinc-950 dark:!text-white"></i>
+            <span class="!text-zinc-950 dark:!text-white">{{ $post->savedByUsers->isNotEmpty() ? __('Remover dos salvos') : __('Salvar') }}</span>
+        </button>
 
-    @endif
-
-    @if (auth()->user()->role === 'admin' || $isResponsiblePremium)
-
-        <form
-            action="{{ route('posts.destroy', $post) }}"
-            method="POST"
-            onsubmit="return confirm('Tem certeza que deseja excluir esta publicação?');"
-            style="display:inline;"
-        >
-            @csrf
-            @method('DELETE')
-
-            <button
-                type="submit"
-                style="background:none; border:none; cursor:pointer; padding:2px; color:#c62828; font-size:12px; font-weight:600;"
-            >
-                Excluir
-            </button>
-        </form>
-
-    @endif
-
-    @if (auth()->user()->isModerator() && $post->user_id !== auth()->id() && ! $post->user->isModerator())
-
-        <form
-            action="{{ route('users.destroy', $post->user) }}"
-            method="POST"
-            onsubmit="return confirm('Tem certeza que deseja excluir a conta deste usuário? Todas as publicações e comentários dele também serão excluídos.');"
-            style="display:inline;"
-        >
-            @csrf
-            @method('DELETE')
-
-            <button
-                type="submit"
-                style="background:none; border:none; cursor:pointer; padding:2px; color:#8e2424; font-size:12px; font-weight:600;"
-            >
-                Excluir conta
-            </button>
-        </form>
-
-    @endif
-
+        @if (auth()->user()->role === 'admin' || $isResponsiblePremium)
+            <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta publicação?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="flex w-full items-center gap-2 text-left !text-red-700 dark:!text-red-300">
+                    <i class="fa-solid fa-trash !text-red-700 dark:!text-red-300" aria-hidden="true"></i>
+                    <span class="!text-red-700 dark:!text-red-300">{{ __('Excluir') }}</span>
+                </button>
+            </form>
+        @endif
+    </div>
 </div>
 
                     </div>
@@ -485,8 +464,8 @@
                             </button>
 
                             <div
-                                class="curtidas-total-post-label"
-                                style="font-size:13px; color:#262626; font-weight:600; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
+                                class="curtidas-total-post-label text-zinc-800 dark:text-zinc-300"
+                                style="font-size:13px; font-weight:600; {{ $post->curtidas->count() ? '' : 'display:none;' }}"
                             >
                                 <span class="curtidas-total-post">{{ $post->curtidas->count() }}</span> curtida{{ $post->curtidas->count() == 1 ? '' : 's' }}
                             </div>
@@ -507,8 +486,8 @@
                             </button>
 
                             <div
-                                class="comentarios-total-post-label"
-                                style="font-size:13px; color:#262626; font-weight:600; {{ $post->comentarios->count() ? '' : 'display:none;' }}"
+                                class="comentarios-total-post-label text-zinc-800 dark:text-zinc-300"
+                                style="font-size:13px; font-weight:600; {{ $post->comentarios->count() ? '' : 'display:none;' }}"
                             >
                                 <span class="comentarios-total-post">{{ $post->comentarios->count() }}</span> comentário{{ $post->comentarios->count() == 1 ? '' : 's' }}
                             </div>
@@ -532,25 +511,25 @@
                             </button>
 
                             <div
-                                class="menu-compartilhar-post"
-                                style="display:none; position:absolute; bottom:calc(100% + 8px); top:auto; right:0; z-index:20; min-width:190px; padding:6px; background:#fff; border:1px solid #eee; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,.12);"
+                                class="menu-compartilhar-post bg-white dark:border-zinc-700 dark:bg-zinc-800"
+                                style="display:none; position:absolute; bottom:calc(100% + 8px); top:auto; right:0; z-index:20; min-width:190px; padding:6px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,.12);"
                             >
-                                <button type="button" data-share-action="copy" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                <button type="button" data-share-action="copy" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-regular fa-copy" style="width:16px;"></i> Copiar link
                                 </button>
-                                <button type="button" data-share-action="email" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                <button type="button" data-share-action="email" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-solid fa-envelope" style="width:16px;"></i> E-mail
                                 </button>
-                                <button type="button" data-share-action="sms" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                <button type="button" data-share-action="sms" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-solid fa-comment-sms" style="width:16px;"></i> SMS
                                 </button>
-                                <button type="button" data-share-action="whatsapp" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                <button type="button" data-share-action="whatsapp" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-brands fa-whatsapp" style="width:16px;"></i> WhatsApp
                                 </button>
-                                <button type="button" data-share-action="instagram" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                <button type="button" data-share-action="instagram" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-brands fa-instagram" style="width:16px;"></i> Instagram
                                 </button>
-                                <button type="button" data-share-action="facebook" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; color:#262626; cursor:pointer; text-align:left; font-size:12px;">
+                                <button type="button" data-share-action="facebook" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
                                     <i class="fa-brands fa-facebook" style="width:16px;"></i> Facebook
                                 </button>
                             </div>
@@ -569,7 +548,7 @@
                         <div
                             class="comentarios-painel"
                             id="comentarios-painel-{{ $post->id }}"
-                            style="display:none; margin-top:10px; border-top:1px solid #eee; padding-top:8px;"
+                            style="display:none; margin-top:10px; padding-top:8px;"
                         >
 
                             <div
@@ -1499,6 +1478,60 @@
 
             });
 
+            document.querySelectorAll('.post-menu-btn').forEach(btn => {
+
+                btn.addEventListener('click', event => {
+                    event.stopPropagation();
+
+                    const menu = btn.closest('.post-menu');
+                    const aberto = menu.classList.contains('active');
+
+                    document.querySelectorAll('.post-menu').forEach(outroMenu => {
+                        outroMenu.classList.remove('active');
+                        outroMenu.querySelector('.post-menu-btn').setAttribute('aria-expanded', 'false');
+                    });
+
+                    menu.classList.toggle('active', !aberto);
+                    btn.setAttribute('aria-expanded', aberto ? 'false' : 'true');
+                });
+            });
+
+            document.querySelectorAll('.post-save-action').forEach(btn => {
+
+                btn.addEventListener('click', async event => {
+                    event.stopPropagation();
+
+                    if (btn.dataset.loading === '1') return;
+
+                    btn.dataset.loading = '1';
+
+                    try {
+                        const response = await fetch(btn.dataset.saveUrl, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json',
+                            },
+                        });
+
+                        if (!response.ok) throw new Error('save-failed');
+
+                        const data = await response.json();
+                        const icon = btn.querySelector('i');
+                        const label = btn.querySelector('span');
+
+                        btn.classList.toggle('is-saved', data.salvo);
+                        icon.classList.toggle('fa-solid', data.salvo);
+                        icon.classList.toggle('fa-regular', !data.salvo);
+                        label.textContent = data.salvo ? 'Remover dos salvos' : 'Salvar';
+                    } catch (error) {
+                        alert('Não foi possível salvar a publicação.');
+                    } finally {
+                        btn.dataset.loading = '0';
+                    }
+                });
+            });
+
             document.addEventListener('click', () => {
 
                 document.querySelectorAll('.menu-compartilhar-post').forEach(menu => {
@@ -1507,6 +1540,11 @@
 
                 document.querySelectorAll('.btn-compartilhar-post').forEach(btn => {
                     btn.setAttribute('aria-expanded', 'false');
+                });
+
+                document.querySelectorAll('.post-menu').forEach(menu => {
+                    menu.classList.remove('active');
+                    menu.querySelector('.post-menu-btn').setAttribute('aria-expanded', 'false');
                 });
 
             });

@@ -78,3 +78,37 @@ test('authenticated users can visit the collection points page', function () {
         ->assertSee('Igarassu')
         ->assertSee('Ver no mapa');
 });
+
+test('users can save posts and view their saved post history', function () {
+    $user = User::factory()->create();
+    $author = User::factory()->create();
+    $post = Post::factory()->for($author)->create([
+        'content' => 'Post salvo para consultar depois.',
+    ]);
+
+    $this->actingAs($user)
+        ->postJson(route('posts.salvar', $post))
+        ->assertOk()
+        ->assertJson(['salvo' => true]);
+
+    $this->assertDatabaseHas('post_salvos', [
+        'user_id' => $user->id,
+        'post_id' => $post->id,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('posts.saved'))
+        ->assertOk()
+        ->assertSee('Post salvo para consultar depois.')
+        ->assertSee('Posts salvos');
+
+    $this->actingAs($user)
+        ->postJson(route('posts.salvar', $post))
+        ->assertOk()
+        ->assertJson(['salvo' => false]);
+
+    $this->assertDatabaseMissing('post_salvos', [
+        'user_id' => $user->id,
+        'post_id' => $post->id,
+    ]);
+});

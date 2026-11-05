@@ -90,6 +90,19 @@ class Post extends Model
         return $this->curtidas->contains('user_id', $userId);
     }
 
+    /** @return HasMany<PostSalvo, $this> */
+    public function salvos(): HasMany
+    {
+        return $this->hasMany(PostSalvo::class);
+    }
+
+    /** @return BelongsToMany<User, $this> */
+    public function savedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'post_salvos')
+            ->withTimestamps();
+    }
+
     /**
      * @return HasMany<PostAttachment, $this>
      */

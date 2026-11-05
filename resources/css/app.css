@@ -1372,6 +1372,7 @@ select:focus[data-flux-control] {
         padding: 25px;
         box-shadow: var(--shadow);
         transition: var(--transition);
+        @apply dark:bg-zinc-900;
     }
 
     .new-post-trigger {
@@ -1393,7 +1394,10 @@ select:focus[data-flux-control] {
     .new-post-trigger small { margin-top: 3px; color: #64748b; font-size: 12px; }
     .new-post-trigger-arrow { margin-left: auto; color: #6b8580; transition: transform .2s ease; }
     .new-post.is-open .new-post-trigger-arrow { transform: rotate(180deg); }
-    .composer-content { margin-top: 22px; padding-top: 22px; border-top: 1px solid #edf1ef; }
+    .new-post-trigger strong { @apply dark:text-zinc-100; }
+    .new-post-trigger small { @apply dark:text-zinc-400; }
+    .new-post-trigger-arrow { @apply dark:text-emerald-300; }
+    .composer-content { margin-top: 22px; padding-top: 22px; border-top: 1px solid #edf1ef; @apply dark:border-zinc-700; }
     .post-price {
         display: inline-flex;
         align-items: center;
@@ -1448,12 +1452,14 @@ select:focus[data-flux-control] {
         font-size: 15px;
         font-family: inherit;
         transition: .3s;
+        @apply dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400;
     }
 
     .post-header textarea:focus {
         outline: none;
         background: var(--white);
         box-shadow: 0 0 0 3px rgba(116, 195, 101, .15);
+        @apply dark:bg-zinc-800;
     }
 
     .post-actions {
@@ -1465,6 +1471,7 @@ select:focus[data-flux-control] {
         border-top: 1px solid #ececec;
         flex-wrap: wrap;
         gap: 10px;
+        @apply dark:border-zinc-700;
     }
 
     .post-actions button {
@@ -1478,6 +1485,7 @@ select:focus[data-flux-control] {
         border: none;
         cursor: pointer;
         transition: .3s;
+        @apply dark:bg-zinc-800 dark:text-zinc-200;
     }
 
     .post-actions button:hover:not(:disabled) {
@@ -1520,6 +1528,7 @@ select:focus[data-flux-control] {
         border-radius: var(--radius);
         padding: 25px;
         box-shadow: var(--shadow);
+        @apply dark:bg-zinc-900;
     }
 
     .post-top {
@@ -1557,11 +1566,13 @@ select:focus[data-flux-control] {
         color: #123b35;
         font-size: 17px;
         font-weight: 750;
+        @apply dark:text-zinc-100;
     }
 
     .post-top span {
         color: var(--gray3);
         font-size: 14px;
+        @apply dark:text-zinc-400;
     }
 
     .post-action-bar {
@@ -1571,6 +1582,7 @@ select:focus[data-flux-control] {
         margin-top: 10px;
         padding-top: 10px;
         border-top: 1px solid #eee;
+        @apply dark:border-zinc-700;
     }
 
     .post-action-button {
@@ -1588,12 +1600,14 @@ select:focus[data-flux-control] {
         line-height: 1;
         font-size: 18px;
         transition: background-color .2s, border-color .2s, transform .2s;
+        @apply dark:border-zinc-600 dark:text-zinc-300;
     }
 
     .post-action-button:hover {
         background: #f5f5f5;
         border-color: #bdbdbd;
         transform: translateY(-1px);
+        @apply dark:bg-zinc-800 dark:border-zinc-500;
     }
     .post-action-bar > div {
         gap: 2px !important;
@@ -1660,11 +1674,21 @@ select:focus[data-flux-control] {
     }
 
     .post-menu-btn {
+        display: grid;
+        width: 2rem;
+        height: 2rem;
+        place-items: center;
         background: none;
         border: none;
+        border-radius: 999px;
         font-size: 22px;
         cursor: pointer;
         color: #555;
+        @apply dark:text-zinc-300;
+    }
+
+    .post-menu-btn:hover {
+        @apply bg-zinc-100 dark:bg-zinc-700;
     }
 
     .post-menu-options {
@@ -1679,19 +1703,46 @@ select:focus[data-flux-control] {
         padding: 8px;
         overflow: hidden;
         z-index: 1000;
+        @apply dark:bg-zinc-800;
     }
 
     .post-menu-options a {
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
         padding: 12px 14px;
         border-radius: 10px;
-        color: var(--text);
         text-decoration: none;
         font-size: 14px;
+        @apply text-zinc-900 dark:text-zinc-100;
+    }
+
+    .post-menu-options form {
+        display: block;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .post-menu-options button {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+        @apply text-zinc-900 dark:text-zinc-100;
     }
 
     .post-menu-options a:hover {
         background: var(--gray);
+        @apply dark:bg-zinc-700;
+    }
+
+    .post-menu-options button:hover {
+        @apply bg-zinc-100 dark:bg-zinc-700;
     }
 
     .post-menu.active .post-menu-options {
@@ -1703,6 +1754,7 @@ select:focus[data-flux-control] {
         line-height: 1.8;
         font-size: 15px;
         color: var(--text);
+        @apply dark:text-zinc-200;
     }
 
     .post-footer {
@@ -1713,6 +1765,7 @@ select:focus[data-flux-control] {
         gap: 10px;
         border-top: 1px solid #ededed;
         padding-top: 18px;
+        @apply dark:border-zinc-700;
     }
 
     .post-footer button {
@@ -1729,6 +1782,7 @@ select:focus[data-flux-control] {
         cursor: pointer;
         transition: .3s;
         font-weight: 600;
+        @apply dark:bg-zinc-800 dark:text-zinc-200;
     }
 
     .post-footer i {
@@ -1755,6 +1809,7 @@ select:focus[data-flux-control] {
         margin-top: 20px;
         border-top: 1px solid #efefef;
         padding-top: 20px;
+        @apply dark:border-zinc-700;
     }
 
     .comment {
@@ -1775,12 +1830,14 @@ select:focus[data-flux-control] {
         background: var(--gray);
         padding: 15px;
         border-radius: 15px;
+        @apply dark:bg-zinc-800;
     }
 
     .comment strong {
         color: #374151;
         display: block;
         margin-bottom: 5px;
+        @apply dark:text-zinc-100;
     }
 
     .comment-text {
@@ -1814,6 +1871,8 @@ select:focus[data-flux-control] {
 
     .comentarios-painel {
         animation: comentarios-abrir .2s ease;
+        border-top: 1px solid #efefef;
+        @apply dark:border-zinc-700;
     }
 
     @keyframes comentarios-abrir {
@@ -1863,12 +1922,14 @@ select:focus[data-flux-control] {
         font-size: 0.88rem;
         line-height: 1.4;
         overflow-wrap: anywhere;
+        @apply dark:text-zinc-200;
     }
 
     .comentario-mensagem strong {
         margin-right: 0.3rem;
         color: #123b35;
         font-weight: 800;
+        @apply dark:text-zinc-100;
     }
 
     .btn-curtir-comentario {
@@ -1894,6 +1955,7 @@ select:focus[data-flux-control] {
         color: #737983;
         font-size: 0.75rem;
         font-weight: 600;
+        @apply dark:text-zinc-400;
     }
 
     .comentario-acoes .btn-curtir-comentario,
@@ -1907,6 +1969,7 @@ select:focus[data-flux-control] {
         color: #606060;
         cursor: pointer;
         font-size: 0.8rem;
+        @apply dark:text-zinc-300;
     }
 
     .comentario-acoes .btn-curtir-comentario:hover,
@@ -1925,6 +1988,7 @@ select:focus[data-flux-control] {
 
     .comentario-acoes button:hover {
         color: #1f2937;
+        @apply dark:text-zinc-100;
     }
 
     .form-resposta {
@@ -1947,6 +2011,7 @@ select:focus[data-flux-control] {
         padding: 0.45rem 0.75rem;
         font-size: 0.78rem;
         outline: none;
+        @apply dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400;
     }
 
     .form-resposta button {
@@ -1956,6 +2021,7 @@ select:focus[data-flux-control] {
         cursor: pointer;
         font-size: 0.75rem;
         font-weight: 700;
+        @apply dark:text-zinc-200;
     }
 
     .respostas-lista {
