@@ -405,7 +405,7 @@
                     @if ($post->attachments->isNotEmpty())
 
                         <div
-                            class="{{ $post->attachments->count() === 1 ? 'grid-cols-1' : 'grid-cols-2' }} mt-3 grid max-w-2xl gap-1 overflow-hidden rounded-2xl bg-slate-100 shadow-lg ring-1 ring-slate-200"
+                            class="{{ $post->attachments->count() === 1 ? 'grid-cols-1' : 'grid-cols-2' }} mx-auto mt-3 grid w-full max-w-2xl gap-1 overflow-hidden rounded-2xl bg-slate-100 shadow-lg ring-1 ring-slate-200"
                             data-media-gallery
                         >
                             @foreach ($post->attachments as $index => $attachment)
@@ -438,7 +438,7 @@
 
                                     @if ($index === 3 && $post->attachments->count() > 4)
                                         <span class="absolute inset-0 flex items-center justify-center bg-slate-950/55 text-3xl font-semibold tracking-widest text-white backdrop-blur-[1px]">
-                                            ...
+                                            +{{ $post->attachments->count() - 4 }}
                                         </span>
                                     @endif
                                 </button>
@@ -456,7 +456,7 @@
                                 type="button"
                                 class="post-action-button btn-curtir-post"
                                 data-id="{{ $post->id }}"
-                                style="color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }}; width:100%;"
+                                style="color:{{ $post->curtidoPor(auth()->id()) ? '#e0245e' : '#8e8e8e' }};"
                                 aria-label="Curtir publicação"
                                 title="Curtir"
                             >
@@ -480,7 +480,6 @@
                                 data-post-id="{{ $post->id }}"
                                 aria-label="Comentar publicação"
                                 title="Comentar"
-                                style="width:100%;"
                             >
                                 <i class="fa-regular fa-comment"></i>
                             </button>
@@ -505,32 +504,31 @@
                                 aria-label="Compartilhar publicação"
                                 title="Compartilhar"
                                 aria-expanded="false"
-                                style="width:100%;"
                             >
                                 <i class="fa-solid fa-share-nodes"></i>
                             </button>
 
                             <div
-                                class="menu-compartilhar-post bg-white dark:border-zinc-700 dark:bg-zinc-800"
-                                style="display:none; position:absolute; bottom:calc(100% + 8px); top:auto; right:0; z-index:20; min-width:190px; padding:6px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,.12);"
+                                class="menu-compartilhar-post z-20 min-w-72 rounded-xl border border-zinc-200 bg-white p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
+                                style="display:none; position:absolute; bottom:calc(100% + 8px); top:auto; right:0;"
                             >
-                                <button type="button" data-share-action="copy" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
-                                    <i class="fa-regular fa-copy" style="width:16px;"></i> Copiar link
+                                <button type="button" data-share-action="copy" class="flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-base text-zinc-800 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-700">
+                                    <i class="fa-regular fa-copy w-6 text-lg text-zinc-600 dark:text-zinc-300"></i> Copiar link
                                 </button>
-                                <button type="button" data-share-action="email" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
-                                    <i class="fa-solid fa-envelope" style="width:16px;"></i> E-mail
+                                <button type="button" data-share-action="email" class="flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-base text-zinc-800 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-700">
+                                    <i class="fa-solid fa-envelope w-6 text-lg text-red-500"></i> E-mail
                                 </button>
-                                <button type="button" data-share-action="sms" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
-                                    <i class="fa-solid fa-comment-sms" style="width:16px;"></i> SMS
+                                <button type="button" data-share-action="sms" class="flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-base text-zinc-800 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-700">
+                                    <i class="fa-solid fa-comment-sms w-6 text-lg text-sky-500"></i> SMS
                                 </button>
-                                <button type="button" data-share-action="whatsapp" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
-                                    <i class="fa-brands fa-whatsapp" style="width:16px;"></i> WhatsApp
+                                <button type="button" data-share-action="whatsapp" class="flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-base text-zinc-800 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-700">
+                                    <i class="fa-brands fa-whatsapp w-6 text-lg text-green-500"></i> WhatsApp
                                 </button>
-                                <button type="button" data-share-action="instagram" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
-                                    <i class="fa-brands fa-instagram" style="width:16px;"></i> Instagram
+                                <button type="button" data-share-action="instagram" class="flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-base text-zinc-800 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-700">
+                                    <i class="fa-brands fa-instagram w-6 text-lg text-pink-500"></i> Instagram
                                 </button>
-                                <button type="button" data-share-action="facebook" class="text-zinc-800 dark:text-zinc-200" style="display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0; background:none; cursor:pointer; text-align:left; font-size:12px;">
-                                    <i class="fa-brands fa-facebook" style="width:16px;"></i> Facebook
+                                <button type="button" data-share-action="facebook" class="flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-base text-zinc-800 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-700">
+                                    <i class="fa-brands fa-facebook w-6 text-lg text-blue-600"></i> Facebook
                                 </button>
                             </div>
 
@@ -823,7 +821,8 @@
             const lightboxImage = lightbox.querySelector('[data-lightbox-image]');
             const lightboxVideo = lightbox.querySelector('[data-lightbox-video]');
             const lightboxCounter = lightbox.querySelector('[data-lightbox-counter]');
-            const mediaTriggers = Array.from(document.querySelectorAll('[data-media-src]'));
+            const allMediaTriggers = Array.from(document.querySelectorAll('[data-media-src]'));
+            let mediaTriggers = [];
             let lightboxIndex = 0;
 
             function showLightboxMedia(index) {
@@ -855,9 +854,12 @@
                 document.body.classList.remove('overflow-hidden');
             }
 
-            mediaTriggers.forEach((trigger, index) => {
+            allMediaTriggers.forEach(trigger => {
                 trigger.addEventListener('click', () => {
-                    showLightboxMedia(index);
+                    mediaTriggers = Array.from(
+                        trigger.closest('[data-media-gallery]').querySelectorAll('[data-media-src]')
+                    );
+                    showLightboxMedia(Number(trigger.dataset.mediaIndex));
                     lightbox.classList.remove('hidden');
                     lightbox.classList.add('flex');
                     document.body.classList.add('overflow-hidden');

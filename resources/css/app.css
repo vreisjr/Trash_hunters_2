@@ -1587,6 +1587,9 @@ select:focus[data-flux-control] {
 
     .post-action-button {
         display: flex;
+        width: calc(100% - .5rem);
+        min-width: 0;
+        margin-inline: auto;
         align-items: center;
         justify-content: center;
         height: 36px;
@@ -1609,7 +1612,13 @@ select:focus[data-flux-control] {
         transform: translateY(-1px);
         @apply dark:bg-zinc-800 dark:border-zinc-500;
     }
+
+    .btn-compartilhar-post {
+        width: calc(100% - 1rem);
+    }
+
     .post-action-bar > div {
+        min-width: 0;
         gap: 2px !important;
     }
     .curtidas-total-post-label {
@@ -1852,7 +1861,8 @@ select:focus[data-flux-control] {
     }
 
     .btn-curtir-post,
-    .btn-toggle-comentarios {
+    .btn-toggle-comentarios,
+    .btn-compartilhar-post {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1860,12 +1870,14 @@ select:focus[data-flux-control] {
     }
 
     .btn-curtir-post:hover,
-    .btn-toggle-comentarios:hover {
+    .btn-toggle-comentarios:hover,
+    .btn-compartilhar-post:hover {
         transform: scale(1.12);
     }
 
     .btn-curtir-post:active,
-    .btn-toggle-comentarios:active {
+    .btn-toggle-comentarios:active,
+    .btn-compartilhar-post:active {
         transform: scale(.9);
     }
 
