@@ -148,11 +148,14 @@ class PostController extends Controller
 
     public function edit(Request $request, Post $post): View
     {
-        if ($post->user_id !== $request->user()->id) {
+        $user = $request->user();
+        $isPrivileged = $user->isModerator();
+
+        if (! $isPrivileged && $post->user_id !== $user->id) {
             abort(403);
         }
 
-        if ($post->edited_at !== null) {
+        if (! $isPrivileged && $post->edited_at !== null) {
             abort(403, 'Esta publicação já foi editada.');
         }
 
@@ -165,11 +168,14 @@ class PostController extends Controller
         Request $request,
         Post $post
     ): RedirectResponse {
-        if ($post->user_id !== $request->user()->id) {
+        $user = $request->user();
+        $isPrivileged = $user->isModerator();
+
+        if (! $isPrivileged && $post->user_id !== $user->id) {
             abort(403);
         }
 
-        if ($post->edited_at !== null) {
+        if (! $isPrivileged && $post->edited_at !== null) {
             return redirect()
                 ->route('posts.index')
                 ->with(
@@ -285,14 +291,7 @@ class PostController extends Controller
     ): RedirectResponse {
         $user = $request->user();
 
-        $isAdmin = $user->role === 'admin';
-
-        $isResponsiblePremium =
-            $user->role === 'premium'
-            && $user->district !== null
-            && $user->district === $post->district;
-
-        if (! $isAdmin && ! $isResponsiblePremium) {
+        if (! $user->isModerator()) {
             abort(403);
         }
 

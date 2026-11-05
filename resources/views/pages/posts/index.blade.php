@@ -312,10 +312,8 @@
                         {{-- AÇÕES DO POST --}}
 
 @php
-    $isResponsiblePremium =
-        auth()->user()->role === 'premium'
-        && auth()->user()->district !== null
-        && auth()->user()->district === $post->district;
+    $isPrivileged = auth()->user()->isModerator();
+    $canEditPost = $isPrivileged || ($post->user_id === auth()->id() && $post->edited_at === null);
 @endphp
 
 <div class="post-menu">
@@ -324,7 +322,7 @@
     </button>
 
     <div class="post-menu-options bg-white dark:bg-zinc-800">
-        @if ($post->user_id === auth()->id() && $post->edited_at === null)
+        @if ($canEditPost)
             <a href="{{ route('posts.edit', $post) }}" class="flex items-center gap-2 !text-zinc-950 dark:!text-white">
                 <i class="fa-solid fa-pen-to-square !text-zinc-950 dark:!text-white" aria-hidden="true"></i>
                 <span class="!text-zinc-950 dark:!text-white">{{ __('Editar') }}</span>
@@ -341,7 +339,7 @@
             <span class="!text-zinc-950 dark:!text-white">{{ $post->savedByUsers->isNotEmpty() ? __('Remover dos salvos') : __('Salvar') }}</span>
         </button>
 
-        @if (auth()->user()->role === 'admin' || $isResponsiblePremium)
+        @if ($isPrivileged)
             <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta publicação?');">
                 @csrf
                 @method('DELETE')

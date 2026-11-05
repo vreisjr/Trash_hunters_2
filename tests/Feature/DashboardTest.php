@@ -112,3 +112,47 @@ test('users can save posts and view their saved post history', function () {
         'post_id' => $post->id,
     ]);
 });
+
+test('privileged users can edit and delete any post while regular users can only edit their own post once', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $premium = User::factory()->create(['role' => 'premium']);
+    $regular = User::factory()->create();
+    $regularPost = Post::factory()->for($regular)->create(['content' => 'Post do usuário comum.']);
+    $ownPost = Post::factory()->for($regular)->create(['content' => 'Post próprio.']);
+    $adminPost = Post::factory()->for($admin)->create(['content' => 'Post do administrador.']);
+
+    $this->actingAs($admin)
+        ->get(route('posts.edit', $regularPost))
+        ->assertOk();
+
+    $this->actingAs($premium)
+        ->put(route('posts.update', $regularPost), ['content' => 'Editado pelo premium.'])
+        ->assertRedirect(route('posts.index'));
+
+    $regularPost->refresh();
+
+    $this->actingAs($premium)
+        ->put(route('posts.update', $regularPost), ['content' => 'Editado novamente pelo premium.'])
+        ->assertRedirect(route('posts.index'));
+
+    $this->actingAs($regular)
+        ->put(route('posts.update', $ownPost), ['content' => 'Editado pelo próprio autor.'])
+        ->assertRedirect(route('posts.index'));
+
+    $this->actingAs($regular)
+        ->put(route('posts.update', $ownPost), ['content' => 'Segunda edição indevida.'])
+        ->assertRedirect(route('posts.index'))
+        ->assertSessionHas('error', 'Esta publicação já foi editada e não pode ser alterada novamente.');
+
+    $this->actingAs($regular)
+        ->put(route('posts.update', $adminPost), ['content' => 'Alteração indevida.'])
+        ->assertForbidden();
+
+    $this->actingAs($regular)
+        ->delete(route('posts.destroy', $regularPost))
+        ->assertForbidden();
+
+    $this->actingAs($premium)
+        ->delete(route('posts.destroy', $adminPost))
+        ->assertRedirect(route('posts.index'));
+});
