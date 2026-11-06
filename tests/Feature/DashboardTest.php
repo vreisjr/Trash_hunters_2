@@ -13,6 +13,7 @@ test('authenticated users can visit the dashboard with posts linked to their aut
     $user = User::factory()->create();
     $post = Post::factory()->for($user)->create([
         'content' => 'Material disponível para reaproveitamento.',
+        'post_type' => 'marketplace',
     ]);
     $this->actingAs($user);
 
@@ -24,15 +25,45 @@ test('authenticated users can visit the dashboard with posts linked to their aut
         ->assertSee($user->name);
 });
 
+test('feed and marketplace posts stay in their own areas', function () {
+    $user = User::factory()->create();
+    $feedPost = Post::factory()->for($user)->create([
+        'content' => 'Publicação exclusiva do feed.',
+        'post_type' => 'feed',
+    ]);
+    $marketplacePost = Post::factory()->for($user)->create([
+        'content' => 'Oferta exclusiva de venda.',
+        'post_type' => 'marketplace',
+        'price_type' => 'paid',
+        'price' => 25,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('posts.index'))
+        ->assertOk()
+        ->assertSee($feedPost->content)
+        ->assertDontSee($marketplacePost->content)
+        ->assertDontSee('Para doação')
+        ->assertDontSee('Pede-se uma contribuição');
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee($marketplacePost->content)
+        ->assertDontSee($feedPost->content);
+});
+
 test('users can collect a free item from the dashboard and see it in their history', function () {
     $firstUser = User::factory()->create();
     $secondUser = User::factory()->create();
     $firstPost = Post::factory()->for($firstUser)->create([
         'content' => 'Latas para reutilização.',
+        'post_type' => 'marketplace',
         'price_type' => 'free',
     ]);
     $secondPost = Post::factory()->for($secondUser)->create([
         'content' => 'Garrafas de vidro para reutilização.',
+        'post_type' => 'marketplace',
         'price_type' => 'paid',
         'price' => 20,
     ]);
@@ -84,6 +115,7 @@ test('users can save posts and view their saved post history', function () {
     $author = User::factory()->create();
     $post = Post::factory()->for($author)->create([
         'content' => 'Post salvo para consultar depois.',
+        'post_type' => 'marketplace',
     ]);
 
     $this->actingAs($user)

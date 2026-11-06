@@ -51,6 +51,7 @@
 
             <form class="recovery-publish-form" method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="post_type" value="marketplace">
                 <label>
                     <span>{{ __('O que você está oferecendo?') }} <em>*</em></span>
                     <textarea name="content" rows="3" required placeholder="{{ __('Descreva o resíduo, suas condições e como ele pode ser reaproveitado.') }}">{{ old('content') }}</textarea>

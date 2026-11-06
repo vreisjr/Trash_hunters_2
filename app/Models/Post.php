@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property string $content
+ * @property string $post_type
  * @property string $price_type
  * @property float|null $price
  * @property string|null $media_path
@@ -31,7 +32,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Comentario> $comentarios
  * @property-read Collection<int, PostAttachment> $attachments
  */
-#[Fillable(['user_id', 'content', 'price_type', 'price', 'media_path', 'media_type', 'latitude', 'longitude', 'address', 'edited_at', 'district', 'status'])]
+#[Fillable(['user_id', 'content', 'post_type', 'price_type', 'price', 'media_path', 'media_type', 'latitude', 'longitude', 'address', 'edited_at', 'district', 'status'])]
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */

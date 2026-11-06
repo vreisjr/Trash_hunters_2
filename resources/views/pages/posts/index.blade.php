@@ -38,6 +38,7 @@
                 <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="form-nova-postagem">
 
                 @csrf
+                <input type="hidden" name="post_type" value="feed">
 
                 <div class="post-header">
 
@@ -130,50 +131,6 @@
 
                             </div>
 
-                        </div>
-
-                    </div>
-
-                    <div style="position:relative; display:inline-block;">
-
-                        <button type="button" id="btn-preco">
-                            <i class="fa-solid fa-hand-holding-dollar"></i>
-                            <span id="btn-preco-label">{{ __('Defina um valor') }}</span>
-                        </button>
-
-                        <div
-                            id="dropdown-preco"
-                            style="display:none; position:absolute; bottom:110%; left:0; background:#fff; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:50; min-width:230px; padding:10px;"
-                        >
-                            <label style="display:flex; align-items:center; gap:8px; padding:7px 4px; cursor:pointer;">
-                                <input type="radio" name="price_type" value="free" checked>
-                                <span>{{ __('Grátis') }}</span>
-                            </label>
-
-                            <label style="display:flex; align-items:center; gap:8px; padding:7px 4px; cursor:pointer;">
-                                <input type="radio" name="price_type" value="paid">
-                                <span>{{ __('Defina um valor') }}</span>
-                            </label>
-
-                            <div id="preco-valor-wrapper" hidden style="margin-top:6px;">
-                                <label for="preco-valor" style="display:block; margin-bottom:4px; color:#64748b; font-size:12px;">
-                                    {{ __('Valor sugerido em reais') }}
-                                </label>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span style="color:#64748b; font-size:13px;">R$</span>
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        id="preco-valor"
-                                        min="0.01"
-                                        max="99999999.99"
-                                        step="0.01"
-                                        placeholder="0,00"
-                                        inputmode="decimal"
-                                        style="width:100%; padding:7px 8px; border:1px solid #cbd5e1; border-radius:6px;"
-                                    >
-                                </div>
-                            </div>
                         </div>
 
                     </div>
@@ -385,18 +342,6 @@
                         @endif
 
                     </div>
-
-                    @if ($post->price_type === 'paid' && $post->price !== null)
-                        <div class="post-price post-price-paid">
-                            <i class="fa-solid fa-hand-holding-dollar"></i>
-                            {{ __('Pede-se uma contribuição de') }} <strong>R$ {{ number_format((float) $post->price, 2, ',', '.') }}</strong>
-                        </div>
-                    @else
-                        <div class="post-price post-price-free">
-                            <i class="fa-solid fa-gift"></i>
-                            {{ __('Para doação') }}
-                        </div>
-                    @endif
 
                     <p>{{ $post->content }}</p>
 
@@ -1196,50 +1141,9 @@
 
                 });
 
-            // --- Preço da doação ---
-
-            const btnPreco = document.getElementById('btn-preco');
-            const dropdownPreco = document.getElementById('dropdown-preco');
-            const btnPrecoLabel = document.getElementById('btn-preco-label');
-            const precoValorWrapper = document.getElementById('preco-valor-wrapper');
-            const precoValor = document.getElementById('preco-valor');
-            const opcoesPreco = document.querySelectorAll('input[name="price_type"]');
-
-            btnPreco.addEventListener('click', (e) => {
-                e.stopPropagation();
-
-                dropdownPreco.style.display =
-                    dropdownPreco.style.display === 'none' ? 'block' : 'none';
-            });
-
-            dropdownPreco.addEventListener('click', (e) => e.stopPropagation());
-
-            opcoesPreco.forEach((opcao) => {
-                opcao.addEventListener('change', () => {
-                    const isPaid = opcao.value === 'paid' && opcao.checked;
-
-                    precoValorWrapper.hidden = !isPaid;
-                    precoValor.required = isPaid;
-                    btnPrecoLabel.textContent = isPaid
-                        ? (precoValor.value ? `R$ ${precoValor.value}` : 'Defina um valor')
-                        : 'Grátis';
-                });
-            });
-
-            precoValor.addEventListener('input', () => {
-                const opcaoPaga = document.querySelector('input[name="price_type"][value="paid"]');
-
-                if (opcaoPaga.checked) {
-                    btnPrecoLabel.textContent = precoValor.value
-                        ? `R$ ${precoValor.value}`
-                        : 'Defina um valor';
-                }
-            });
-
             document.addEventListener('click', () => {
 
                 dropdownCategoria.style.display = 'none';
-                dropdownPreco.style.display = 'none';
 
             });
 
