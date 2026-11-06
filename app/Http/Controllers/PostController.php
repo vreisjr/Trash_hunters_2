@@ -17,7 +17,7 @@ class PostController extends Controller
 {
     public function index(): View
     {
-        $posts = Post::with([
+        $posts = Post::where('post_type', 'feed')->with([
             'user',
             'categorias',
             'comentarios.user',
@@ -46,7 +46,7 @@ class PostController extends Controller
 
     public function dashboard(): View
     {
-        $posts = Post::with([
+        $posts = Post::where('post_type', 'marketplace')->with([
             'user',
             'categorias',
             'attachments',
@@ -83,7 +83,8 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'content' => ['required', 'string', 'max:5000'],
-            'price_type' => ['required', 'in:free,paid'],
+            'post_type' => ['required', 'in:feed,marketplace'],
+            'price_type' => ['nullable', 'in:free,paid'],
             'price' => ['nullable', 'required_if:price_type,paid', 'numeric', 'min:0.01', 'max:99999999.99'],
             'categoria_ids' => ['nullable', 'array'],
             'categoria_ids.*' => ['exists:categorias,id'],
@@ -97,8 +98,11 @@ class PostController extends Controller
 
         $data = [
             'content' => $validated['content'],
-            'price_type' => $validated['price_type'],
-            'price' => $validated['price_type'] === 'paid' ? $validated['price'] : null,
+            'post_type' => $validated['post_type'],
+            'price_type' => $validated['post_type'] === 'marketplace' ? ($validated['price_type'] ?? 'free') : 'free',
+            'price' => $validated['post_type'] === 'marketplace' && ($validated['price_type'] ?? 'free') === 'paid'
+                ? $validated['price']
+                : null,
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
             'address' => $validated['address'] ?? null,
@@ -147,7 +151,7 @@ class PostController extends Controller
         }
 
         return redirect()
-            ->route('posts.index')
+            ->route($validated['post_type'] === 'marketplace' ? 'dashboard' : 'posts.index')
             ->with('status', 'Postagem publicada com sucesso!');
     }
 
