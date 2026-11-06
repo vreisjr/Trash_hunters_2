@@ -97,6 +97,12 @@ test('users can save posts and view their saved post history', function () {
     ]);
 
     $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('recovery-favorite is-saved')
+        ->assertSee(route('posts.salvar', $post), false);
+
+    $this->actingAs($user)
         ->get(route('posts.saved'))
         ->assertOk()
         ->assertSee('Post salvo para consultar depois.')

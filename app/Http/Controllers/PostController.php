@@ -46,7 +46,12 @@ class PostController extends Controller
 
     public function dashboard(): View
     {
-        $posts = Post::with(['user', 'categorias', 'attachments'])
+        $posts = Post::with([
+            'user',
+            'categorias',
+            'attachments',
+            'savedByUsers' => fn ($query) => $query->whereKey(auth()->id()),
+        ])
             ->latest()
             ->get();
 
