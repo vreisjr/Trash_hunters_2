@@ -52,4 +52,20 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => now(),
         ]);
     }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => ['role' => 'admin']);
+    }
+
+    /**
+     * Indicate that the user is a premium user.
+     */
+    public function premium(): static
+    {
+        return $this->state(fn (array $attributes) => ['role' => 'premium']);
+    }
 }
