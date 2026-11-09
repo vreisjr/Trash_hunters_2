@@ -52,14 +52,14 @@ class FeedSeeder extends Seeder
                 $comentario = Comentario::factory()->create([
                     'post_id' => $post->id,
                     'user_id' => $usuarios->random()->id,
-                    'texto'   => fake()->randomElement($comentarios),
+                    'texto' => fake()->randomElement($comentarios),
                 ]);
 
                 // Metade dos comentários recebe uma resposta do autor do post
                 if (rand(0, 1)) {
                     Comentario::factory()->resposta($comentario)->create([
                         'user_id' => $post->user_id,
-                        'texto'   => 'Obrigado! Fico feliz que gostou.',
+                        'texto' => 'Obrigado! Fico feliz que gostou.',
                     ]);
                 }
             }

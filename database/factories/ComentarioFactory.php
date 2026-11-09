@@ -17,17 +17,17 @@ class ComentarioFactory extends Factory
     public function definition(): array
     {
         return [
-            'post_id'   => Post::factory(),
-            'user_id'   => User::factory(),
+            'post_id' => Post::factory(),
+            'user_id' => User::factory(),
             'parent_id' => null,
-            'texto'     => fake()->sentence(),
+            'texto' => fake()->sentence(),
         ];
     }
 
     public function resposta(Comentario $pai): static
     {
         return $this->state(fn () => [
-            'post_id'   => $pai->post_id,
+            'post_id' => $pai->post_id,
             'parent_id' => $pai->id,
         ]);
     }

@@ -16,7 +16,7 @@ class CategoriaFactory extends Factory
     {
         return [
             'nome' => fake()->unique()->word(),
-            'cor'  => fake()->hexColor(),
+            'cor' => fake()->hexColor(),
         ];
     }
 }

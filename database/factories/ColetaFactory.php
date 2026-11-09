@@ -16,11 +16,11 @@ class ColetaFactory extends Factory
     public function definition(): array
     {
         return [
-            'doador_id'  => User::factory(),
+            'doador_id' => User::factory(),
             'coletor_id' => User::factory(),
-            'post_id'    => null,
-            'item'       => fake()->words(2, true),
-            'data_hora'  => now(),
+            'post_id' => null,
+            'item' => fake()->words(2, true),
+            'data_hora' => now(),
         ];
     }
 }

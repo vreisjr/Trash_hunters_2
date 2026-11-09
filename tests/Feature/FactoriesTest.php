@@ -43,7 +43,7 @@ test('coleta liga um doador a um coletor', function () {
     $coletor = User::factory()->create();
 
     $coleta = Coleta::factory()->create([
-        'doador_id'  => $doador->id,
+        'doador_id' => $doador->id,
         'coletor_id' => $coletor->id,
     ]);
 

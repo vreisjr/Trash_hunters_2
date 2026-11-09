@@ -33,9 +33,9 @@ class MarketplaceSeeder extends Seeder
                 ->for($usuarios->random())
                 ->marketplace()
                 ->create([
-                    'content'    => $texto,
+                    'content' => $texto,
                     'price_type' => $tipoPreco,
-                    'price'      => $preco,
+                    'price' => $preco,
                 ]);
 
             // Cada post recebe de 1 a 2 categorias aleatórias
