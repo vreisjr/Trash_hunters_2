@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\CategoriaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,6 +17,7 @@ use Illuminate\Support\Carbon;
  */
 class Categoria extends Model
 {
+    /** @use HasFactory<CategoriaFactory> */
     use HasFactory;
 
     protected $fillable = ['nome', 'cor'];

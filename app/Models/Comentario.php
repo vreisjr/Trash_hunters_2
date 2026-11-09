@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ComentarioFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,7 @@ use Illuminate\Support\Carbon;
  */
 class Comentario extends Model
 {
+    /** @use HasFactory<ComentarioFactory> */
     use HasFactory;
 
     protected $fillable = ['post_id', 'user_id', 'parent_id', 'texto'];
