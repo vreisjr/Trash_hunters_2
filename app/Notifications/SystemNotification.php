@@ -15,11 +15,17 @@ class SystemNotification extends Notification
         public readonly ?string $url = null,
     ) {}
 
+    /**
+     * @return array<int, string>
+     */
     public function via(object $notifiable): array
     {
         return ['database'];
     }
 
+    /**
+     * @return array<string, string|null>
+     */
     public function toArray(object $notifiable): array
     {
         return [
