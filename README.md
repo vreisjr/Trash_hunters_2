@@ -41,7 +41,8 @@ php artisan key:generate
 php artisan migrate
 ```
 
-# Insere os dados iniciais das categorias no banco de dados
+### Insira os dados iniciais das categorias no banco de dados
+
 ```bash
 php artisan db:seed --class=CategoriaSeeder
 ```
@@ -50,4 +51,68 @@ php artisan db:seed --class=CategoriaSeeder
 
 ```bash
 composer run dev
+```
+
+## Dados de exemplo (opcional)
+
+Para popular o banco de desenvolvimento com usuários, posts, comentários e respostas falsos:
+
+```bash
+# Posts do marketplace (com categorias, comentários e respostas)
+php artisan db:seed --class=MarketplaceSeeder
+
+# Posts do feed (com categorias, comentários e respostas)
+php artisan db:seed --class=FeedSeeder
+```
+
+Cada execução cria mais 5 usuários e 8 posts, sem apagar os dados anteriores.
+
+Para recriar o banco do zero com o seeder principal:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+> Atenção: `migrate:fresh` apaga todos os dados do banco. Use apenas em desenvolvimento.
+
+## Testes
+
+```bash
+# Todos os testes
+php artisan test
+
+# Um arquivo específico
+php artisan test tests/Feature/FactoriesTest.php
+
+# Testes + lint + análise de tipos (o mesmo que roda no CI)
+composer test
+```
+
+## Factories
+
+As factories ficam em `database/factories/` e geram dados falsos para os testes e os seeders.
+
+| Factory | States disponíveis |
+|---|---|
+| `UserFactory` | `unverified()`, `withTwoFactor()`, `admin()`, `premium()` |
+| `PostFactory` | `marketplace()`, `paid($preco)`, `edited()` |
+| `ComentarioFactory` | `resposta($comentarioPai)` |
+| `CategoriaFactory` | - |
+| `ColetaFactory` | - |
+
+Exemplos de uso nos testes:
+
+```php
+$admin = User::factory()->admin()->create();
+$post  = Post::factory()->paid(40)->create();
+$pai   = Comentario::factory()->create();
+Comentario::factory()->count(3)->resposta($pai)->create();
+```
+
+## Qualidade de código
+
+```bash
+composer lint         # formata o código (Pint)
+composer lint:check   # apenas verifica o formato
+composer types:check  # análise estática (PHPStan)
 ```
