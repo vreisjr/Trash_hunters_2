@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use App\Models\Coleta;
 use App\Models\Post;
+use App\Models\User;
+use App\Notifications\SystemNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -136,6 +138,14 @@ class PostController extends Controller
 
         $post = $request->user()->posts()->create($data);
 
+        User::query()
+            ->where('id', '!=', $request->user()->id)
+            ->each(fn (User $user) => $user->notify(new SystemNotification(
+                'new_post',
+                $request->user()->name.' publicou uma nova postagem: "'.Str::limit($post->content, 120).'".',
+                route($validated['post_type'] === 'marketplace' ? 'dashboard' : 'posts.index'),
+            )));
+
         if (! empty($validated['categoria_ids'])) {
             $post->categorias()->attach($validated['categoria_ids']);
         }
@@ -230,6 +240,12 @@ class PostController extends Controller
             return back()->withErrors(['coleta' => 'Este item já foi coletado por outra pessoa.']);
         }
 
+        $post->user->notify(new SystemNotification(
+            'collection',
+            $user->name.' demonstrou interesse em coletar seu item "'.Str::limit($post->content, 120).'".',
+            route('historico.doacoes'),
+        ));
+
         return back()->with('status', 'Item coletado! Ele já aparece no seu histórico de coletas.');
     }
 
@@ -252,6 +268,14 @@ class PostController extends Controller
             ]);
 
             $curtido = true;
+
+            if ($post->user_id !== $userId) {
+                $post->user->notify(new SystemNotification(
+                    'post_like',
+                    $request->user()->name.' curtiu sua postagem "'.Str::limit($post->content, 120).'".',
+                    route($post->post_type === 'marketplace' ? 'dashboard' : 'posts.index'),
+                ));
+            }
         }
 
         return response()->json([

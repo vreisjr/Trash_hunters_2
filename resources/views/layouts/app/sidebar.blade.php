@@ -27,9 +27,11 @@
                         {{ __('Criar post') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="bell" href="#">
+                    <flux:sidebar.item icon="bell" :href="route('notifications.index')" :current="request()->routeIs('notifications.*')" wire:navigate>
                         {{ __('Notificações') }}
-                        <x-slot name="badge">3</x-slot>
+                        @if (auth()->user()->unreadNotifications()->count() > 0)
+                            <x-slot name="badge">{{ auth()->user()->unreadNotifications()->count() }}</x-slot>
+                        @endif
                     </flux:sidebar.item>
 
                     {{-- "Feature Flag" for messages --}}

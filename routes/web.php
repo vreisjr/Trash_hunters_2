@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\HistoricoController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PontoColetaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -11,6 +12,9 @@ Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [PostController::class, 'dashboard'])->name('dashboard');
+    Route::get('/notificacoes', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notificacoes/marcar-todas-como-lidas', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::post('/notificacoes/{notification}/marcar-como-lida', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
     Route::get('pontos-de-coleta', [PontoColetaController::class, 'index'])->name('collection-points.index');
     Route::post('/posts/{post}/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
     Route::patch('/comentarios/{comentario}', [ComentarioController::class, 'update'])->name('comentarios.update');
