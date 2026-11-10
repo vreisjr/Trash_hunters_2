@@ -24,7 +24,7 @@
 
             <button class="recovery-publish-button" type="button" id="open-publish-panel" aria-expanded="false" aria-controls="publish-panel">
                 <span aria-hidden="true">+</span>
-                {{ __('Publicar item') }}
+                {{ __('Anunciar Venda') }}
             </button>
         </header>
 
@@ -98,7 +98,7 @@
 
                 <div class="recovery-publish-form-actions">
                     <button class="recovery-panel-cancel" type="button" id="cancel-publish-panel">{{ __('Cancelar') }}</button>
-                    <button class="recovery-publish-button" type="submit">{{ __('Publicar item') }}</button>
+                    <button class="recovery-publish-button" type="submit">{{ __('Anunciar Venda') }}</button>
                 </div>
             </form>
         </section>
@@ -274,7 +274,7 @@
                 <div class="recovery-empty">
                     <h2>{{ __('Ainda não há resíduos publicados') }}</h2>
                     <p>{{ __('Seja a primeira pessoa a publicar um item para reaproveitamento.') }}</p>
-                    <a class="recovery-publish-button" href="{{ route('posts.create') }}">{{ __('Publicar item') }}</a>
+                    <a class="recovery-publish-button" href="{{ route('posts.create') }}">{{ __('Anunciar Venda') }}</a>
                 </div>
             @endforelse
         </section>
