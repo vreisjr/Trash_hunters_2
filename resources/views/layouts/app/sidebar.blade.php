@@ -64,7 +64,7 @@
                 </flux:sidebar.item>
 
                 <flux:sidebar.group :heading="__('Comunidade')" class="trash-sidebar-group">
-                    <flux:sidebar.item icon="play" href="#">
+                    <flux:sidebar.item icon="play" href="{{ route('jogo') }}">
                         {{ __('Jogos') }}
                     </flux:sidebar.item>
 

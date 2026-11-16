@@ -23,7 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/posts/{post}/curtir', [PostController::class, 'toggleLike'])->name('posts.curtir');
     Route::post('/posts/{post}/salvar', [PostController::class, 'toggleSave'])->name('posts.salvar');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-
+    Route::view('/jogo', 'pages.jogo.index')->name('jogo');
     Route::prefix('posts')->name('posts.')->group(function () {
         Route::get('/salvos', [PostController::class, 'saved'])->name('saved');
         Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy');
@@ -33,7 +33,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
         Route::put('/{post}', [PostController::class, 'update'])->name('update');
         Route::post('/{post}/coletar', [PostController::class, 'coletar'])->name('coletar');
-    });
+        
+        });
 });
 
 require __DIR__.'/settings.php';
@@ -41,4 +42,5 @@ require __DIR__.'/settings.php';
 Route::middleware('auth')->prefix('historico')->name('historico.')->group(function () {
     Route::get('/doacoes', [HistoricoController::class, 'doacoes'])->name('doacoes');
     Route::get('/coletas', [HistoricoController::class, 'coletas'])->name('coletas');
-});
+    });
+
