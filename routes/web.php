@@ -33,8 +33,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
         Route::put('/{post}', [PostController::class, 'update'])->name('update');
         Route::post('/{post}/coletar', [PostController::class, 'coletar'])->name('coletar');
-        
-        });
+
+    });
 });
 
 require __DIR__.'/settings.php';
@@ -42,5 +42,4 @@ require __DIR__.'/settings.php';
 Route::middleware('auth')->prefix('historico')->name('historico.')->group(function () {
     Route::get('/doacoes', [HistoricoController::class, 'doacoes'])->name('doacoes');
     Route::get('/coletas', [HistoricoController::class, 'coletas'])->name('coletas');
-    });
-
+});
